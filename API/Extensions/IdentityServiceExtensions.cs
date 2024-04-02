@@ -14,6 +14,7 @@ public static class IdentityServiceExtensions
 			opt.Password.RequiredLength = 1;
 			opt.Password.RequireDigit = false;
 			opt.Password.RequireNonAlphanumeric = false;
+			opt.Password.RequireUppercase = false;
 		})
 			.AddRoles<Role>()
 			.AddRoleManager<RoleManager<Role>>()
