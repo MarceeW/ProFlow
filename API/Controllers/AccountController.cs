@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.DTO;
 using API.Entities;
+using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,16 @@ public class AccountController : BaseApiController
 	private readonly UserManager<User> _userManager;
 	private readonly IMapper _mapper;
 	private readonly DataContext _dataContext;
+    private readonly ITokenService _tokenService;
 
-	public AccountController(UserManager<User> userManager, IMapper mapper, DataContext dataContext) 
+    public AccountController(UserManager<User> userManager, IMapper mapper, DataContext dataContext,
+		ITokenService tokenService) 
 	{
 		_userManager = userManager;
 		_mapper = mapper;
 		_dataContext = dataContext;
-	}
+        _tokenService = tokenService;
+    }
 	
 	[HttpPost("register")]
 	public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO)
@@ -37,7 +41,7 @@ public class AccountController : BaseApiController
 		return new UserDTO
 		{
 			Username = registerDTO.UserName,
-			Token = ""
+			Token = _tokenService.CreateToken(user)
 		};
 	}
 	
@@ -58,7 +62,7 @@ public class AccountController : BaseApiController
 		return new UserDTO
 		{
 			Username = loginDTO.UserName,
-			Token = ""
+			Token = _tokenService.CreateToken(user)
 		};
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.Helpers;
-using Microsoft.AspNetCore.Identity;
+using API.Interfaces;
+using API.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions;
@@ -12,21 +13,18 @@ public static class ApplicationServiceExtensions
 	{
 		services.AddControllers();
 		services.AddEndpointsApiExplorer();
-		services.AddSwaggerGen();
+		// services.AddSwaggerGen();
 
 		services.AddDbContext<DataContext>(
 			options => options.UseSqlServer(config.GetConnectionString("DefaultConnection"))
 		);
-
-		services.AddIdentityServices(config);
-
-		services.AddAuthorization();
-		services
-			.AddIdentityApiEndpoints<IdentityUser>()
-			.AddEntityFrameworkStores<DataContext>();
-			
+		
+		services.AddCors();
+		
+		services.AddScoped<ITokenService, TokenService>();
+		
 		services.AddAutoMapper(typeof(AutoMapperProfiles));
-			
+		
 		return services;
 	}
 }
