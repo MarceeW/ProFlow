@@ -13,7 +13,6 @@ public static class ApplicationServiceExtensions
 	{
 		services.AddControllers();
 		services.AddEndpointsApiExplorer();
-		// services.AddSwaggerGen();
 
 		services.AddDbContext<DataContext>(
 			options => options.UseSqlServer(config.GetConnectionString("DefaultConnection"))

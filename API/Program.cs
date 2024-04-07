@@ -15,12 +15,6 @@ app.UseCors(builder => builder
 
 app.MapIdentityApi<IdentityUser>();
 
-// if (app.Environment.IsDevelopment())
-// {
-// 	app.UseSwagger();
-// 	app.UseSwaggerUI();
-// }
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
