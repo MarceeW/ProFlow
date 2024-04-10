@@ -5,6 +5,7 @@ import { AsyncPipe } from '@angular/common';
 import { AccountService } from '../../_services/account.service';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -20,11 +21,15 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent {
   model : LoginModel = { username:'', password:'' };
 
-  constructor(private accountService: AccountService, private toastr: ToastrService) {}
+  constructor(private accountService: AccountService, private toastr: ToastrService,
+    private router: Router) {}
 
   login() {
     this.accountService.login(this.model).subscribe({
-      next: _ => this.toastr.success(`Welcome back, ${this.model.username}!`),
+      next: _ => {
+        this.router.navigateByUrl('');
+        this.toastr.success(`Welcome back, ${this.model.username}!`);
+      },
       error: error => console.error(error)
     });
   }
