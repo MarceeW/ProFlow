@@ -12,19 +12,21 @@ namespace API.Controllers;
 public class AccountController : BaseApiController
 {
 	private readonly UserManager<User> _userManager;
-	private readonly IMapper _mapper;
+    private readonly RoleManager<Role> _roleManager;
+    private readonly IMapper _mapper;
 	private readonly DataContext _dataContext;
 	private readonly ITokenService _tokenService;
 
 	public AccountController(
 		UserManager<User> userManager,
-		RoleManager<UserRole> roleManager, 
+		RoleManager<Role> roleManager, 
 		IMapper mapper, 
 		DataContext dataContext,
 		ITokenService tokenService)
 	{
 		_userManager = userManager;
-		_mapper = mapper;
+        _roleManager = roleManager;
+        _mapper = mapper;
 		_dataContext = dataContext;
 		_tokenService = tokenService;
 	}
