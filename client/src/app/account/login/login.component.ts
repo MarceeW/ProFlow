@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  model : LoginModel = { username:'', password:'' };
+  model : LoginModel = { userName:'', password:'' };
 
   constructor(private accountService: AccountService, private toastr: ToastrService,
     private router: Router) {}
@@ -28,7 +28,7 @@ export class LoginComponent {
     this.accountService.login(this.model).subscribe({
       next: _ => {
         this.router.navigateByUrl('');
-        this.toastr.success(`Welcome back, ${this.model.username}!`);
+        this.toastr.success(`Welcome back, ${this.model.userName}!`);
       },
       error: error => console.error(error)
     });

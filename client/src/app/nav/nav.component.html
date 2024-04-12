@@ -3,7 +3,7 @@
     <a class="navbar-brand">ProFlow</a>
     <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
       <a class="dropdown-toggle text-white" dropdownToggle>
-        {{user.username | titlecase}}
+        {{user.userName | titlecase}}
       </a>
       <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
         <a class="dropdown-item" (click)="logout()">Logout</a>
