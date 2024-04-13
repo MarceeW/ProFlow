@@ -1,4 +1,5 @@
-﻿using API.Entities;
+﻿using API.Constants;
+using API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +14,8 @@ public static class Seeder
 			
 		var roles = new List<Role>
 		{
-			new Role { Name = "Administrator" },
-			new Role { Name = "User" },
+			RoleConstant.ADMINISTRATOR,
+			RoleConstant.USER,
 		};
 		
 		foreach (var role in roles) 
@@ -28,6 +29,6 @@ public static class Seeder
 		};
 		
 		await userManager.CreateAsync(admin, "admin");
-		await userManager.AddToRoleAsync(admin, "Administrator");
+		await userManager.AddToRolesAsync(admin, [RoleConstant.ADMINISTRATOR.Name, RoleConstant.USER.Name]);
 	} 
 }

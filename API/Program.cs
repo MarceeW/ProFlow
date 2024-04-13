@@ -16,8 +16,6 @@ app.UseCors(builder => builder
 	.AllowAnyMethod()
 	.WithOrigins("https://localhost:4200"));
 
-app.MapIdentityApi<IdentityUser>();
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

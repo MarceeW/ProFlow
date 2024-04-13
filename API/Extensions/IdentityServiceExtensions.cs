@@ -15,7 +15,7 @@ public static class IdentityServiceExtensions
 	{	
 		services.AddIdentityCore<User>(opt =>
 		{
-			opt.Password.RequiredLength = 8;
+			opt.Password.RequiredLength = 5;
 			opt.Password.RequireDigit = false;
 			opt.Password.RequireNonAlphanumeric = false;
 			opt.Password.RequireUppercase = false;
