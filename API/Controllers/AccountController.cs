@@ -1,4 +1,5 @@
-﻿using API.Data;
+﻿using API.Constants;
+using API.Data;
 using API.DTO;
 using API.Entities;
 using API.Interfaces;
@@ -12,22 +13,20 @@ namespace API.Controllers;
 public class AccountController : BaseApiController
 {
 	private readonly UserManager<User> _userManager;
-    private readonly RoleManager<Role> _roleManager;
-    private readonly IMapper _mapper;
-	private readonly DataContext _dataContext;
+	private readonly RoleManager<Role> _roleManager;
+	private readonly IMapper _mapper;
 	private readonly ITokenService _tokenService;
 
 	public AccountController(
 		UserManager<User> userManager,
-		RoleManager<Role> roleManager, 
+		RoleManager<Role> roleManager,
 		IMapper mapper, 
 		DataContext dataContext,
 		ITokenService tokenService)
 	{
 		_userManager = userManager;
-        _roleManager = roleManager;
-        _mapper = mapper;
-		_dataContext = dataContext;
+		_roleManager = roleManager;
+		_mapper = mapper;
 		_tokenService = tokenService;
 	}
 
@@ -43,11 +42,16 @@ public class AccountController : BaseApiController
 
 		if (!result.Succeeded)
 			return BadRequest(result.Errors);
-
+			
+		var roleResult = await _userManager.AddToRoleAsync(user, RoleConstant.User);
+			
+		if (!roleResult.Succeeded)
+			return BadRequest(roleResult.Errors);
+			
 		return new UserDTO
 		{
 			UserName = registerDTO.UserName,
-			Token = _tokenService.CreateToken(user)
+			Token = await _tokenService.CreateToken(user),
 		};
 	}
 
@@ -64,11 +68,11 @@ public class AccountController : BaseApiController
 
 		if (!result)
 			return Unauthorized("Invalid password!");
-
+			
 		return new UserDTO
 		{
 			UserName = loginDTO.UserName,
-			Token = _tokenService.CreateToken(user)
+			Token = await _tokenService.CreateToken(user),
 		};
 	}
 }

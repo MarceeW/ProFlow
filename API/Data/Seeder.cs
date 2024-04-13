@@ -14,8 +14,8 @@ public static class Seeder
 			
 		var roles = new List<Role>
 		{
-			RoleConstant.ADMINISTRATOR,
-			RoleConstant.USER,
+			new Role { Name = RoleConstant.Administrator },
+			new Role { Name = RoleConstant.User },
 		};
 		
 		foreach (var role in roles) 
@@ -29,6 +29,6 @@ public static class Seeder
 		};
 		
 		await userManager.CreateAsync(admin, "admin");
-		await userManager.AddToRolesAsync(admin, [RoleConstant.ADMINISTRATOR.Name, RoleConstant.USER.Name]);
+		await userManager.AddToRolesAsync(admin, [RoleConstant.Administrator, RoleConstant.User]);
 	} 
 }
