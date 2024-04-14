@@ -8,3 +8,6 @@ dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 
 dotnet_naming_style.prefix_underscore.capitalization = camel_case
 dotnet_naming_style.prefix_underscore.required_prefix = _
+
+# CS1956: Member implements interface member with multiple matches at run-time
+dotnet_diagnostic.CS1956.severity = silent

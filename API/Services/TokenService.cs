@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using API.Entities;
+using API.Models;
 using API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -17,9 +17,9 @@ public class TokenService : ITokenService
 
 	public TokenService(IConfiguration config, UserManager<User> userManager)
 	{
-		_key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]));
-		_issuer = config["JwtSettings:Issuer"];
-		_audience = config["JwtSettings:Audience"];
+		_key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!));
+		_issuer = config["JwtSettings:Issuer"]!;
+		_audience = config["JwtSettings:Audience"]!;
 		_userManager = userManager;
 	}
 	public async Task<string> CreateToken(User user)
@@ -27,7 +27,7 @@ public class TokenService : ITokenService
 		var roles = await _userManager.GetRolesAsync(user);
 		var claims = new List<Claim>
 		{
-			new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
+			new Claim(JwtRegisteredClaimNames.NameId, user.UserName!),
 		};
 		claims.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
 

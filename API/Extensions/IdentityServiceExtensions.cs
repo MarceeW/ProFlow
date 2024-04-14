@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using API.Data;
-using API.Entities;
+using API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -29,10 +29,10 @@ public static class IdentityServiceExtensions
 				{
 					options.TokenValidationParameters = new TokenValidationParameters
 					{
-						ValidIssuer = config["JwtSettings:Issuer"],
-						ValidAudience = config["JwtSettings:Audience"],
+						ValidIssuer = config["JwtSettings:Issuer"]!,
+						ValidAudience = config["JwtSettings:Audience"]!,
 						IssuerSigningKey = new SymmetricSecurityKey(
-							Encoding.UTF8.GetBytes(config["JwtSettings:Key"])),
+							Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
 						ValidateIssuer = true,
 						ValidateAudience = true,
 						ValidateLifetime = true,

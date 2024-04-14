@@ -1,5 +1,5 @@
 using API.Data;
-using API.Entities;
+using API.Models;
 using API.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +37,7 @@ app.MapControllers();
  catch (Exception ex)
  {
  	var logger = services.GetService<ILogger<Program>>();
- 	logger.LogError(ex, ex.Message);
+ 	logger?.LogError(ex, ex.Message);
  }
 
 app.Run();

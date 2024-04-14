@@ -1,12 +1,16 @@
 ﻿using API.Constants;
 using API.Data;
 using API.DTO;
-using API.Entities;
+using API.Models;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using API.Repositories;
+using System.Security.Claims;
+using API.Extensions;
 
 namespace API.Controllers;
 
@@ -16,23 +20,37 @@ public class AccountController : BaseApiController
 	private readonly RoleManager<Role> _roleManager;
 	private readonly IMapper _mapper;
 	private readonly ITokenService _tokenService;
+	private readonly IInvitationRepository _invitationRepository;
 
 	public AccountController(
 		UserManager<User> userManager,
 		RoleManager<Role> roleManager,
 		IMapper mapper, 
-		DataContext dataContext,
-		ITokenService tokenService)
+		ITokenService tokenService,
+		IInvitationRepository invitationRepository)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
 		_mapper = mapper;
 		_tokenService = tokenService;
+		_invitationRepository = invitationRepository;
 	}
 
 	[HttpPost("register")]
-	public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO)
+	public async Task<ActionResult<UserDTO>> Register([FromBody]RegisterDTO registerDTO,
+		[FromQuery]Guid invitationKey)
 	{
+		Invitation? invitation = await _invitationRepository.ReadAsync(invitationKey);
+		
+		if (invitation == null)
+			return BadRequest("Invalid invitation key!");
+			
+		if (invitation.Expires < DateTime.UtcNow)
+			return BadRequest("The invitation has expired!");
+			
+		if (invitation.IsActivated)
+			return BadRequest("The invitation has already been activated!");
+		
 		if (await _userManager.Users.AnyAsync(u => u.UserName == registerDTO.UserName))
 			return BadRequest("Username is taken!");
 
@@ -48,6 +66,11 @@ public class AccountController : BaseApiController
 		if (!roleResult.Succeeded)
 			return BadRequest(roleResult.Errors);
 			
+		invitation.IsActivated = true;
+		
+		_invitationRepository.Update(invitation);
+		await _invitationRepository.SaveAsync();
+		
 		return new UserDTO
 		{
 			UserName = registerDTO.UserName,
@@ -58,8 +81,7 @@ public class AccountController : BaseApiController
 	[HttpPost("login")]
 	public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
 	{
-		var user = await _userManager.Users
-			.SingleOrDefaultAsync(u => u.UserName == loginDTO.UserName.ToLower());
+		var user = await _userManager.GetUserByUserName(loginDTO.UserName);
 
 		if (user == null)
 			return Unauthorized("Invalid username!");
@@ -74,5 +96,26 @@ public class AccountController : BaseApiController
 			UserName = loginDTO.UserName,
 			Token = await _tokenService.CreateToken(user),
 		};
+	}
+	
+	[Authorize(Roles = RoleConstant.Administrator)]
+	[HttpGet("generate-invitation-key")]
+	public async Task<ActionResult<Guid>> GenerateInvitationKey(DateTime expirationDate)
+	{
+		var loggedInUser = await _userManager.GetLoggedInUserAsync(User);
+		
+		if(loggedInUser == null) 
+			return Unauthorized("Logged in user's username claim not found!");
+		
+		Invitation invitation = new Invitation 
+		{ 
+			Expires = expirationDate, 
+			CreatedByUser = loggedInUser
+		};
+		
+		await _invitationRepository.CreateAsync(invitation);
+		await _invitationRepository.SaveAsync();
+		
+		return invitation.Key;
 	}
 }

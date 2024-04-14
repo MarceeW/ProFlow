@@ -1,6 +1,6 @@
 ﻿using API.Data;
 using API.DTO;
-using API.Entities;
+using API.Models;
 using AutoMapper;
 
 namespace API.Helpers;
