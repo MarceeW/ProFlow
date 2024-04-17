@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Invitations : Migration
+    public partial class Invites : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<Guid>(
-                name: "InvitationId",
+                name: "InvitationKey",
                 table: "AspNetUsers",
                 type: "uniqueidentifier",
                 nullable: true);
@@ -31,16 +31,14 @@ namespace API.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_InvitationId",
+                name: "IX_AspNetUsers_InvitationKey",
                 table: "AspNetUsers",
-                column: "InvitationId",
-                unique: true,
-                filter: "[InvitationId] IS NOT NULL");
+                column: "InvitationKey");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Invitations_InvitationId",
+                name: "FK_AspNetUsers_Invitations_InvitationKey",
                 table: "AspNetUsers",
-                column: "InvitationId",
+                column: "InvitationKey",
                 principalTable: "Invitations",
                 principalColumn: "Key");
         }
@@ -49,18 +47,18 @@ namespace API.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Invitations_InvitationId",
+                name: "FK_AspNetUsers_Invitations_InvitationKey",
                 table: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Invitations");
 
             migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_InvitationId",
+                name: "IX_AspNetUsers_InvitationKey",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "InvitationId",
+                name: "InvitationKey",
                 table: "AspNetUsers");
         }
     }

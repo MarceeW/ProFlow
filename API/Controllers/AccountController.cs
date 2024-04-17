@@ -54,7 +54,7 @@ public class AccountController : BaseApiController
 		if (await _userManager.Users.AnyAsync(u => u.UserName == registerDTO.UserName))
 			return BadRequest("Username is taken!");
 
-		var user = new User { UserName = registerDTO.UserName.ToLower() };
+		var user = new User { UserName = registerDTO.UserName.ToLower(), Invitation = invitation };
 
 		var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
@@ -100,22 +100,39 @@ public class AccountController : BaseApiController
 	
 	[Authorize(Roles = RoleConstant.Administrator)]
 	[HttpGet("generate-invitation-key")]
-	public async Task<ActionResult<Guid>> GenerateInvitationKey(DateTime expirationDate)
+	public async Task<ActionResult<InvitationDTO>> GenerateInvitationKey(DateTime expirationDate)
 	{
+		if (await _invitationRepository.IsValidInvitationExistsAsync()) 
+			return BadRequest("You can't generate a new invitation until atleast one expires!");
+		
 		var loggedInUser = await _userManager.GetLoggedInUserAsync(User);
 		
 		if(loggedInUser == null) 
 			return Unauthorized("Logged in user's username claim not found!");
 		
-		Invitation invitation = new Invitation 
-		{ 
-			Expires = expirationDate, 
-			CreatedByUser = loggedInUser
-		};
+		Invitation invitation = new Invitation { Expires = expirationDate };
 		
 		await _invitationRepository.CreateAsync(invitation);
 		await _invitationRepository.SaveAsync();
 		
-		return invitation.Key;
+		return new InvitationDTO 
+		{
+			Key = invitation.Key,
+			Expires = invitation.Expires,
+			IsActivated = invitation.IsActivated,
+		};
+	}
+	
+	[Authorize(Roles = RoleConstant.Administrator)]
+	[HttpGet("invitations")]
+	public async Task<IEnumerable<InvitationDTO>> GetInvitations()
+	{
+		return await _invitationRepository.GetDTOsAsync();
+	}
+	
+	[HttpGet("users")]
+	public async Task<IEnumerable<User>> GetUsers()
+	{
+		return await _userManager.Users.ToListAsync();
 	}
 }

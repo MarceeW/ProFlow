@@ -13,13 +13,12 @@ public class DataContext : IdentityDbContext<User, Role, string>
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);
-		
-		builder.Entity<Invitation>()
-			.HasOne(i => i.CreatedByUser)
-			.WithOne(u => u.Invitation)
-			.HasForeignKey<User>(u => u.InvitationId)
-			.IsRequired(false);
 
+		builder.Entity<User>()
+			.Property(u => u.InvitationKey)
+			.HasColumnName("InvitationKey")
+			.IsRequired(false);
+			
 		builder.Entity<User>()
 			.HasMany(ur => ur.UserRoles)
 			.WithOne(u => u.User)

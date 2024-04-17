@@ -17,52 +17,52 @@ public class AbstractRepository<T, K> : IRepository<T, K>
 		_values = values;
 	}
 
-    public void Create(T entity)
+    public virtual void Create(T entity)
     {
         _values.Add(entity);
     }
 
-    public async Task CreateAsync(T entity)
+    public virtual async Task CreateAsync(T entity)
 	{
 		await _values.AddAsync(entity);
 	}
 
-	public void Delete(T entity)
+	public virtual void Delete(T entity)
 	{
 		_values.Remove(entity);
 	}
 
-    public IEnumerable<T> Get()
+    public virtual IEnumerable<T> Get()
     {
         return _values.ToList();
     }
 
-    public async Task<IEnumerable<T>> GetAsync()
+    public virtual async Task<IEnumerable<T>> GetAsync()
 	{
 		return await _values.ToListAsync();
 	}
 
-    public T? Read(K key)
+    public virtual T? Read(K key)
     {
         return _values.Find(key);
     }
 
-    public async Task<T?> ReadAsync(K key)
+    public virtual async Task<T?> ReadAsync(K key)
     {
         return await _values.FindAsync(key);
     }
 
-    public void Save()
+    public virtual void Save()
     {
         _dataContext.SaveChanges();
     }
 
-    public async Task SaveAsync()
+    public virtual async Task SaveAsync()
 	{
 		await _dataContext.SaveChangesAsync();
 	}
 
-	public void Update(T entity)
+	public virtual void Update(T entity)
 	{
 		_dataContext.Update(entity);
 	}

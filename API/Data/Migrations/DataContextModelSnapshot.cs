@@ -88,8 +88,9 @@ namespace API.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("InvitationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid?>("InvitationKey")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("InvitationKey");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -126,9 +127,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InvitationId")
-                        .IsUnique()
-                        .HasFilter("[InvitationId] IS NOT NULL");
+                    b.HasIndex("InvitationKey");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -266,8 +265,8 @@ namespace API.Data.Migrations
             modelBuilder.Entity("API.Models.User", b =>
                 {
                     b.HasOne("API.Models.Invitation", "Invitation")
-                        .WithOne("CreatedByUser")
-                        .HasForeignKey("API.Models.User", "InvitationId");
+                        .WithMany()
+                        .HasForeignKey("InvitationKey");
 
                     b.Navigation("Invitation");
                 });
@@ -325,12 +324,6 @@ namespace API.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("API.Models.Invitation", b =>
-                {
-                    b.Navigation("CreatedByUser")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>

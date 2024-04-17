@@ -6,8 +6,7 @@ namespace API.Models;
 public class User : IdentityUser
 {
 	public virtual ICollection<UserRole>? UserRoles { get; set; }
-	[ForeignKey("Invitation")]
-	public Guid? InvitationId { get; set; }
-	[JsonIgnore]
+	[ForeignKey(nameof(InvitationKey))]
 	public virtual Invitation? Invitation { get; set; }
+	public Guid? InvitationKey { get; set; }
 }
