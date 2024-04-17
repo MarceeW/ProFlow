@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 
 import { AccountService } from './_services/account.service';
 import { User } from './_models/user';
 import { LoginComponent } from './account/login/login.component';
-import { NavComponent } from './nav/nav.component';
+import { MainNavComponent } from './main-nav/main-nav.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
     LoginComponent,
-    NavComponent,
+    MainNavComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
