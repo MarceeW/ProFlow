@@ -5,3 +5,6 @@
   max-width: 35%;
   gap: .4rem;
 }
+.warn-icon {
+  transform: scale(2);
+}

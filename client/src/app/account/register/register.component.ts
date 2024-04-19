@@ -10,9 +10,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { AccountService } from '../../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { User } from '../../_models/user';
 import { InvitationService } from '../../_services/invitation.service';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-register',
@@ -23,9 +25,12 @@ import { InvitationService } from '../../_services/invitation.service';
     MatDatepickerModule,
     MatButtonModule,
     MatGridListModule,
+    MatDividerModule,
+    MatIconModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -59,7 +64,7 @@ export class RegisterComponent implements OnInit {
       this.invitationValid = false;
       return;
     }
-    
+
     this.maxDate.setDate(this.maxDate.getDate() - 1);
     this.invitationService.readInvitation(this.invitationKey).pipe().subscribe({
       next: invitation => {

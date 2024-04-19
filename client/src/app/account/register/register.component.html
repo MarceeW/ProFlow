@@ -73,6 +73,13 @@
 </div>
 <ng-template #notValid>
   <div class="container-fluid p-3">
-    <h1 class="mat-headline-3 pt-3">Your invitation is not valid</h1>
+    <div class="p-3">
+      <mat-icon color="warn" class="warn-icon">warning</mat-icon>
+    </div>
+    <h1 class="mat-headline-3 pt-3">
+      Your invitation is not valid!
+    </h1>
+    <mat-divider class="pb-3"></mat-divider>
+    <button mat-flat-button color="primary" routerLink="/login">Back to login screen!</button>
   </div>
 </ng-template>
