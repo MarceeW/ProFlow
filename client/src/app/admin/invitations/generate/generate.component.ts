@@ -66,11 +66,12 @@ export class GenerateComponent implements OnInit {
     date.setUTCMinutes(59);
     date.setUTCSeconds(59);
 
-    this.generateEvent.emit();
-
     this.invitationService.generateInvitation(date).pipe(take(1))
-      .subscribe({
-        next: invite => this.inviteKey = invite.key
+    .subscribe({
+      next: invite => {
+          this.inviteKey = invite.key
+          this.generateEvent.emit();
+        }
       });
   }
 }

@@ -22,7 +22,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               }
               throw modelStateErrors.flat();
             } else {
-              toastr.error(error.error);
+              const errorMessage = error.error[0]["description"] ?
+                error.error[0]["description"] : error.error;
+                toastr.error(errorMessage);
               break;
             }
           case 401:

@@ -3,7 +3,7 @@
   <ng-container matColumnDef="key">
     <th mat-header-cell *matHeaderCellDef>Key</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-button [disabled]="element.isActivated" color="primary" title="Copy to clipboard" [cdkCopyToClipboard]="element.key | invitationLink">
+      <button mat-button [disabled]="element.isActivated || (element.expires | dateExpired)" color="primary" title="Copy to clipboard" [cdkCopyToClipboard]="element.key | invitationLink">
         {{element.key}}
       </button>
     </td>
@@ -17,12 +17,21 @@
   </ng-container>
 
   <ng-container matColumnDef="isActivated">
-    <th mat-header-cell *matHeaderCellDef>Active</th>
+    <th mat-header-cell *matHeaderCellDef>Activated</th>
     <td mat-cell *matCellDef="let element">
-      <mat-icon *ngIf="!element.isActivated; else elseBlock">check</mat-icon>
+      <mat-icon *ngIf="element.isActivated; else elseBlock">check</mat-icon>
       <ng-template #elseBlock>
         <mat-icon>dangerous</mat-icon>
       </ng-template>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <button [disabled]="element.isActivated || !(element.expires | dateExpired)" mat-icon-button (click)="delete(element.key)">
+        <mat-icon>delete</mat-icon>
+      </button>
     </td>
   </ng-container>
 

@@ -4,6 +4,7 @@ import { loginGuard } from './_guards/login.guard';
 import { LoginComponent } from './account/login/login.component';
 import { adminGuard } from './_guards/admin.guard';
 import { AdminMainComponent } from './admin/admin-main/admin-main.component';
+import { RegisterComponent } from './account/register/register.component';
 
 export const routes: Routes = [
   { path: '',
@@ -23,5 +24,10 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [loginGuard],
     component: LoginComponent
+  },
+  { path: 'register',
+    runGuardsAndResolvers: 'always',
+    canActivate: [loginGuard],
+    component: RegisterComponent
   }
 ];

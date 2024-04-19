@@ -1,12 +1,87 @@
-import { Component } from '@angular/core';
+import { RegisterModel } from './../../_models/registerModel';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RegisterErrorStateMatcher } from './register-error-state-matcher';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { AccountService } from '../../_services/account.service';
+import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User } from '../../_models/user';
+import { InvitationService } from '../../_services/invitation.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    MatGridListModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
+  registerForm = new FormGroup(
+    {
+      userName: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      dateOfBirth: new FormControl(new Date(), [Validators.required]),
+    }
+  );
+  matcher = new RegisterErrorStateMatcher();
+  maxDate = new Date();
+  invitationKey: string | null = null;
+  invitationValid = true;
 
+  constructor(
+      public invitationService: InvitationService,
+      private accountService: AccountService,
+      private toastr: ToastrService,
+      private router: Router,
+      private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.getInvitationKey();
+    if (this.invitationKey == null) {
+      this.invitationValid = false;
+      return;
+    }
+    
+    this.maxDate.setDate(this.maxDate.getDate() - 1);
+    this.invitationService.readInvitation(this.invitationKey).pipe().subscribe({
+      next: invitation => {
+        this.invitationValid = !invitation.isActivated && new Date() < new Date(invitation.expires)
+         && this.invitationKey != null;
+      }
+    });
+  }
+
+  register() {
+    if (this.registerForm.valid) {
+      this.accountService.register(this.registerForm.value as RegisterModel, this.invitationKey)
+        .subscribe({
+          next: (user: User) => {
+            this.router.navigateByUrl('');
+            this.toastr.success(`Welcome to ProFlow, ${user.userName}!`);
+          }
+        });
+    }
+  }
+
+  getInvitationKey() {
+    this.invitationKey = this.route.snapshot.queryParamMap.get('invitationKey');
+  }
 }

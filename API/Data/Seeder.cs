@@ -25,7 +25,11 @@ public static class Seeder
 				
 		var admin = new User
 		{
-			UserName = "admin"
+			UserName = "admin",
+			FirstName = "",
+			LastName = "",
+			Email = "admin@admin.com",
+			DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow),
 		};
 		
 		await userManager.CreateAsync(admin, "admin");

@@ -1,5 +1,4 @@
 ﻿using API.Constants;
-using API.Data;
 using API.DTO;
 using API.Models;
 using API.Interfaces;
@@ -8,9 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using API.Repositories;
-using System.Security.Claims;
 using API.Extensions;
+using System.Globalization;
 
 namespace API.Controllers;
 
@@ -18,26 +16,24 @@ public class AccountController : BaseApiController
 {
 	private readonly UserManager<User> _userManager;
 	private readonly RoleManager<Role> _roleManager;
-	private readonly IMapper _mapper;
 	private readonly ITokenService _tokenService;
 	private readonly IInvitationRepository _invitationRepository;
 
 	public AccountController(
 		UserManager<User> userManager,
 		RoleManager<Role> roleManager,
-		IMapper mapper, 
 		ITokenService tokenService,
 		IInvitationRepository invitationRepository)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
-		_mapper = mapper;
 		_tokenService = tokenService;
 		_invitationRepository = invitationRepository;
 	}
 
 	[HttpPost("register")]
-	public async Task<ActionResult<UserDTO>> Register([FromBody]RegisterDTO registerDTO,
+	public async Task<ActionResult<UserDTO>> Register(
+		[FromBody]RegisterDTO registerDTO,
 		[FromQuery]Guid invitationKey)
 	{
 		Invitation? invitation = await _invitationRepository.ReadAsync(invitationKey);
@@ -54,7 +50,16 @@ public class AccountController : BaseApiController
 		if (await _userManager.Users.AnyAsync(u => u.UserName == registerDTO.UserName))
 			return BadRequest("Username is taken!");
 
-		var user = new User { UserName = registerDTO.UserName.ToLower(), Invitation = invitation };
+		var textInfo = new CultureInfo("en-US",false).TextInfo;
+		var user = new User 
+		{ 
+			UserName = registerDTO.UserName.ToLower(),
+			Invitation = invitation,
+			FirstName = textInfo.ToTitleCase(registerDTO.FirstName),
+			LastName = textInfo.ToTitleCase(registerDTO.LastName),
+			Email = registerDTO.Email,
+			DateOfBirth = DateOnly.FromDateTime(registerDTO.DateOfBirth),
+		};
 
 		var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
@@ -81,7 +86,7 @@ public class AccountController : BaseApiController
 	[HttpPost("login")]
 	public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
 	{
-		var user = await _userManager.GetUserByUserName(loginDTO.UserName);
+		var user = await _userManager.GetUserByUserName(loginDTO.UserName.ToLower());
 
 		if (user == null)
 			return Unauthorized("Invalid username!");
@@ -103,7 +108,7 @@ public class AccountController : BaseApiController
 	public async Task<ActionResult<InvitationDTO>> GenerateInvitationKey(DateTime expirationDate)
 	{
 		if (await _invitationRepository.IsValidInvitationExistsAsync()) 
-			return BadRequest("You can't generate a new invitation until atleast one expires!");
+			return BadRequest("You can't generate a new invitation until there is a valid key!");
 		
 		var loggedInUser = await _userManager.GetLoggedInUserAsync(User);
 		
@@ -130,9 +135,18 @@ public class AccountController : BaseApiController
 		return await _invitationRepository.GetDTOsAsync();
 	}
 	
-	[HttpGet("users")]
-	public async Task<IEnumerable<User>> GetUsers()
+	[HttpGet("invitation/{key}")]
+	public async Task<ActionResult<InvitationDTO>> ReadInvitation(Guid key)
 	{
-		return await _userManager.Users.ToListAsync();
+		return await _invitationRepository.ReadInvitationDTOAsync(key);
+	}
+	
+	[Authorize(Roles = RoleConstant.Administrator)]
+	[HttpDelete("delete-invitation/{key}")]
+	public async Task<ActionResult<Guid>> GetInvitations(Guid key)
+	{
+		_invitationRepository.Delete(await _invitationRepository.ReadAsync(key));
+		await _invitationRepository.SaveAsync();
+		return Ok(key);
 	}
 }

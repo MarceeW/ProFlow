@@ -1,11 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, map, take, takeLast } from 'rxjs';
+import { BehaviorSubject, map, take } from 'rxjs';
 import { User } from '../_models/user';
 import { LoginModel } from '../_models/loginModel';
 import { RegisterModel } from '../_models/registerModel';
 import { Roles } from '../_enums/roles.enum';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,9 @@ export class AccountService {
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+      private http: HttpClient,
+      private route: ActivatedRoute) { }
 
   login(user: LoginModel) {
     return this.http.post<User>(
@@ -30,14 +33,16 @@ export class AccountService {
           if (user) {
             this.setCurrentUser(user);
           }
+          return user;
         })
       );
   }
 
-  register(user: RegisterModel) {
+  register(registerModel: RegisterModel, invitationKey: string | null) {
     return this.http.post<User>(
       this.apiUrl + 'account/register',
-      user
+      registerModel,
+      { params: new HttpParams().set("invitationKey", invitationKey == null ? '' : invitationKey) }
     )
       .pipe(
         map((response: User) => {
@@ -45,6 +50,7 @@ export class AccountService {
           if (user) {
             this.setCurrentUser(user);
           }
+          return user;
         })
       );
   }

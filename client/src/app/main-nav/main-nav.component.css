@@ -1,5 +1,5 @@
 .sidenav-container {
-  height: 100%;
+  height: calc(100% - 65px);
 }
 
 .sidenav {
@@ -27,6 +27,8 @@
 .navbar {
   user-select: none;
   z-index: 2 !important;
+  min-height: 65px !important;
+  max-height: 65px !important;
 }
 
 .navbar-brand {

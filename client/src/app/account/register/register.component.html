@@ -1,1 +1,78 @@
-<p>register works!</p>
+<div class="container p-3" *ngIf="invitationValid else notValid">
+  <div class="row">
+    <h1 class="mat-headline-3 pt-3">Register</h1>
+  </div>
+  <div class="row">
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="register-form">
+      <mat-form-field class="form-field">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" matInput formControlName="userName" [errorStateMatcher]="matcher"
+               placeholder="proflowUser">
+        @if (registerForm.get('userName')?.hasError('required')) {
+          <mat-error>Username is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" matInput formControlName="password" [errorStateMatcher]="matcher"
+               placeholder="password">
+        @if (registerForm.get('password')?.hasError('required')) {
+          <mat-error>Password is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>First name</mat-label>
+        <input matInput type="text" matInput #firstName formControlName="firstName" [errorStateMatcher]="matcher"
+                placeholder="John">
+        @if (registerForm.get('firstName')?.hasError('required')) {
+          <mat-error>First name is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Last name</mat-label>
+        <input matInput type="text" matInput #firstName formControlName="lastName" [errorStateMatcher]="matcher"
+                placeholder="Doe">
+        @if (registerForm.get('lastName')?.hasError('required')) {
+          <mat-error>Last name is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput type="email" matInput formControlName="email" [errorStateMatcher]="matcher"
+               placeholder="example@proflow.com">
+        @if (registerForm.get('email')?.hasError('email') && !registerForm.get('email')?.hasError('required')) {
+          <mat-error>Please enter a valid email address</mat-error>
+        }
+        @if (registerForm.get('email')?.hasError('required')) {
+          <mat-error>Email is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Date of birth</mat-label>
+        <input matInput [matDatepicker]="datepicker" [max]="maxDate" formControlName="dateOfBirth"
+              [errorStateMatcher]="matcher">
+        @if (registerForm.get('dateOfBirth')?.hasError('required')) {
+          <mat-error>Date of birth is <strong>required</strong></mat-error>
+        }
+        <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker>
+          <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Cancel</button>
+            <button mat-raised-button color="primary" matDatepickerApply>Set</button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit">Submit registration</button>
+    </form>
+  </div>
+</div>
+<ng-template #notValid>
+  <div class="container-fluid p-3">
+    <h1 class="mat-headline-3 pt-3">Your invitation is not valid</h1>
+  </div>
+</ng-template>

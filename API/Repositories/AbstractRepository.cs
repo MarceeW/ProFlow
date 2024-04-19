@@ -17,12 +17,12 @@ public class AbstractRepository<T, K> : IRepository<T, K>
 		_values = values;
 	}
 
-    public virtual void Create(T entity)
-    {
-        _values.Add(entity);
-    }
+	public virtual void Create(T entity)
+	{
+		_values.Add(entity);
+	}
 
-    public virtual async Task CreateAsync(T entity)
+	public virtual async Task CreateAsync(T entity)
 	{
 		await _values.AddAsync(entity);
 	}
@@ -32,32 +32,38 @@ public class AbstractRepository<T, K> : IRepository<T, K>
 		_values.Remove(entity);
 	}
 
-    public virtual IEnumerable<T> Get()
-    {
-        return _values.ToList();
-    }
+	public virtual IEnumerable<T> Get()
+	{
+		return _values.ToList();
+	}
 
-    public virtual async Task<IEnumerable<T>> GetAsync()
+	public virtual async Task<IEnumerable<T>> GetAsync()
 	{
 		return await _values.ToListAsync();
 	}
 
-    public virtual T? Read(K key)
-    {
-        return _values.Find(key);
-    }
+	public virtual T Read(K key)
+	{
+		T? t = _values.Find(key);
+		if (t == null)
+			throw new KeyNotFoundException();
+		return t;
+	}
 
-    public virtual async Task<T?> ReadAsync(K key)
-    {
-        return await _values.FindAsync(key);
-    }
+	public virtual async Task<T> ReadAsync(K key)
+	{
+		T? t = await _values.FindAsync(key);
+		if (t == null)
+			throw new KeyNotFoundException();
+		return t;
+	}
 
-    public virtual void Save()
-    {
-        _dataContext.SaveChanges();
-    }
+	public virtual void Save()
+	{
+		_dataContext.SaveChanges();
+	}
 
-    public virtual async Task SaveAsync()
+	public virtual async Task SaveAsync()
 	{
 		await _dataContext.SaveChangesAsync();
 	}

@@ -9,4 +9,9 @@ public class User : IdentityUser
 	[ForeignKey(nameof(InvitationKey))]
 	public virtual Invitation? Invitation { get; set; }
 	public Guid? InvitationKey { get; set; }
+	public required string FirstName { get; set; }
+	public required string LastName { get; set; }
+	public required DateOnly DateOfBirth { get; set; }
+	public DateTime Created { get; set; } = DateTime.UtcNow;
+	public DateTime LastSeen { get; set; } = DateTime.UtcNow;
 }
