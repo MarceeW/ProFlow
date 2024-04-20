@@ -25,9 +25,6 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.HasColumnName("InvitationKey")
 			.IsRequired(false);
 			
-		builder.Entity<UserRole>()
-			.HasKey(ur => new { ur.UserId, ur.RoleId });
-			
 		builder.Entity<User>()
 			.HasMany(ur => ur.UserRoles)
 			.WithOne(u => u.User)

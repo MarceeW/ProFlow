@@ -39,7 +39,7 @@ namespace API.Data.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("Invitations");
+                    b.ToTable("Invitations", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>
