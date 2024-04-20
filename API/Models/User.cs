@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 namespace API.Models;
-public class User : IdentityUser
+public class User : IdentityUser<Guid>
 {
 	public virtual ICollection<UserRole>? UserRoles { get; set; }
 	[ForeignKey(nameof(InvitationKey))]
