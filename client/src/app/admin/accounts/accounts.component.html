@@ -1,0 +1,11 @@
+<button (click)="toggle()">toggle</button>
+<div class="d-flex" style="overflow-x: hidden;">
+  <div [@listInOut]="active ? 'closed' : 'open'">
+    <app-list></app-list>
+  </div>
+  <ng-container *ngIf="active">
+    <div @editInOut>
+      <app-edit></app-edit>
+    </div>
+  </ng-container>
+</div>

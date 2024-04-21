@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoginModel } from '../../_models/loginModel';
+import { LoginModel } from '../../_models/login-model';
 import { AsyncPipe } from '@angular/common';
 import { AccountService } from '../../_services/account.service';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';

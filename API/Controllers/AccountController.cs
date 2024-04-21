@@ -18,21 +18,24 @@ public class AccountController : BaseApiController
 	private readonly RoleManager<Role> _roleManager;
 	private readonly ITokenService _tokenService;
 	private readonly IInvitationRepository _invitationRepository;
+	private readonly IUserRepository _userRepository;
 
 	public AccountController(
 		UserManager<User> userManager,
 		RoleManager<Role> roleManager,
 		ITokenService tokenService,
-		IInvitationRepository invitationRepository)
+		IInvitationRepository invitationRepository,
+		IUserRepository userRepository)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
 		_tokenService = tokenService;
 		_invitationRepository = invitationRepository;
+		_userRepository = userRepository;
 	}
 
 	[HttpPost("register")]
-	public async Task<ActionResult<UserDTO>> Register(
+	public async Task<ActionResult<AuthUserDTO>> Register(
 		[FromBody]RegisterDTO registerDTO,
 		[FromQuery]Guid invitationKey)
 	{
@@ -76,7 +79,7 @@ public class AccountController : BaseApiController
 		_invitationRepository.Update(invitation);
 		await _invitationRepository.SaveAsync();
 		
-		return new UserDTO
+		return new AuthUserDTO
 		{
 			UserName = registerDTO.UserName,
 			Token = await _tokenService.CreateToken(user),
@@ -84,7 +87,7 @@ public class AccountController : BaseApiController
 	}
 
 	[HttpPost("login")]
-	public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
+	public async Task<ActionResult<AuthUserDTO>> Login(LoginDTO loginDTO)
 	{
 		var user = await _userManager.GetUserByUserName(loginDTO.UserName.ToLower());
 
@@ -96,7 +99,10 @@ public class AccountController : BaseApiController
 		if (!result)
 			return Unauthorized("Invalid password!");
 			
-		return new UserDTO
+		user.LastSeen = DateTime.Now;
+		await _userManager.UpdateAsync(user);
+		
+		return new AuthUserDTO
 		{
 			UserName = loginDTO.UserName,
 			Token = await _tokenService.CreateToken(user),
@@ -107,9 +113,6 @@ public class AccountController : BaseApiController
 	[HttpGet("generate-invitation-key")]
 	public async Task<ActionResult<InvitationDTO>> GenerateInvitationKey(DateTime expirationDate)
 	{
-		if (await _invitationRepository.IsValidInvitationExistsAsync()) 
-			return BadRequest("You can't generate a new invitation until there is a valid key!");
-		
 		var loggedInUser = await _userManager.GetLoggedInUserAsync(User);
 		
 		if(loggedInUser == null) 
@@ -133,6 +136,19 @@ public class AccountController : BaseApiController
 	public async Task<IEnumerable<InvitationDTO>> GetInvitations()
 	{
 		return await _invitationRepository.GetDTOsAsync();
+	}
+	
+	[Authorize(Roles = RoleConstant.Administrator)]
+	[HttpGet]
+	public async Task<IEnumerable<UserDTO>> GetAccounts()
+	{
+		return await _userRepository.GetUsersAsync();
+	}
+	[Authorize(Roles = RoleConstant.Administrator)]
+	[HttpGet("{query}")]
+	public async Task<IEnumerable<UserDTO>> GetAccountsByQuery(string query)
+	{
+		return await _userRepository.GetUsersByQueryAsync(query.ToLower());
 	}
 	
 	[HttpGet("invitation/{key}")]

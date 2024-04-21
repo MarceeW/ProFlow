@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using API.Data;
-
-namespace API.DTO;
+﻿namespace API.Models;
 
 public class UserDTO
 {
-	[Required]
+	public required ICollection<string> Roles { get; set; }
+	public required Invitation Invitation { get; set; }
 	public required string UserName { get; set; }
-	[Required]
-	public required string Token { get; set; }
+	public required string FirstName { get; set; }
+	public required string LastName { get; set; }
+	public required DateOnly DateOfBirth { get; set; }
+	public DateTime Created { get; set; }
+	public DateTime LastSeen { get; set; }
 }

@@ -1,4 +1,4 @@
-import { RegisterModel } from './../../_models/registerModel';
+import { RegisterModel } from '../../_models/register-model';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegisterErrorStateMatcher } from './register-error-state-matcher';
@@ -11,7 +11,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { AccountService } from '../../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { User } from '../../_models/user';
+import { AuthUser } from '../../_models/auth-user';
 import { InvitationService } from '../../_services/invitation.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -78,7 +78,7 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       this.accountService.register(this.registerForm.value as RegisterModel, this.invitationKey)
         .subscribe({
-          next: (user: User) => {
+          next: (user: AuthUser) => {
             this.router.navigateByUrl('');
             this.toastr.success(`Welcome to ProFlow, ${user.userName}!`);
           }

@@ -15,6 +15,10 @@ public static class Seeder
 		var roles = new List<Role>
 		{
 			new Role { Name = RoleConstant.Administrator },
+			new Role { Name = RoleConstant.ProjectManager },
+			new Role { Name = RoleConstant.TeamLeader },
+			new Role { Name = RoleConstant.FunctionalManager },
+			new Role { Name = RoleConstant.TeamMember },
 			new Role { Name = RoleConstant.User },
 		};
 		
@@ -26,8 +30,8 @@ public static class Seeder
 		var admin = new User
 		{
 			UserName = "admin",
-			FirstName = "",
-			LastName = "",
+			FirstName = "admin",
+			LastName = "admin",
 			Email = "admin@admin.com",
 			DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow),
 		};

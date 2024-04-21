@@ -40,7 +40,7 @@ export class ListComponent implements OnInit {
 
   getInvitations() {
     this.invitationService.getInvitations().pipe().subscribe({
-      next: invitations => console.log(this.invitations = invitations)
+      next: invitations => this.invitations = invitations
     });
   }
 

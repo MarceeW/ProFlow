@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { AccountService } from './_services/account.service';
-import { User } from './_models/user';
+import { AuthUser } from './_models/auth-user';
 import { LoginComponent } from './account/login/login.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
 
@@ -25,7 +25,7 @@ export class AppComponent {
   }
 
   setCurrentUser() {
-    const user: User | null = this.accountService.getCurrentUser();
+    const user: AuthUser | null = this.accountService.getCurrentUser();
     if(!user)
       return;
 

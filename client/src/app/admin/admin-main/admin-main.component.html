@@ -1,4 +1,5 @@
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+<mat-tab-group (selectedIndexChange)="onTabChange($event)"
+  mat-stretch-tabs="false" mat-align-tabs="start" [(selectedIndex)]="activeTabIndex">
   <mat-tab label="Invitation">
     <ng-template matTabContent>
       <app-invitations></app-invitations>
@@ -6,7 +7,7 @@
   </mat-tab>
   <mat-tab label="Accounts">
     <ng-template matTabContent>
-      Accounts
+      <app-accounts></app-accounts>
     </ng-template>
   </mat-tab>
 </mat-tab-group>
