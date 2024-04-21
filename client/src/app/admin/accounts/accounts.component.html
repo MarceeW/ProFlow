@@ -1,11 +1,10 @@
-<button (click)="toggle()">toggle</button>
 <div class="d-flex" style="overflow-x: hidden;">
-  <div [@listInOut]="active ? 'closed' : 'open'">
-    <app-list></app-list>
+  <div [@listInOut]="profileOnEdit ? 'closed' : 'open'">
+    <app-list #list (editEvent)="toggleEdit()"></app-list>
   </div>
-  <ng-container *ngIf="active">
+  <ng-container *ngIf="profileOnEdit">
     <div @editInOut>
-      <app-edit></app-edit>
+      <app-edit [model]="list.selected$ | async"></app-edit>
     </div>
   </ng-container>
 </div>

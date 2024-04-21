@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from '../../../_models/user';
 import { AccountService } from '../../../_services/account.service';
 import { MatTableModule } from '@angular/material/table';
@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -25,9 +26,15 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './list.component.css'
 })
 export class ListComponent implements OnInit {
-  displayedColumns: string[] = ["roles", "name", "userName"]
+  displayedColumns: string[] = ["roles", "name", "userName", "actions"]
   accounts: User[] = [];
   filterString: string = "";
+    
+  @Output()
+  editEvent = new EventEmitter<null>();
+
+  private currentUserSource = new BehaviorSubject<User | null>(null);
+  selected$: Observable<User | null> = this.currentUserSource.asObservable();
 
   constructor(private accountService: AccountService) { }
 
@@ -41,5 +48,10 @@ export class ListComponent implements OnInit {
     this.accountService.getFilteredUsers(this.filterString).pipe().subscribe({
       next: accounts => this.accounts = accounts
     });
+  }
+
+  onEdit(user: User) {
+    this.currentUserSource.next(user);
+    this.editEvent.emit();
   }
 }

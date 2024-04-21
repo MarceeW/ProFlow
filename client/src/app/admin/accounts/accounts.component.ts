@@ -20,24 +20,24 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     trigger('editInOut', [
       transition(':enter', [
         style({transform: 'translateX(100%)'}),
-        animate('500ms ease-in',style({transform: 'translateX(0%)'}))
+        animate('.2s ease-in',style({transform: 'translateX(0%)'}))
       ]),
       transition(':leave', [
-        animate('500ms ease-in', style({transform: 'translateX(100%)'}))
+        animate('.2s ease-in', style({transform: 'translateX(100%)'}))
       ])
     ]),
     trigger('listInOut', [
       state('open', style({width: '100%'})),
       state('closed', style({width: '50%'})),
-      transition('open => closed', [animate('.5s')]),
-      transition('closed => open', [animate('.5s')])
+      transition('open => closed', [animate('.2s')]),
+      transition('closed => open', [animate('.2s')])
     ]),
   ]
 })
 export class AccountsComponent {
-  active: boolean = false;
+  profileOnEdit: boolean = false;
 
-  toggle() {
-    this.active = !this.active;
+  toggleEdit() {
+    this.profileOnEdit = !this.profileOnEdit;
   }
 }
