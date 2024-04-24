@@ -1,0 +1,9 @@
+.role {
+  background-color: rgb(0, 255, 200);
+  border-radius: 25px;
+  padding: 3px 10px;
+  font-weight: 500;
+}
+.role-admin {
+  background-color: rgb(255, 0, 0);
+}

@@ -3,6 +3,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { InvitationsComponent } from '../invitations/invitations.component';
 import { AccountsComponent } from '../accounts/accounts.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CompanySettingsComponent } from '../company-settings/company-settings.component';
 
 @Component({
   selector: 'app-admin-main',
@@ -10,7 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   imports: [
     MatTabsModule,
     InvitationsComponent,
-    AccountsComponent
+    AccountsComponent,
+    CompanySettingsComponent
   ],
   templateUrl: './admin-main.component.html',
   styleUrl: './admin-main.component.css'

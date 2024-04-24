@@ -1,43 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountService } from '../../_services/account.service';
-import { User } from '../../_models/user';
 import { ListComponent } from './list/list.component';
 import { CommonModule } from '@angular/common';
-import { EditComponent } from './edit/edit.component';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Role } from '../../_models/role';
+import { ManageComponent } from './manage/manage.component';
+import { User } from '../../_models/user';
+import { AdminService } from '../../_services/admin.service';
 
 @Component({
   selector: 'app-accounts',
   standalone: true,
   imports: [
     ListComponent,
-    EditComponent,
+    ManageComponent,
     CommonModule
   ],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.css',
-  animations: [
-    trigger('editInOut', [
-      transition(':enter', [
-        style({transform: 'translateX(100%)'}),
-        animate('.2s ease-in',style({transform: 'translateX(0%)'}))
-      ]),
-      transition(':leave', [
-        animate('.2s ease-in', style({transform: 'translateX(100%)'}))
-      ])
-    ]),
-    trigger('listInOut', [
-      state('open', style({width: '100%'})),
-      state('closed', style({width: '50%'})),
-      transition('open => closed', [animate('.2s')]),
-      transition('closed => open', [animate('.2s')])
-    ]),
-  ]
 })
-export class AccountsComponent {
-  profileOnEdit: boolean = false;
+export class AccountsComponent implements OnInit {
+  profileUnderManage: boolean = false;
+  availableRoles!: Role[];
+  editedUser: User | null = null;
 
-  toggleEdit() {
-    this.profileOnEdit = !this.profileOnEdit;
+  constructor(private adminService: AdminService) { }
+
+  ngOnInit(): void {
+    this.adminService.getRoles().pipe().subscribe({
+      next: roles => this.availableRoles = roles
+    });
+  }
+
+  toggleManage(value: boolean) {
+    this.profileUnderManage = value;
+  }
+
+  setEditedUser(user: User | null) {
+    this.editedUser = user;
   }
 }

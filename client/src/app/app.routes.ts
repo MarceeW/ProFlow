@@ -5,6 +5,7 @@ import { LoginComponent } from './account/login/login.component';
 import { adminGuard } from './_guards/admin.guard';
 import { AdminMainComponent } from './admin/admin-main/admin-main.component';
 import { RegisterComponent } from './account/register/register.component';
+import { ManageComponent } from './admin/accounts/manage/manage.component';
 
 export const routes: Routes = [
   { path: '',

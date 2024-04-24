@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Extensions;
 using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers;
 
@@ -18,21 +19,24 @@ public class AccountController : BaseApiController
 	private readonly RoleManager<Role> _roleManager;
 	private readonly ITokenService _tokenService;
 	private readonly IInvitationRepository _invitationRepository;
-	private readonly IUserRepository _userRepository;
+	private readonly IAccountRepository _accountRepository;
+    private readonly IMapper _mapper;
 
-	public AccountController(
+    public AccountController(
 		UserManager<User> userManager,
 		RoleManager<Role> roleManager,
 		ITokenService tokenService,
 		IInvitationRepository invitationRepository,
-		IUserRepository userRepository)
+		IAccountRepository accountRepository,
+		IMapper mapper)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
 		_tokenService = tokenService;
 		_invitationRepository = invitationRepository;
-		_userRepository = userRepository;
-	}
+		_accountRepository = accountRepository;
+        _mapper = mapper;
+    }
 
 	[HttpPost("register")]
 	public async Task<ActionResult<AuthUserDTO>> Register(
@@ -109,60 +113,9 @@ public class AccountController : BaseApiController
 		};
 	}
 	
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpGet("generate-invitation-key")]
-	public async Task<ActionResult<InvitationDTO>> GenerateInvitationKey(DateTime expirationDate)
-	{
-		var loggedInUser = await _userManager.GetLoggedInUserAsync(User);
-		
-		if(loggedInUser == null) 
-			return Unauthorized("Logged in user's username claim not found!");
-		
-		Invitation invitation = new Invitation { Expires = expirationDate };
-		
-		await _invitationRepository.CreateAsync(invitation);
-		await _invitationRepository.SaveAsync();
-		
-		return new InvitationDTO 
-		{
-			Key = invitation.Key,
-			Expires = invitation.Expires,
-			IsActivated = invitation.IsActivated,
-		};
-	}
-	
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpGet("invitations")]
-	public async Task<IEnumerable<InvitationDTO>> GetInvitations()
-	{
-		return await _invitationRepository.GetDTOsAsync();
-	}
-	
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpGet]
-	public async Task<IEnumerable<UserDTO>> GetAccounts()
-	{
-		return await _userRepository.GetUsersAsync();
-	}
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpGet("{query}")]
-	public async Task<IEnumerable<UserDTO>> GetAccountsByQuery(string query)
-	{
-		return await _userRepository.GetUsersByQueryAsync(query.ToLower());
-	}
-	
 	[HttpGet("invitation/{key}")]
 	public async Task<ActionResult<InvitationDTO>> ReadInvitation(Guid key)
 	{
 		return await _invitationRepository.ReadInvitationDTOAsync(key);
-	}
-	
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpDelete("delete-invitation/{key}")]
-	public async Task<ActionResult<Guid>> GetInvitations(Guid key)
-	{
-		_invitationRepository.Delete(await _invitationRepository.ReadAsync(key));
-		await _invitationRepository.SaveAsync();
-		return Ok(key);
 	}
 }

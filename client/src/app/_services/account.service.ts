@@ -5,9 +5,7 @@ import { BehaviorSubject, map, take } from 'rxjs';
 import { AuthUser } from '../_models/auth-user';
 import { LoginModel } from '../_models/login-model';
 import { RegisterModel } from '../_models/register-model';
-import { Roles } from '../_enums/roles.enum';
-import { ActivatedRoute } from '@angular/router';
-import { User } from '../_models/user';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +19,7 @@ export class AccountService {
 
   constructor(
       private http: HttpClient,
-      private route: ActivatedRoute) { }
+      private router: Router) { }
 
   login(user: LoginModel) {
     return this.http.post<AuthUser>(
@@ -59,6 +57,7 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.router.navigateByUrl('/login');
   }
 
   setCurrentUser(user: AuthUser) {
@@ -68,14 +67,6 @@ export class AccountService {
 
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
-  }
-
-  getUsers() {
-    return this.http.get<User[]>(this.apiUrl + 'account/');
-  }
-
-  getFilteredUsers(filter: string) {
-    return this.http.get<User[]>(this.apiUrl + 'account/' + filter);
   }
 
   getCurrentUser(): AuthUser | null {
@@ -97,7 +88,7 @@ export class AccountService {
     this.currentUser$.pipe(take(1))
       .subscribe({
         next: user => {
-          if (user && user.roles.includes(Roles.Administrator))
+          if (user && user.roles.includes("Administrator"))
             isAdmin = true;
         }
       });

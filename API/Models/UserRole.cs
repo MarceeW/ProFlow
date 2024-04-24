@@ -1,8 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using API.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace API;
+namespace API.Models;
 
 public class UserRole : IdentityUserRole<Guid>
 {
