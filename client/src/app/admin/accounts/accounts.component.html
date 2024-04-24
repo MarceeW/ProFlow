@@ -1,10 +1,13 @@
-<div class="d-flex" style="overflow-x: hidden;">
-  <div [@listInOut]="profileOnEdit ? 'closed' : 'open'">
-    <app-list #list (editEvent)="toggleEdit()"></app-list>
-  </div>
-  <ng-container *ngIf="profileOnEdit">
-    <div @editInOut>
-      <app-edit [model]="list.selected$ | async"></app-edit>
-    </div>
+<div class="container-fluid">
+  <ng-container *ngIf="!editedUser">
+    <app-list class="w-100" (manageEvent)="setEditedUser($event)"></app-list>
+  </ng-container>
+  <ng-container *ngIf="editedUser">
+    <app-manage
+      class="w-100"
+      [availableRoles]="availableRoles"
+      (closeEvent)="setEditedUser(null)"
+      [user]="editedUser">
+    </app-manage>
   </ng-container>
 </div>

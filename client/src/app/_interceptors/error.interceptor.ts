@@ -1,3 +1,4 @@
+import { AccountService } from './../_services/account.service';
 import { inject } from '@angular/core';
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { NavigationExtras, Router } from '@angular/router';
@@ -7,6 +8,7 @@ import { catchError } from 'rxjs';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toastr = inject(ToastrService);
+  const accountService = inject(AccountService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -29,6 +31,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             }
           case 401:
             toastr.error('Unauthorized', error.status.toString());
+            accountService.logout();
             break;
           case 404:
             router.navigateByUrl('/not-found');

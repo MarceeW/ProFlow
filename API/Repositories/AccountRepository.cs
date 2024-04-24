@@ -1,26 +1,37 @@
-﻿using System.Net.Quic;
-using API.Data;
-using API.DTO;
+﻿using API.DTO;
+using API.Extensions;
 using API.Interfaces;
 using API.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Repositories;
 
-public class UserRepository : IUserRepository
+public class AccountRepository : IAccountRepository
 {
 	private readonly UserManager<User> _userManager;
+	private readonly RoleManager<Role> _roleManager;
 	private readonly IMapper _mapper;
 
-	public UserRepository(UserManager<User> userManager, IMapper mapper)
+	public AccountRepository(
+		UserManager<User> userManager, 
+		RoleManager<Role> roleManager,
+		IMapper mapper)
 	{
 		_userManager = userManager;
+		_roleManager = roleManager;
 		_mapper = mapper;
+	}
+
+	public async Task<IEnumerable<RoleDTO>> GetRolesAsync()
+	{
+		return await _roleManager
+			.Roles
+			.ProjectTo<RoleDTO>(_mapper.ConfigurationProvider)
+			.ToListAsync();
 	}
 
 	public async Task<IEnumerable<UserDTO>> GetUsersAsync()

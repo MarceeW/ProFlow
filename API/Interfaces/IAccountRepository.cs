@@ -1,9 +1,11 @@
-﻿using API.Models;
+﻿using API.DTO;
+using API.Models;
 
 namespace API.Interfaces;
 
-public interface IUserRepository
+public interface IAccountRepository
 {
 	Task<IEnumerable<UserDTO>> GetUsersAsync();
 	Task<IEnumerable<UserDTO>> GetUsersByQueryAsync(string query);
+	Task<IEnumerable<RoleDTO>> GetRolesAsync();
 }

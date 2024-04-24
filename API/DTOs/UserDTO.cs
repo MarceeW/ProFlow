@@ -1,9 +1,9 @@
-﻿namespace API.Models;
+﻿namespace API.DTO;
 
 public class UserDTO
 {
 	public required ICollection<string> Roles { get; set; }
-	public required Invitation Invitation { get; set; }
+	public InvitationDTO? Invitation { get; set; }
 	public required string UserName { get; set; }
 	public required string FirstName { get; set; }
 	public required string LastName { get; set; }

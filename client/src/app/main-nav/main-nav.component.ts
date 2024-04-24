@@ -33,7 +33,7 @@ import { AccountService } from '../_services/account.service';
 export class MainNavComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
-  constructor(public accountService: AccountService, private router: Router) {}
+  constructor(public accountService: AccountService) {}
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -43,6 +43,5 @@ export class MainNavComponent {
 
   logout() {
     this.accountService.logout();
-    this.router.navigateByUrl('/login');
   }
 }

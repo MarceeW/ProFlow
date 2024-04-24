@@ -11,8 +11,9 @@ public class AutoMapperProfiles : Profile
 	public AutoMapperProfiles()
 	{
 		CreateMap<Invitation, InvitationDTO>();
+		CreateMap<Role, RoleDTO>();
 		CreateMap<User, UserDTO>()
 			.ForMember(dest => dest.Roles,
-				opt => opt.MapFrom(src => src.UserRoles!.Select(ur => ur.Role.Name)));
+			opt => opt.MapFrom(src => src.UserRoles!.Select(ur => ur.Role.Name)));
 	}
 }

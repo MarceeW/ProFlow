@@ -29,7 +29,7 @@ public class TokenService : ITokenService
 		{
 			new Claim(JwtRegisteredClaimNames.NameId, user.UserName!),
 		};
-		claims.AddRange(roles.Select(x => new Claim(ClaimTypes.Role, x)));
+		claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
 		var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

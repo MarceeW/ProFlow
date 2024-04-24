@@ -19,7 +19,7 @@ public static class Seeder
 			new Role { Name = RoleConstant.TeamLeader },
 			new Role { Name = RoleConstant.FunctionalManager },
 			new Role { Name = RoleConstant.TeamMember },
-			new Role { Name = RoleConstant.User },
+			new Role { Name = RoleConstant.User, Default = true },
 		};
 		
 		foreach (var role in roles) 

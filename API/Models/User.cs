@@ -14,4 +14,6 @@ public class User : IdentityUser<Guid>
 	public required DateOnly DateOfBirth { get; set; }
 	public DateTime Created { get; set; } = DateTime.UtcNow;
 	public DateTime LastSeen { get; set; } = DateTime.UtcNow;
+	[NotMapped]
+	public string FullName { get => $"{FirstName} {LastName}"; }
 }

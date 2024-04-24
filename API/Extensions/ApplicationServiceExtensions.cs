@@ -29,7 +29,7 @@ public static class ApplicationServiceExtensions
 
 		services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IInvitationRepository, InvitationRepository>();
-		services.AddScoped<IUserRepository, UserRepository>();
+		services.AddScoped<IAccountRepository, AccountRepository>();
 
 		services.AddAutoMapper(typeof(AutoMapperProfiles));
 
