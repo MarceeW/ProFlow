@@ -16,7 +16,6 @@ export class AdminService {
     private http: HttpClient) { }
 
   updateUser(manageModel: UserManageModel) {
-    console.log(manageModel);
     return this.http
       .patch<User>(this.apiUrl + 'admin/update', manageModel);
   }
