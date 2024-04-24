@@ -12,11 +12,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace API;
 
+[Authorize(Roles = RoleConstant.Administrator)]
 public class AdminController : BaseApiController
 {
 	private readonly UserManager<User> _userManager;
-    private readonly IMapper _mapper;
-    private readonly IAccountRepository _accountRepository;
+	private readonly IMapper _mapper;
+	private readonly IAccountRepository _accountRepository;
 	private readonly IInvitationRepository _invitationRepository;
 
 	public AdminController(
@@ -26,33 +27,25 @@ public class AdminController : BaseApiController
 		IInvitationRepository invitationRepository) 
 	{
 		_userManager = userManager;
-        _mapper = mapper;
-        _accountRepository = accountRepository;
+		_mapper = mapper;
+		_accountRepository = accountRepository;
 		_invitationRepository = invitationRepository;
 	}
 	
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpGet]
-	public async Task<IEnumerable<UserDTO>> GetAccounts()
+	[HttpGet("accounts/{query?}")]
+	public async Task<IEnumerable<UserDTO>> GetAccountsByQuery(string? query)
 	{
-		return await _accountRepository.GetUsersAsync();
-	}
-	
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpGet("{query}")]
-	public async Task<IEnumerable<UserDTO>> GetAccountsByQuery(string query)
-	{
+		if (query == null)
+			return await _accountRepository.GetUsersAsync();
 		return await _accountRepository.GetUsersByQueryAsync(query.ToLower());
 	}
 	
-	[Authorize(Roles = RoleConstant.Administrator)]
 	[HttpGet("roles")]
 	public async Task<IEnumerable<RoleDTO>> GetRoles()
 	{
 		return await _accountRepository.GetRolesAsync();
 	}
 	
-	[Authorize(Roles = RoleConstant.Administrator)]
 	[HttpGet("generate-invitation-key")]
 	public async Task<ActionResult<InvitationDTO>> GenerateInvitationKey(DateTime expirationDate)
 	{
@@ -61,7 +54,7 @@ public class AdminController : BaseApiController
 		if(loggedInUser == null) 
 			return Unauthorized("Logged in user's username claim not found!");
 		
-		Invitation invitation = new Invitation { Expires = expirationDate };
+		Invitation invitation = new Invitation { Expires = expirationDate, CreatedBy = loggedInUser };
 		
 		await _invitationRepository.CreateAsync(invitation);
 		await _invitationRepository.SaveAsync();
@@ -74,15 +67,12 @@ public class AdminController : BaseApiController
 		};
 	}
 	
-	[Authorize(Roles = RoleConstant.Administrator)]
 	[HttpGet("invitations")]
 	public async Task<IEnumerable<InvitationDTO>> GetInvitations()
 	{
 		return await _invitationRepository.GetDTOsAsync();
 	}
 	
-		
-	[Authorize(Roles = RoleConstant.Administrator)]
 	[HttpDelete("delete-invitation/{key}")]
 	public async Task<ActionResult<Guid>> GetInvitations(Guid key)
 	{
@@ -91,8 +81,7 @@ public class AdminController : BaseApiController
 		return Ok(key);
 	}
 	
-	[Authorize(Roles = RoleConstant.Administrator)]
-	[HttpPatch("update")]
+	[HttpPatch("update-account")]
 	public async Task<ActionResult<UserDTO>> Update(UserManageDTO dto)
 	{
 		var user = await _userManager.GetUserByUserName(dto.UserName.ToLower());

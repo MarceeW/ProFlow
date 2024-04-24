@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240421155246_RoleDefault")]
-    partial class RoleDefault
+    [Migration("20240424221837_Projects")]
+    partial class Projects
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,9 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");
 
@@ -42,7 +45,32 @@ namespace API.Data.Migrations
 
                     b.HasKey("Key");
 
+                    b.HasIndex("CreatedById");
+
                     b.ToTable("Invitations");
+                });
+
+            modelBuilder.Entity("API.Models.Project", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProjectManagerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectManagerId");
+
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>
@@ -74,6 +102,27 @@ namespace API.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("API.Models.Team", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TeamLeaderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("TeamLeaderId");
+
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("API.Models.User", b =>
@@ -165,7 +214,7 @@ namespace API.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("API.UserRole", b =>
+            modelBuilder.Entity("API.Models.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -178,6 +227,21 @@ namespace API.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("API.Models.UserTeam", b =>
+                {
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("TeamId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTeams");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -268,6 +332,45 @@ namespace API.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("API.Models.Invitation", b =>
+                {
+                    b.HasOne("API.Models.User", "CreatedBy")
+                        .WithMany("CreatedInvitations")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("API.Models.Project", b =>
+                {
+                    b.HasOne("API.Models.User", "ProjectManager")
+                        .WithMany("Projects")
+                        .HasForeignKey("ProjectManagerId");
+
+                    b.Navigation("ProjectManager");
+                });
+
+            modelBuilder.Entity("API.Models.Team", b =>
+                {
+                    b.HasOne("API.Models.Project", "Project")
+                        .WithMany("Teams")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.User", "TeamLeader")
+                        .WithMany("LedTeams")
+                        .HasForeignKey("TeamLeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("TeamLeader");
+                });
+
             modelBuilder.Entity("API.Models.User", b =>
                 {
                     b.HasOne("API.Models.Invitation", "Invitation")
@@ -277,7 +380,7 @@ namespace API.Data.Migrations
                     b.Navigation("Invitation");
                 });
 
-            modelBuilder.Entity("API.UserRole", b =>
+            modelBuilder.Entity("API.Models.UserRole", b =>
                 {
                     b.HasOne("API.Models.Role", "Role")
                         .WithMany("UserRoles")
@@ -294,6 +397,21 @@ namespace API.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Models.UserTeam", b =>
+                {
+                    b.HasOne("API.Models.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -332,6 +450,11 @@ namespace API.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("API.Models.Project", b =>
+                {
+                    b.Navigation("Teams");
+                });
+
             modelBuilder.Entity("API.Models.Role", b =>
                 {
                     b.Navigation("UserRoles");
@@ -339,6 +462,12 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Models.User", b =>
                 {
+                    b.Navigation("CreatedInvitations");
+
+                    b.Navigation("LedTeams");
+
+                    b.Navigation("Projects");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

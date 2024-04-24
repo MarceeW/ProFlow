@@ -9,6 +9,10 @@ public class User : IdentityUser<Guid>
 	[ForeignKey(nameof(InvitationKey))]
 	public virtual Invitation? Invitation { get; set; }
 	public Guid? InvitationKey { get; set; }
+	public virtual ICollection<Invitation> CreatedInvitations { get; set; } = [];
+	public virtual ICollection<Team> Teams { get; set; } = [];
+	public virtual ICollection<Team> LedTeams { get; set; } = [];
+	public virtual ICollection<Project> Projects { get; set; } = [];
 	public required string FirstName { get; set; }
 	public required string LastName { get; set; }
 	public required DateOnly DateOfBirth { get; set; }
