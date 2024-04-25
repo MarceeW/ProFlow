@@ -15,7 +15,7 @@ import { AdminService } from '../../_services/admin.service';
     CommonModule
   ],
   templateUrl: './accounts.component.html',
-  styleUrl: './accounts.component.css',
+  styleUrl: './accounts.component.scss',
 })
 export class AccountsComponent implements OnInit {
   profileUnderManage: boolean = false;

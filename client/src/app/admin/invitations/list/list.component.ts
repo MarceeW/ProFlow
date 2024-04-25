@@ -25,7 +25,7 @@ import { DateExpiredPipe } from '../../../_pipes/date-expired.pipe';
     CommonModule,
   ],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.css'
+  styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
 

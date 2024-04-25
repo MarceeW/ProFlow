@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
     NgbAlert
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   model : LoginModel = { userName:'', password:'' };

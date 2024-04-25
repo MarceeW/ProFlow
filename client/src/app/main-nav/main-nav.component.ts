@@ -15,7 +15,7 @@ import { AccountService } from '../_services/account.service';
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
-  styleUrl: './main-nav.component.css',
+  styleUrl: './main-nav.component.scss',
   standalone: true,
   imports: [
     CommonModule,

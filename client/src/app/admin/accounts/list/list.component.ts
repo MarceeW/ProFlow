@@ -22,7 +22,7 @@ import { AdminService } from '../../../_services/admin.service';
     FormsModule
   ],
   templateUrl: './list.component.html',
-  styleUrl: './list.component.css'
+  styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
   displayedColumns: string[] = ["name", "userName", "roles", "actions"]

@@ -29,7 +29,7 @@ import { InvitationLinkPipe } from '../../../_pipes/invitation-link.pipe';
     InvitationLinkPipe
   ],
   templateUrl: './generate.component.html',
-  styleUrl: './generate.component.css'
+  styleUrl: './generate.component.scss'
 })
 export class GenerateComponent implements OnInit {
 

@@ -28,7 +28,7 @@ import { AdminService } from '../../../_services/admin.service';
     ReactiveFormsModule
   ],
   templateUrl: './manage.component.html',
-  styleUrl: './manage.component.css'
+  styleUrl: './manage.component.scss'
 })
 export class ManageComponent implements OnInit {
 

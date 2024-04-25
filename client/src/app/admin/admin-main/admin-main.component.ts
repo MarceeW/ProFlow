@@ -15,7 +15,7 @@ import { CompanySettingsComponent } from '../company-settings/company-settings.c
     CompanySettingsComponent
   ],
   templateUrl: './admin-main.component.html',
-  styleUrl: './admin-main.component.css'
+  styleUrl: './admin-main.component.scss'
 })
 export class AdminMainComponent {
 

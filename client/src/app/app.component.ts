@@ -13,7 +13,7 @@ import { MainNavComponent } from './main-nav/main-nav.component';
     MainNavComponent
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'ProFlow';

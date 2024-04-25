@@ -13,7 +13,7 @@ import { ListComponent } from './list/list.component';
     MatDividerModule
   ],
   templateUrl: './invitations.component.html',
-  styleUrl: './invitations.component.css'
+  styleUrl: './invitations.component.scss'
 })
 export class InvitationsComponent {
 }
