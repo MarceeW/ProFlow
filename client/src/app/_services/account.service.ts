@@ -1,25 +1,18 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { BehaviorSubject, map, take } from 'rxjs';
 import { AuthUser } from '../_models/auth-user';
 import { LoginModel } from '../_models/login-model';
 import { RegisterModel } from '../_models/register-model';
-import { Router } from '@angular/router';
+import { BaseService } from './base.service';
+import { BehaviorSubject, map, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService {
-
-  apiUrl: string = environment.apiUrl;
+export class AccountService extends BaseService {
 
   private currentUserSource = new BehaviorSubject<AuthUser | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
-
-  constructor(
-      private http: HttpClient,
-      private router: Router) { }
 
   login(user: LoginModel) {
     return this.http.post<AuthUser>(

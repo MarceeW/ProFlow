@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row">
+    <h1 class="mat-headline-3 pt-3">Create project</h1>
+  </div>
+  <mat-divider class="pb-3"></mat-divider>
+  <div class="row">
+    <form [formGroup]="projectCreateForm" class="d-flex flex-column w-50">
+      <mat-form-field class="form-field">
+        <mat-label>Project name</mat-label>
+        <input matInput type="text" formControlName="projectName" [errorStateMatcher]="errorStateMatcher"
+                placeholder="Example project">
+        @if (projectCreateForm.get('projectName')?.hasError('required')) {
+          <mat-error>Project name is <strong>required</strong></mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </div>
+</div>

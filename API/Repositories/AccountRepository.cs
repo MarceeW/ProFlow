@@ -1,6 +1,6 @@
 ﻿using API.DTO;
 using API.Extensions;
-using API.Interfaces;
+using API.Interfaces.Repository;
 using API.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -34,15 +34,15 @@ public class AccountRepository : IAccountRepository
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<UserDTO>> GetUsersAsync()
+	public async Task<IEnumerable<AccountDTO>> GetAccountsAsync()
 	{		
 		return await _userManager
 			.Users
-			.ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
+			.ProjectTo<AccountDTO>(_mapper.ConfigurationProvider)
 			.ToListAsync();
 	}
 
-	public async Task<IEnumerable<UserDTO>> GetUsersByQueryAsync(string query)
+	public async Task<IEnumerable<AccountDTO>> GetAccountsByQueryAsync(string query)
 	{
 		var filteredList = await _userManager
 			.Users
@@ -50,7 +50,7 @@ public class AccountRepository : IAccountRepository
 				u.UserName!.ToLower().Contains(query)
 			 	|| u.FirstName.ToLower().Contains(query)
 				|| u.LastName.ToLower().Contains(query))
-			.ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
+			.ProjectTo<AccountDTO>(_mapper.ConfigurationProvider)
 			.ToListAsync();
 			
 		if (!filteredList.IsNullOrEmpty())
@@ -58,7 +58,7 @@ public class AccountRepository : IAccountRepository
 		
 		var fullDTOList = await _userManager
 			.Users
-			.ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
+			.ProjectTo<AccountDTO>(_mapper.ConfigurationProvider)
 			.ToListAsync();
 			
 		return fullDTOList.Where(u => u.Roles.Any(r => r.ToLower().Contains(query)));

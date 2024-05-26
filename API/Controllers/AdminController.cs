@@ -2,7 +2,7 @@
 using API.Controllers;
 using API.DTO;
 using API.Extensions;
-using API.Interfaces;
+using API.Interfaces.Repository;
 using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -33,11 +33,11 @@ public class AdminController : BaseApiController
 	}
 	
 	[HttpGet("accounts/{query?}")]
-	public async Task<IEnumerable<UserDTO>> GetAccountsByQuery(string? query)
+	public async Task<IEnumerable<AccountDTO>> GetAccountsByQuery(string? query)
 	{
 		if (query == null)
-			return await _accountRepository.GetUsersAsync();
-		return await _accountRepository.GetUsersByQueryAsync(query.ToLower());
+			return await _accountRepository.GetAccountsAsync();
+		return await _accountRepository.GetAccountsByQueryAsync(query.ToLower());
 	}
 	
 	[HttpGet("roles")]
@@ -82,7 +82,7 @@ public class AdminController : BaseApiController
 	}
 	
 	[HttpPatch("update-account")]
-	public async Task<ActionResult<UserDTO>> Update(UserManageDTO dto)
+	public async Task<ActionResult<AccountDTO>> Update(UserManageDTO dto)
 	{
 		var user = await _userManager.GetUserByUserName(dto.UserName.ToLower());
 		
@@ -107,6 +107,6 @@ public class AdminController : BaseApiController
 		if(!result.Succeeded)
 			return BadRequest(result.Errors);
 			
-		return _mapper.Map<UserDTO>(user);
+		return _mapper.Map<AccountDTO>(user);
 	}
 }

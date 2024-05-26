@@ -1,3 +1,11 @@
+mat-toolbar button {
+  font-weight: 400;
+}
+
+mat-toolbar div, app-nav-menu {
+  align-self: center;
+}
+
 .sidenav-container {
   height: calc(100% - 65px);
 }
@@ -20,10 +28,15 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dropdown-toggle, .dropdown-item {
+.mat-mdc-menu-item {
+  min-height: 36px;
+}
+
+.menu-link {
   text-decoration: none;
   cursor: pointer;
 }
+
 .navbar {
   user-select: none;
   z-index: 2 !important;
@@ -33,4 +46,8 @@
 
 .navbar-brand {
   color: white !important;
+}
+
+.menu-item-label {
+  font-size: small;
 }

@@ -1,24 +1,49 @@
 <ng-container>
-  <mat-toolbar color="primary" class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/">ProFlow</a>
-      <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
-        <a class="dropdown-toggle text-white" dropdownToggle>
-          {{user.userName | titlecase}}
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
-          <a class="dropdown-item" (click)="logout()">Logout</a>
-        </div>
+  <mat-toolbar class="align-self-center" color="primary">
+    <button *ngIf="(accountService.currentUser$ | async)"
+      mat-icon-button (click)="sidenavExpanded = !sidenavExpanded">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div
+      class="d-flex w-100">
+      <div class="d-flex justify-content-center">
+        <a class="navbar-brand" routerLink="/">ProFlow</a>
+      </div>
+      <div *ngIf="(accountService.currentUser$ | async)"
+        class="container d-flex justify-content-between">
+        <app-nav-menu></app-nav-menu>
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <a class="menu-link" routerLink="account/settings">
+            <button mat-menu-item>
+              <mat-icon>manage_accounts</mat-icon>
+              <span class="menu-item-label">Account settings</span>
+            </button>
+          </a>
+          <button mat-menu-item (click)="accountService.logout()">
+            <mat-icon>logout</mat-icon>
+            <span class="menu-item-label">Logout</span>
+          </button>
+        </mat-menu>
       </div>
     </div>
   </mat-toolbar>
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav"
+    <mat-sidenav *ngIf="(accountService.currentUser$ | async)" class="sidenav"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
         [mode]="(isHandset$ | async) ? 'over' : 'side'"
-        [opened]="(isHandset$ | async) === false">
+        [opened]="((isHandset$ | async) || sidenavExpanded)">
       <mat-nav-list>
-        <a mat-list-item routerLink="/admin" routerLinkActive="mat-list-item-active">Administration</a>
+        <a *ngIf="accountService.isCurrentUserAdmin()"
+          mat-list-item routerLink="/admin"
+          routerLinkActive="mat-list-item-active">
+          <div class="d-flex align-content-center">
+            <mat-icon class="me-1">admin_panel_settings</mat-icon>
+            Administration
+          </div>
+        </a>
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -26,4 +51,3 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 </ng-container>
-

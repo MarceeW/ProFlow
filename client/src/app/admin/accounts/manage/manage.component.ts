@@ -1,6 +1,6 @@
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { User } from '../../../_models/user';
+import { Account } from '../../../_models/account';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -44,10 +44,10 @@ export class ManageComponent implements OnInit {
   closeEvent = new EventEmitter<null>();
 
   @Output()
-  saveEvent = new EventEmitter<User>();
+  saveEvent = new EventEmitter<Account>();
 
   @Input()
-  set user(value: User) {
+  set user(value: Account) {
     this.manageModel = { userName: value.userName, deletedRoles: [], newRoles: [] }
     this._user = value;
   }
@@ -55,7 +55,7 @@ export class ManageComponent implements OnInit {
   get user() {
     return this._user;
   }
-  private _user!: User;
+  private _user!: Account;
   private manageModel!: UserManageModel;
 
   @Input()
@@ -71,7 +71,6 @@ export class ManageComponent implements OnInit {
       const control = this.formBuilder.control(this.user.roles.includes(r.name));
       if(r.default)
         control.disable();
-      console.log(control);
       this.roleControls.push(control);
     });
   }
@@ -123,9 +122,8 @@ export class ManageComponent implements OnInit {
     }
   }
 
-  private reset(user: User) {
+  private reset(user: Account) {
     this.user = user;
     this.manageFormGroup.markAsPristine();
-    console.log(this.manageFormGroup.dirty);
   }
 }

@@ -1,7 +1,7 @@
 ﻿using API.DTO;
 using API.Models;
 
-namespace API.Interfaces;
+namespace API.Interfaces.Repository;
 
 public interface IInvitationRepository : IRepository<Invitation, Guid>
 {

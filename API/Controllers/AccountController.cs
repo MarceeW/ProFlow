@@ -1,15 +1,14 @@
 ﻿using API.Constants;
 using API.DTO;
 using API.Models;
-using API.Interfaces;
+using API.Interfaces.Repository;
+using API.Interfaces.Service;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Extensions;
 using System.Globalization;
-using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers;
 
@@ -20,9 +19,9 @@ public class AccountController : BaseApiController
 	private readonly ITokenService _tokenService;
 	private readonly IInvitationRepository _invitationRepository;
 	private readonly IAccountRepository _accountRepository;
-    private readonly IMapper _mapper;
+	private readonly IMapper _mapper;
 
-    public AccountController(
+	public AccountController(
 		UserManager<User> userManager,
 		RoleManager<Role> roleManager,
 		ITokenService tokenService,
@@ -35,8 +34,8 @@ public class AccountController : BaseApiController
 		_tokenService = tokenService;
 		_invitationRepository = invitationRepository;
 		_accountRepository = accountRepository;
-        _mapper = mapper;
-    }
+		_mapper = mapper;
+	}
 
 	[HttpPost("register")]
 	public async Task<ActionResult<AuthUserDTO>> Register(

@@ -1,7 +1,7 @@
 import { RegisterModel } from '../../_models/register-model';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RegisterErrorStateMatcher } from './register-error-state-matcher';
+import { FormErrorStateMatcher } from '../../_state-matchers/form-error-state-matcher';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
       dateOfBirth: new FormControl(new Date(), [Validators.required]),
     }
   );
-  matcher = new RegisterErrorStateMatcher();
+  matcher = new FormErrorStateMatcher();
   maxDate = new Date();
   invitationKey: string | null = null;
   invitationValid = true;
@@ -70,7 +70,8 @@ export class RegisterComponent implements OnInit {
       next: invitation => {
         this.invitationValid = !invitation.isActivated && new Date() < new Date(invitation.expires)
          && this.invitationKey != null;
-      }
+      },
+      error: _ => this.invitationValid = false
     });
   }
 

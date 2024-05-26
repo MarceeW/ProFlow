@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Invitation } from '../_models/invitation';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InvitationService {
-
-  apiUrl: string = environment.apiUrl;
-
-  constructor(private http: HttpClient) { }
+export class InvitationService extends BaseService {
 
   generateInvitation(date: Date) {
     return this.http.get<Invitation>(

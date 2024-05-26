@@ -1,31 +1,25 @@
 import { Injectable } from '@angular/core';
-import { User } from '../_models/user';
+import { Account } from '../_models/account';
 import { UserManageModel } from '../_models/user-manage-model';
-import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Role } from '../_models/role';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AdminService {
-  apiUrl: string = environment.apiUrl;
-
-  constructor(
-    private http: HttpClient) { }
+export class AdminService extends BaseService {
 
   updateUser(manageModel: UserManageModel) {
     return this.http
-      .patch<User>(this.apiUrl + 'admin/update', manageModel);
+      .patch<Account>(this.apiUrl + 'admin/update-account', manageModel);
   }
 
   getUsers() {
-    return this.http.get<User[]>(this.apiUrl + 'admin/');
+    return this.http.get<Account[]>(this.apiUrl + 'admin/accounts/');
   }
 
   getFilteredUsers(filter: string) {
-    return this.http.get<User[]>(this.apiUrl + 'admin/' + filter);
+    return this.http.get<Account[]>(this.apiUrl + 'admin/accounts/' + filter);
   }
 
   getRoles() {

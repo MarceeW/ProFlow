@@ -1,4 +1,4 @@
-﻿namespace API.Interfaces;
+﻿namespace API.Interfaces.Repository;
 
 public interface IRepository<T, K> where K : IComparable<K>
 {

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { User } from '../../../_models/user';
+import { Account } from '../../../_models/account';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,11 +26,11 @@ import { AdminService } from '../../../_services/admin.service';
 })
 export class ListComponent implements OnInit {
   displayedColumns: string[] = ["name", "userName", "roles", "actions"]
-  accounts!: User[];
+  accounts!: Account[];
   filterString: string = "";
 
   @Output()
-  manageEvent = new EventEmitter<User>();
+  manageEvent = new EventEmitter<Account>();
 
   constructor(private adminService: AdminService) { }
 
@@ -50,7 +50,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  onManage(user: User) {
+  onManage(user: Account) {
     this.manageEvent.emit(user);
   }
 

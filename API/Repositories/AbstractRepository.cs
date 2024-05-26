@@ -1,5 +1,5 @@
 ﻿using API.Data;
-using API.Interfaces;
+using API.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace API;

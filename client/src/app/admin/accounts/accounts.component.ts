@@ -3,7 +3,7 @@ import { ListComponent } from './list/list.component';
 import { CommonModule } from '@angular/common';
 import { Role } from '../../_models/role';
 import { ManageComponent } from './manage/manage.component';
-import { User } from '../../_models/user';
+import { Account } from '../../_models/account';
 import { AdminService } from '../../_services/admin.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { AdminService } from '../../_services/admin.service';
 export class AccountsComponent implements OnInit {
   profileUnderManage: boolean = false;
   availableRoles!: Role[];
-  editedUser: User | null = null;
+  editedUser: Account | null = null;
 
   constructor(private adminService: AdminService) { }
 
@@ -34,7 +34,7 @@ export class AccountsComponent implements OnInit {
     this.profileUnderManage = value;
   }
 
-  setEditedUser(user: User | null) {
+  setEditedUser(user: Account | null) {
     this.editedUser = user;
   }
 }

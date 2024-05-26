@@ -1,0 +1,19 @@
+<div>
+  <button class="nav-button" [matMenuTriggerFor]="projectMenu" mat-button>
+    Projects
+  </button>
+  <mat-menu #projectMenu="matMenu">
+    <a class="menu-link" routerLink="projects">
+      <button mat-menu-item>
+        <mat-icon>visibility</mat-icon>
+        <span class="menu-item-label">View projects</span>
+      </button>
+    </a>
+    <a class="menu-link" routerLink="projects/create">
+      <button mat-menu-item>
+        <mat-icon>add_circle</mat-icon>
+        <span class="menu-item-label">Create</span>
+      </button>
+    </a>
+  </mat-menu>
+</div>

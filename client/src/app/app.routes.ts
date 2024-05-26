@@ -1,3 +1,4 @@
+import { AccountPageComponent } from './account/account-page/account-page.component';
 import { Routes } from '@angular/router';
 import { authGuard } from './_guards/auth.guard';
 import { loginGuard } from './_guards/login.guard';
@@ -5,7 +6,9 @@ import { LoginComponent } from './account/login/login.component';
 import { adminGuard } from './_guards/admin.guard';
 import { AdminMainComponent } from './admin/admin-main/admin-main.component';
 import { RegisterComponent } from './account/register/register.component';
-import { ManageComponent } from './admin/accounts/manage/manage.component';
+import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
+import { ProjectListComponent } from './project/project-list/project-list.component';
+import { ProjectCreateComponent } from './project/project-create/project-create.component';
 
 export const routes: Routes = [
   { path: '',
@@ -14,20 +17,44 @@ export const routes: Routes = [
     children: [
       {
         path: 'admin',
-        runGuardsAndResolvers: 'always',
         canActivate: [adminGuard],
         component: AdminMainComponent,
-        children: []
+      },
+      {
+        path: 'account',
+        children: [
+          {
+            path: '',
+            component: AccountPageComponent
+          },
+          {
+            path: 'settings',
+            component: AccountSettingsComponent
+          }
+        ]
+      },
+      {
+        path: 'projects',
+        children: [
+          {
+            path: '',
+            component: ProjectListComponent
+          },
+          {
+            path: 'create',
+            component: ProjectCreateComponent
+          }
+        ]
       },
     ]
   },
-  { path: 'login',
-    runGuardsAndResolvers: 'always',
+  {
+    path: 'login',
     canActivate: [loginGuard],
     component: LoginComponent
   },
-  { path: 'register',
-    runGuardsAndResolvers: 'always',
+  {
+    path: 'register',
     canActivate: [loginGuard],
     component: RegisterComponent
   }
