@@ -10,7 +10,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AccountService } from '../_services/account.service';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 

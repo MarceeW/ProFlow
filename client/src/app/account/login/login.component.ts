@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { LoginModel } from '../../_models/login-model';
 import { AsyncPipe } from '@angular/common';
 import { AccountService } from '../../_services/account.service';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
@@ -13,7 +12,6 @@ import { Router } from '@angular/router';
   imports: [
     FormsModule,
     AsyncPipe,
-    NgbAlert
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
