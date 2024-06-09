@@ -14,11 +14,6 @@ public static class UserManagerExtensions
 		if(userName == null)
 			return null;
 		
-		return await userManager.GetUserByUserName(userName);
-	}
-	public static async Task<User?> GetUserByUserName(this UserManager<User> userManager, string userName) 
-	{
-		return await userManager.Users
-			.SingleOrDefaultAsync(u => u.UserName == userName.ToLower());
+		return await userManager.FindByNameAsync(userName);
 	}
 }

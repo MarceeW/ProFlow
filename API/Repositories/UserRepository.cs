@@ -19,7 +19,13 @@ public class UserRepository : IUserRepository
 		_userManager = userManager;
 		_mapper = mapper;
 	}
-	public async Task<IEnumerable<UserDTO>> GetUsersAsync(string? filter)
+
+    public async Task<UserDTO> GetUserByUserNameAsync(string userName)
+    {
+        return _mapper.Map<UserDTO>(await _userManager.FindByNameAsync(userName));
+    }
+
+    public async Task<IEnumerable<UserDTO>> GetUsersAsync(string? filter)
 	{
 		return await _userManager
 			.Users

@@ -7,7 +7,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using API.Extensions;
 using System.Globalization;
 
 namespace API.Controllers;
@@ -92,7 +91,7 @@ public class AccountController : BaseApiController
 	[HttpPost("login")]
 	public async Task<ActionResult<AuthUserDTO>> Login(LoginDTO loginDTO)
 	{
-		var user = await _userManager.GetUserByUserName(loginDTO.UserName.ToLower());
+		var user = await _userManager.FindByNameAsync(loginDTO.UserName.ToLower());
 
 		if (user == null)
 			return Unauthorized("Invalid username!");

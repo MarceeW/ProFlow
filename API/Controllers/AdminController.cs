@@ -84,7 +84,7 @@ public class AdminController : BaseApiController
 	[HttpPatch("update-account")]
 	public async Task<ActionResult<AccountDTO>> Update(UserManageDTO dto)
 	{
-		var user = await _userManager.GetUserByUserName(dto.UserName.ToLower());
+		var user = await _userManager.FindByNameAsync(dto.UserName.ToLower());
 		
 		if (user == null)
 			return BadRequest($"No user found with this username: {dto.UserName}!");

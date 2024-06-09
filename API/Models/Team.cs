@@ -13,6 +13,6 @@ public class Team
 	public Guid ProjectId { get; set; }
 	[ForeignKey(nameof(TeamLeaderId))]
 	public virtual required User TeamLeader { get; set; }
-	public required Guid TeamLeaderId { get; set; }
+	public Guid TeamLeaderId { get; set; }
 	public virtual ICollection<User> Members { get; set; } = [];
 }

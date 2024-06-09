@@ -10,4 +10,9 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
     public ProjectRepository(DataContext dataContext) : base(dataContext, dataContext.Projects)
     {
     }
+
+    public async Task<bool> IsProjectNameExistsAsync(string projectName)
+    {
+        return await _values.AnyAsync(p => p.Name == projectName);
+    }
 }
