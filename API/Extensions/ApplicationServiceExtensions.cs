@@ -1,10 +1,11 @@
 ﻿using API.Data;
-using API.Helpers;
 using API.Interfaces.Service;
 using API.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 using API.Services;
 using API.Repositories;
+using API.Interfaces;
+using API.Helpers;
 
 namespace API.Extensions;
 
@@ -30,7 +31,8 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<IAccountRepository, AccountRepository>();
 		services.AddScoped<IProjectRepositoy, ProjectRepository>();
 		services.AddScoped<IUserRepository, UserRepository>();
-
+		services.AddScoped<INotificationRepository, NotificationRepository>();
+		
 		services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 		return services;

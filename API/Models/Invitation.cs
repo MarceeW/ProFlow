@@ -9,7 +9,7 @@ public class Invitation
 	public Guid Key { get; set; } = Guid.NewGuid();
 	public required DateTime Expires { get; set; }
 	[ForeignKey(nameof(CreatedById))]
-	public virtual required User CreatedBy { get; set; }
+	public required virtual User CreatedBy { get; set; }
 	public Guid CreatedById { get; set; }
 	public bool IsActivated { get; set; } = false;
 }

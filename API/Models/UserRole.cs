@@ -4,6 +4,6 @@ namespace API.Models;
 
 public class UserRole : IdentityUserRole<Guid>
 {
-	public virtual required User User { get; set; }
-	public virtual required Role Role { get; set; }
+	public required virtual User User { get; set; }
+	public required virtual Role Role { get; set; }
 }

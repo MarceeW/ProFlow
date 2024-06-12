@@ -9,10 +9,10 @@ public class Team
 	[Key]
 	public Guid Id { get; set; } = Guid.NewGuid();
 	[ForeignKey(nameof(ProjectId))]
-	public virtual required Project Project { get; set; }
+	public required virtual Project Project { get; set; }
 	public Guid ProjectId { get; set; }
 	[ForeignKey(nameof(TeamLeaderId))]
-	public virtual required User TeamLeader { get; set; }
+	public required virtual User TeamLeader { get; set; }
 	public Guid TeamLeaderId { get; set; }
 	public virtual ICollection<User> Members { get; set; } = [];
 }

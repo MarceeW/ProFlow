@@ -13,6 +13,7 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 	public DbSet<Project> Projects { get; set; }
 	public DbSet<Team> Teams { get; set; }
 	public DbSet<UserTeam> UserTeams { get; set; }
+	public DbSet<Notification> Notifications { get; set; }
 	public DataContext(DbContextOptions options) : base(options)
 	{
 	}
@@ -20,18 +21,28 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 	{
 		base.OnModelCreating(builder);
 		
+		#region Project
+		
 		builder.Entity<Project>()
 			.HasMany(p => p.Teams)
 			.WithOne(t => t.Project)
 			.HasForeignKey(t => t.ProjectId)
 			.IsRequired();
+			
+		#endregion Project
+		
+		#region UserRole
 		
 		builder.Entity<UserRole>()
 			.HasKey(ur => new { ur.UserId, ur.RoleId });
+		
+		#endregion UserRole
+			
+		#region User
 			
 		builder.Entity<User>()
 			.HasMany(u => u.Teams)
-			.WithMany(u => u.Members)
+			.WithMany(t => t.Members)
 			.UsingEntity<UserTeam>(
 				l => l.HasOne<Team>().WithMany().HasForeignKey(ut => ut.TeamId).OnDelete(DeleteBehavior.Restrict),
 				r => r.HasOne<User>().WithMany().HasForeignKey(ut => ut.UserId).OnDelete(DeleteBehavior.Restrict)
@@ -65,11 +76,27 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.WithOne(u => u.User)
 			.HasForeignKey(ur => ur.UserId)
 			.IsRequired();
+			
+		#endregion User
+		
+		#region Notification
+		
+		builder.Entity<Notification>()
+			.HasOne(n => n.TargetUser)
+			.WithMany(u => u.Notifications)
+			.HasForeignKey(n => n.TargetUserId)
+			.IsRequired();
+		
+		#endregion Notification
+			
+		#region Role
 
 		builder.Entity<Role>()
 			.HasMany(ur => ur.UserRoles)
 			.WithOne(u => u.Role)
 			.HasForeignKey(ur => ur.RoleId)
 			.IsRequired();
+			
+		#endregion
 	}
 }
