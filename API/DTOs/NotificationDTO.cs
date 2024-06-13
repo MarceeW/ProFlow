@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using API.Enums;
 
 namespace API.DTO;
 
 public class NotificationDTO
 {
 	[Required]
-	public required NotificationType NotificationType { get; set; }
+	public required string Type { get; set; }
+	[Required]
+	public required string Title { get; set; }
 	[Required]
 	public required string Content { get; set; }
 	[Required]

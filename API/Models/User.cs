@@ -21,4 +21,16 @@ public class User : IdentityUser<Guid>
 	public DateTime LastSeen { get; set; } = DateTime.UtcNow;
 	[NotMapped]
 	public string FullName { get => $"{FirstName} {LastName}"; }
+
+	public override bool Equals(object? obj)
+	{
+		if(obj is User u)
+			return u.Id == Id;
+		return false;
+	}
+
+    public override int GetHashCode()
+    {
+        return (Id, UserName).GetHashCode();
+    }
 }

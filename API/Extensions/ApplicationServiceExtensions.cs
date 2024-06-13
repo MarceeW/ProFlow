@@ -26,15 +26,18 @@ public static class ApplicationServiceExtensions
 
 		services.AddCors();
 
+		services.AddAutoMapper(typeof(AutoMapperProfiles));
+		
 		services.AddScoped<ITokenService, TokenService>();
+		services.AddScoped<IProjectService, ProjectService>();
+		services.AddScoped<INotificationService, NotificationService>();
+		
 		services.AddScoped<IInvitationRepository, InvitationRepository>();
 		services.AddScoped<IAccountRepository, AccountRepository>();
 		services.AddScoped<IProjectRepositoy, ProjectRepository>();
 		services.AddScoped<IUserRepository, UserRepository>();
 		services.AddScoped<INotificationRepository, NotificationRepository>();
 		
-		services.AddAutoMapper(typeof(AutoMapperProfiles));
-
 		return services;
 	}
 }

@@ -3,6 +3,7 @@ using API.DTO;
 using API.Interfaces;
 using API.Models;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,5 +21,30 @@ public class NotificationRepository : AbstractRepository<Notification, Guid>, IN
 	{
 		_mapper = mapper;
 		_userManager = userManager;
+	}
+
+	public async Task<IQueryable<Notification>> GetUserNotifications(string userName)
+	{
+		User? user = await _userManager.FindByNameAsync(userName);
+		
+		if(user == null)
+			throw new KeyNotFoundException($"User with this username: [{userName}] is not found");
+			
+		return _values
+			.Where(n => n.TargetUser == user)
+			.OrderBy(n => n.Viewed)
+			.ThenByDescending(n => n.Created);
+	}
+	
+	public async Task BulkUpdateUserNotifications(string userName)
+	{
+		User? user = await _userManager.FindByNameAsync(userName);
+		
+		if(user == null)
+			throw new KeyNotFoundException($"User with this username: [{userName}] is not found");
+			
+		await _values
+			.Where(n => !n.Viewed && n.TargetUser == user)
+			.ExecuteUpdateAsync(s => s.SetProperty(n => n.Viewed, e => true));
 	}
 }

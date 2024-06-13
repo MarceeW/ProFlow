@@ -32,14 +32,9 @@ public class AbstractRepository<T, K> : IRepository<T, K>
 		_values.Remove(entity);
 	}
 
-	public virtual IEnumerable<T> Get()
+	public virtual IQueryable<T> Get()
 	{
-		return _values.ToList();
-	}
-
-	public virtual async Task<IEnumerable<T>> GetAsync()
-	{
-		return await _values.ToListAsync();
+		return _values;
 	}
 
 	public virtual T Read(K key)

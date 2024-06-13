@@ -1,9 +1,8 @@
 ﻿using API.Constants;
 using API.Controllers;
 using API.DTO;
-using API.Interfaces.Repository;
+using API.Interfaces.Service;
 using API.Models;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,42 +11,25 @@ namespace API;
 
 public class ProjectController : BaseApiController
 {
-	private readonly IProjectRepositoy _projectRepositoy;
-	private readonly UserManager<User> _userManager;
-	private readonly IMapper _mapper;
+    private readonly IProjectService _projectService;
 
-	public ProjectController(
-		IProjectRepositoy projectRepositoy,
-		UserManager<User> userManager,
-		IMapper mapper) 
+    public ProjectController(IProjectService projectService) 
 	{
-		_projectRepositoy = projectRepositoy;
-		_userManager = userManager;
-		_mapper = mapper;
-	}
+        _projectService = projectService;
+    }
 	
 	[HttpPost("create")]
 	[Authorize(Roles = RoleConstant.ProjectManager)]
 	public async Task<ActionResult> CreateProject(ProjectDTO projectDTO) 
 	{
-		if(await _projectRepositoy.IsProjectNameExistsAsync(projectDTO.ProjectName))
-			return BadRequest($"Project with the following name: '{projectDTO.ProjectName}' already exists!");
-		
-		Project project = new Project
+		try
 		{
-			Name = projectDTO.ProjectName,
-			ProjectManager = (await _userManager.FindByNameAsync(projectDTO.ProjectManager.UserName))!,
-		};
-		var teams = projectDTO.Teams.Select(async t => new Team() 
+			await _projectService.CreateProjectAsync(projectDTO);
+		}
+		catch (NameAlreadyExistsException e)
 		{
-			TeamLeader = (await _userManager.FindByNameAsync(t.TeamLeader.UserName))!,
-			Project = project
-		});
-		project.Teams = await Task.WhenAll(teams);
-
-		await _projectRepositoy.CreateAsync(project);
-		await _projectRepositoy.SaveAsync();
-
+			return BadRequest(e.Message);
+		}
 		return Created();
 	}
 }
