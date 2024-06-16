@@ -8,7 +8,7 @@ import { HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UserService extends BaseService {
-  accountService: AccountService = inject(AccountService);
+  private accountService: AccountService = inject(AccountService);
 
   getUsers(filter?: string | null) {
     return this.http.get<User[]>(this.apiUrl + 'user/' + (filter ? filter : ''));

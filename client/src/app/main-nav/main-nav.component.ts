@@ -12,6 +12,8 @@ import { map, shareReplay } from 'rxjs/operators';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { AccountService } from '../_services/account.service';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
+import { AccountMenuComponent } from './account-menu/account-menu.component';
 
 @Component({
   selector: 'app-main-nav',
@@ -29,7 +31,9 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
     AsyncPipe,
     RouterOutlet,
     RouterModule,
-    NavMenuComponent
+    NavMenuComponent,
+    NotificationMenuComponent,
+    AccountMenuComponent
   ],
   encapsulation: ViewEncapsulation.None
 })

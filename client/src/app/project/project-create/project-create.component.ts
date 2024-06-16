@@ -52,7 +52,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
   @ViewChild('teamLeaderInput') teamLeaderInput!: ElementRef<HTMLInputElement>;
   @ViewChild('teamLeaderChipGrid') teamLeaderChipGrid!: MatChipGrid;
 
-  filteredUsers!: Observable<User[]>;
+  filteredUsers$!: Observable<User[]>;
   teamLeaders: User[] = [];
   errorStateMatcher = new FormErrorStateMatcher();
   private announcer = inject(LiveAnnouncer);
@@ -95,7 +95,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
   private _setupFilteredUsers() {
     const teamLeaderCtrl = this.projectCreateForm.controls.teamLeader;
-    this.filteredUsers = teamLeaderCtrl.valueChanges.pipe(
+    this.filteredUsers$ = teamLeaderCtrl.valueChanges.pipe(
       startWith(null),
       map((filter: string | null) => (filter ? this._filter(filter).splice(0, this.displayedTeamLeaderCount) :
         this._getAvailableUsers().slice(0, this.displayedTeamLeaderCount))),
