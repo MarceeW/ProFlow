@@ -1,5 +1,4 @@
-﻿
-namespace API.DTO;
+﻿namespace API.DTO;
 
 public class InvitationDTO
 {

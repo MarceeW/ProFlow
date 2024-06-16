@@ -16,6 +16,8 @@ public static class ApplicationServiceExtensions
 	{
 		services.AddControllers();
 		services.AddEndpointsApiExplorer();
+		
+		services.AddSignalR();
 
 		services.AddDbContext<DataContext>(
 			options => 
