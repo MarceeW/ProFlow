@@ -1,9 +1,7 @@
 ﻿using API.Data;
-using API.DTO;
 using API.Interfaces;
 using API.Models;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

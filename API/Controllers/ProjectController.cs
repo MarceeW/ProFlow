@@ -1,13 +1,11 @@
 ﻿using API.Constants;
-using API.Controllers;
 using API.DTO;
+using API.Exceptions;
 using API.Interfaces.Service;
-using API.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API;
+namespace API.Controllers;
 
 public class ProjectController : BaseApiController
 {

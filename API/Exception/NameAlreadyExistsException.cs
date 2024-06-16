@@ -1,4 +1,4 @@
-﻿namespace API;
+﻿namespace API.Exceptions;
 
 public class NameAlreadyExistsException : Exception
 {
