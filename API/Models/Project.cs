@@ -12,6 +12,6 @@ public class Project
 	[ForeignKey(nameof(ProjectManagerId))]
 	public virtual required User ProjectManager { get; set; }
 	public virtual Guid ProjectManagerId { get; set; }
-	public virtual ICollection<Team>? Teams { get; set; }
+	public virtual ICollection<Team> Teams { get; set; } = [];
 	public DateTime Created { get; set; } = DateTime.UtcNow;
 }

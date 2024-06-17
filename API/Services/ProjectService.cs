@@ -31,12 +31,16 @@ public class ProjectService : IProjectService
 			Name = projectDTO.ProjectName,
 			ProjectManager = (await _userManager.FindByNameAsync(projectDTO.ProjectManager.UserName))!,
 		};
-		var teams = projectDTO.Teams.Select(async t =>  new Team
+		
+		foreach(var teamDTO in projectDTO.Teams) 
+		{
+			Team team = new Team
 			{
-				TeamLeader = (await _userManager.FindByNameAsync(t.TeamLeader.UserName))!,
+				TeamLeader = (await _userManager.FindByNameAsync(teamDTO.TeamLeader.UserName))!,
 				Project = project
-			});
-		project.Teams = await Task.WhenAll(teams);
+			};
+			project.Teams.Add(team);
+		}
 
 		await _projectRepository.CreateAsync(project);
 		await _projectRepository.SaveAsync();
