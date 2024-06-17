@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using API.Extensions;
+using API.Interfaces.SignalR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.SignalR;
 
-public sealed class NotificationHub : Hub
+[Authorize]
+public sealed class NotificationHub : Hub<INotificationClient>
 {
-    public override async Task OnConnectedAsync()
-    {
-        await Clients.Others.SendAsync("UserIsOnline");
-    }
+	public override async Task OnConnectedAsync()
+	{
+		await Clients.Client(Context.ConnectionId).ReceiveNotification();
+		await base.OnConnectedAsync();
+	}
 }

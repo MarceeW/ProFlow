@@ -1,13 +1,21 @@
-import { AccountService } from './account.service';
-import { Injectable, inject } from '@angular/core';
-import { BaseService } from './base.service';
+import { Injectable } from '@angular/core';
 import { UserNotification } from '../_models/user-notification';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AccountService } from './account.service';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService extends BaseService {
-  private accountService: AccountService = inject(AccountService);
+
+  constructor(
+    http: HttpClient,
+    router: Router,
+    private accountService: AccountService) {
+    super(http, router);
+  }
 
   getNotifications() {
     const currentUser = this.accountService.getCurrentUser();

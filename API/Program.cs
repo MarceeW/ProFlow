@@ -3,6 +3,7 @@ using API.Models;
 using API.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>("hubs/notification");
 
  using var scope = app.Services.CreateScope();
  var services = scope.ServiceProvider;

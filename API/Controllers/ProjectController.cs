@@ -11,14 +11,14 @@ public class ProjectController : BaseApiController
 {
     private readonly IProjectService _projectService;
 
-    public ProjectController(IProjectService projectService) 
+    public ProjectController(IProjectService projectService)
 	{
         _projectService = projectService;
     }
-	
+
 	[HttpPost("create")]
 	[Authorize(Roles = RoleConstant.ProjectManager)]
-	public async Task<ActionResult> CreateProject(ProjectDTO projectDTO) 
+	public async Task<ActionResult> CreateProject(ProjectDTO projectDTO)
 	{
 		try
 		{

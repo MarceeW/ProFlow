@@ -17,7 +17,7 @@ import { User } from '../../_models/user';
 import { MatOptionModule } from '@angular/material/core';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Observable, Subject, map, startWith, take, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, map, startWith, takeUntil } from 'rxjs';
 import { ProjectService } from '../../_services/project.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -59,7 +59,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
   private users!: User[];
   private projectManager!: User;
 
-  private ngDestroy$ = new Subject();
+  private ngDestroy$ = new ReplaySubject();
   private displayedTeamLeaderCount = 10;
 
 
