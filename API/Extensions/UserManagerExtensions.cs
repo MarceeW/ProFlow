@@ -16,4 +16,9 @@ public static class UserManagerExtensions
 		
 		return await userManager.FindByNameAsync(userName);
 	}
+	
+	public static string? GetUserName(this ClaimsPrincipal claimsPrincipal) 
+	{
+		return claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+	}
 }

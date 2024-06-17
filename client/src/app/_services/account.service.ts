@@ -1,18 +1,27 @@
-import { HttpParams } from '@angular/common/http';
+import { NotificationService } from './notification.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthUser } from '../_models/auth-user';
 import { LoginModel } from '../_models/login-model';
 import { RegisterModel } from '../_models/register-model';
 import { BaseService } from './base.service';
 import { BehaviorSubject, map, take } from 'rxjs';
+import { Router } from '@angular/router';
+import { NotificationSignalRService } from './signalR/notification-signalr.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService extends BaseService {
-
   private currentUserSource = new BehaviorSubject<AuthUser | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
+
+  constructor(
+    http: HttpClient,
+    router: Router,
+    private notificationHubService: NotificationSignalRService) {
+      super(http, router);
+  }
 
   login(user: LoginModel) {
     return this.http.post<AuthUser>(
@@ -51,6 +60,7 @@ export class AccountService extends BaseService {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
     this.router.navigateByUrl('/login');
+    this.notificationHubService.stopHubConnection();
   }
 
   setCurrentUser(user: AuthUser) {
@@ -60,6 +70,7 @@ export class AccountService extends BaseService {
 
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
+    this.notificationHubService.createHubConnection(user);
   }
 
   getCurrentUser(): AuthUser | null {
