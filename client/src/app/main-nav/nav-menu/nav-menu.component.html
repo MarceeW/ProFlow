@@ -9,11 +9,13 @@
         <span class="menu-item-label">View projects</span>
       </button>
     </a>
-    <a class="menu-link" routerLink="projects/create">
-      <button mat-menu-item>
-        <mat-icon>add_circle</mat-icon>
-        <span class="menu-item-label">New project</span>
-      </button>
-    </a>
+    @if (accountService.isCurrentUserInRole(RoleType.ProjectManager) | async) {
+      <a class="menu-link" routerLink="projects/create">
+        <button mat-menu-item>
+          <mat-icon>add_circle</mat-icon>
+          <span class="menu-item-label">New project</span>
+        </button>
+      </a>
+    }
   </mat-menu>
 </div>

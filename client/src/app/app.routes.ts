@@ -1,3 +1,4 @@
+import { projectManagerGuard } from './_guards/project-manager.guard';
 import { AccountPageComponent } from './account/account-page/account-page.component';
 import { Routes } from '@angular/router';
 import { authGuard } from './_guards/auth.guard';
@@ -42,6 +43,7 @@ export const routes: Routes = [
           },
           {
             path: 'create',
+            canActivate: [projectManagerGuard],
             component: ProjectCreateComponent
           }
         ]

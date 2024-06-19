@@ -5,9 +5,10 @@ import { AuthUser } from '../_models/auth-user';
 import { LoginModel } from '../_models/login-model';
 import { RegisterModel } from '../_models/register-model';
 import { BaseService } from './base.service';
-import { BehaviorSubject, map, take } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { NotificationSignalRService } from './signalR/notification-signalr.service';
+import { RoleType } from '../_enums/role-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -86,16 +87,16 @@ export class AccountService extends BaseService {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
-  isCurrentUserAdmin() {
-    let isAdmin: boolean = false;
+  isCurrentUserInRole(role: RoleType | string) {
+    console.log(role);
+    return this.currentUser$.pipe(map(
+      user => {
+        if(!user)
+          return false;
 
-    this.currentUser$.pipe(take(1))
-      .subscribe({
-        next: user => {
-          if (user && user.roles.includes("Administrator"))
-            isAdmin = true;
-        }
-      });
-    return isAdmin;
+      const isInRole = user.roles.indexOf(role) >= 0;
+      return isInRole;
+      }
+    ));
   }
 }

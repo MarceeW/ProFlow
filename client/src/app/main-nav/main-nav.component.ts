@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -14,6 +14,7 @@ import { AccountService } from '../_services/account.service';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
 import { AccountMenuComponent } from './account-menu/account-menu.component';
+import { RoleType } from '../_enums/role-type.enum';
 
 @Component({
   selector: 'app-main-nav',
@@ -41,11 +42,15 @@ export class MainNavComponent {
   private breakpointObserver = inject(BreakpointObserver);
   sidenavExpanded = false;
 
+  get RoleType() {
+    return RoleType;
+  }
+
   constructor(public accountService: AccountService) {}
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
-    );
+  );
 }

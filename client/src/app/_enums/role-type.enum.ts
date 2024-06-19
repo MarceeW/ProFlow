@@ -1,4 +1,4 @@
-export enum Roles {
+export enum RoleType {
   Administrator = "Administrator",
   ProjectManager = "Project_manager",
   TeamLeader = "Team_leader",
