@@ -1,3 +1,4 @@
+import { User } from './../../_models/user';
 import { Project } from './../../_models/project';
 import { MatChipGrid, MatChipsModule } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
@@ -13,7 +14,6 @@ import { MatInputModule } from '@angular/material/input';
 import { Router, RouterModule } from '@angular/router';
 import { FormErrorStateMatcher } from '../../_state-matchers/form-error-state-matcher';
 import { UserService } from '../../_services/user.service';
-import { User } from '../../_models/user';
 import { MatOptionModule } from '@angular/material/core';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -46,7 +46,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ProjectCreateComponent implements OnInit, OnDestroy {
   projectCreateForm = new FormGroup({
     projectName: new FormControl('', [Validators.required]),
-    teamLeaders: new FormControl('', [Validators.required]),
+    teamLeaders: new FormControl(new Array<User>(), [Validators.required]),
     teamLeader: new FormControl('')
   });
   @ViewChild('teamLeaderInput') teamLeaderInput!: ElementRef<HTMLInputElement>;
@@ -61,7 +61,6 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
   private ngDestroy$ = new ReplaySubject();
   private displayedTeamLeaderCount = 10;
-
 
   constructor(
     private userService: UserService,
@@ -120,12 +119,17 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
     const teamLeaderCtrl = this.projectCreateForm.controls.teamLeader;
     teamLeaderCtrl.setValue(null);
+
+    const teamLeadersCtrl = this.projectCreateForm.controls.teamLeaders;
+    teamLeadersCtrl.setValue(this.teamLeaders);
   }
 
   removeTeamLeader(teamLeaderName: User) {
     const index = this.teamLeaders.indexOf(teamLeaderName);
+
     this.teamLeaders.splice(index, 1);
     this.announcer.announce(`Removed ${teamLeaderName}`);
+
     const teamLeaderCtrl = this.projectCreateForm.controls.teamLeader;
     teamLeaderCtrl.setValue(null);
   }

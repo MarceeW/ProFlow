@@ -19,7 +19,7 @@
           @for (teamLeader of teamLeaders; track teamLeader) {
             <mat-chip-row (removed)="removeTeamLeader(teamLeader)">
               {{teamLeader.fullName}}
-              <button matChipRemove [attr.aria-label]="'remove ' + 'teamleader'">
+              <button matChipRemove [attr.aria-label]="'remove teamleader'">
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip-row>
@@ -28,9 +28,14 @@
         @if (projectCreateForm.get('teamLeaders')!.hasError('required')) {
           <mat-error>Project needs at least <strong>one team leader</strong>!</mat-error>
         }
-        <input placeholder="Select Team leader(s)" #teamLeaderInput formControlName="teamLeader"
-          [matChipInputFor]="teamLeaderChipGrid" [matAutocomplete]="auto"/>
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="teamLeaderSelected($event)">
+        <input
+          placeholder="Select Team leader(s)"
+          #teamLeaderInput formControlName="teamLeader"
+          [matChipInputFor]="teamLeaderChipGrid"
+          [matAutocomplete]="auto"/>
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="teamLeaderSelected($event)">
           @for (user of filteredUsers$ | async; track user) {
             <mat-option [value]="user.fullName">{{user.fullName}}</mat-option>
           }
