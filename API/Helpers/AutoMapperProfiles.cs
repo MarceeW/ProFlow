@@ -18,5 +18,8 @@ public class AutoMapperProfiles : Profile
 		CreateMap<User, UserDTO>();
 		
 		CreateMap<Notification, NotificationDTO>();
+		
+		CreateMap<Project, ProjectDTO>();
+		CreateMap<Team, TeamDTO>();
 	}
 }

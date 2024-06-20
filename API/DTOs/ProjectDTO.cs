@@ -6,7 +6,9 @@ namespace API.DTO;
 public class ProjectDTO
 {
 	[Required]
-	public required string ProjectName { get; set; }
+	public required Guid Id { get; set; }
+	[Required]
+	public required string Name { get; set; }
 	[Required]
 	public required UserDTO ProjectManager { get; set; }
 	[Required]

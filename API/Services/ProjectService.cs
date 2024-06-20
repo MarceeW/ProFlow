@@ -23,12 +23,12 @@ public class ProjectService : IProjectService
 	}
 	public async Task CreateProjectAsync(ProjectDTO projectDTO)
 	{
-		if(await IsProjectNameExistsAsync(projectDTO.ProjectName))
-			throw new NameAlreadyExistsException(projectDTO.ProjectName);
+		if(await IsProjectNameExistsAsync(projectDTO.Name))
+			throw new NameAlreadyExistsException(projectDTO.Name);
 		
 		Project project = new Project
 		{
-			Name = projectDTO.ProjectName,
+			Name = projectDTO.Name,
 			ProjectManager = (await _userManager.FindByNameAsync(projectDTO.ProjectManager.UserName))!,
 		};
 		
