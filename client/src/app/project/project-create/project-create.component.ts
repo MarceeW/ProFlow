@@ -139,7 +139,8 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       return;
 
     const project: Project = {
-      projectName: this.projectCreateForm.controls.projectName.value!,
+      id: '',
+      name: this.projectCreateForm.controls.projectName.value!,
       projectManager: this.projectManager,
       teams: this.teamLeaders.map(tl => ({teamLeader: tl}))
     };
@@ -147,7 +148,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       takeUntil(this.ngDestroy$)
     ).subscribe({
       next: _ => {
-        this.toastr.success(`Project ${project.projectName} created succesfully!`);
+        this.toastr.success(`Project ${project.name} created succesfully!`);
         this.router.navigateByUrl('');
       }
     });

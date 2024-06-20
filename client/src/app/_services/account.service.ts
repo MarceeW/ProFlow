@@ -88,7 +88,6 @@ export class AccountService extends BaseService {
   }
 
   isCurrentUserInRole(role: RoleType | string) {
-    console.log(role);
     return this.currentUser$.pipe(map(
       user => {
         if(!user)

@@ -10,6 +10,7 @@ import { RegisterComponent } from './account/register/register.component';
 import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
 import { ProjectListComponent } from './project/project-list/project-list.component';
 import { ProjectCreateComponent } from './project/project-create/project-create.component';
+import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 
 export const routes: Routes = [
   { path: '',
@@ -40,6 +41,10 @@ export const routes: Routes = [
           {
             path: '',
             component: ProjectListComponent
+          },
+          {
+            path: ':id',
+            component: ProjectDetailsComponent
           },
           {
             path: 'create',
