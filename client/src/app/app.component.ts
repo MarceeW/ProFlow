@@ -21,10 +21,11 @@ export class AppComponent {
   constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.setCurrentUser();
+    this.setupCurrentUser();
+    this.accountService.loadProfilePicture();
   }
 
-  setCurrentUser() {
+  setupCurrentUser() {
     const user: AuthUser | null = this.accountService.getCurrentUser();
     if(!user)
       return;

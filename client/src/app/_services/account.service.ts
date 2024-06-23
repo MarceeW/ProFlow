@@ -5,10 +5,12 @@ import { AuthUser } from '../_models/auth-user';
 import { LoginModel } from '../_models/login-model';
 import { RegisterModel } from '../_models/register-model';
 import { BaseService } from './base.service';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { NotificationSignalRService } from './signalR/notification-signalr.service';
 import { RoleType } from '../_enums/role-type.enum';
+import { AccountSettingsModel } from '../_models/account-settings-model';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,9 @@ import { RoleType } from '../_enums/role-type.enum';
 export class AccountService extends BaseService {
   private currentUserSource = new BehaviorSubject<AuthUser | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
+
+  private currentAccountPictureSource = new BehaviorSubject<string>('');
+  currentAccountPicture$ = this.currentAccountPictureSource.asObservable();
 
   constructor(
     http: HttpClient,
@@ -34,6 +39,7 @@ export class AccountService extends BaseService {
           const user = response;
           if (user) {
             this.setCurrentUser(user);
+            this.currentAccountPictureSource.next(this.getCurrentAccountProfilePictureSource());
           }
           return user;
         })
@@ -65,8 +71,12 @@ export class AccountService extends BaseService {
   }
 
   setCurrentUser(user: AuthUser) {
+    const claims = this.getClaimsFromToken(user.token)
+
+    user.id = claims.sub;
+
     user.roles = [];
-    const roles = this.getDecodedToken(user.token).role;
+    const roles = claims.role;
     Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
 
     localStorage.setItem('user', JSON.stringify(user));
@@ -83,7 +93,7 @@ export class AccountService extends BaseService {
     return user;
   }
 
-  getDecodedToken(token: string) {
+  getClaimsFromToken(token: string) {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
@@ -97,5 +107,36 @@ export class AccountService extends BaseService {
       return isInRole;
       }
     ));
+  }
+
+  uploadProfilePicture(image: File) {
+    const formData = new FormData();
+    formData.append('picture', image, image.name);
+    return this.http.post(this.apiUrl + 'account/upload-picture', formData)
+      .pipe(
+        map(_ => this.loadProfilePicture())
+      );
+  }
+
+
+  updateAccountSettings(settingsModel: AccountSettingsModel) {
+    return this.http.patch<AuthUser>(this.apiUrl + 'account/update', settingsModel)
+    .pipe(
+      map(authUser => {
+        this.setCurrentUser(authUser);
+        return authUser;
+      })
+    );
+  }
+
+  loadProfilePicture() {
+    this.currentAccountPictureSource.next(this.getCurrentAccountProfilePictureSource());
+  }
+
+  private getCurrentAccountProfilePictureSource(): string {
+    const currentUser = this.getCurrentUser();
+    if(!currentUser)
+      return '';
+    return `${this.apiUrl}user/picture/${currentUser.id}?${new Date().getTime()}`;
   }
 }

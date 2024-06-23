@@ -11,12 +11,17 @@ import { AccountSettingsComponent } from './account/account-settings/account-set
 import { ProjectListComponent } from './project/project-list/project-list.component';
 import { ProjectCreateComponent } from './project/project-create/project-create.component';
 import { ProjectDetailsComponent } from './project/project-details/project-details.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
   { path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
     children: [
+      {
+        path: '',
+        component: HomeComponent
+      },
       {
         path: 'admin',
         canActivate: [adminGuard],
@@ -43,7 +48,7 @@ export const routes: Routes = [
             component: ProjectListComponent
           },
           {
-            path: ':id',
+            path: 'project/:id',
             component: ProjectDetailsComponent
           },
           {

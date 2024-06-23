@@ -1,1 +1,69 @@
-<p>settings works!</p>
+<div class="container">
+  <div class="header">
+    <div id="profile-picture-container">
+      <div id="profile-picture-action-cover" (click)="triggerImageInput()">
+        <mat-icon id="profile-picture-action-icon">upload</mat-icon>
+        <input type="file"
+               style="display: none;"
+               (change)="onImageSelected($event)"
+               #imageInput
+               accept=".png,.jpeg,.jpg,.webp">
+      </div>
+      <img id="profile-picture"
+      [src]="accountService.currentAccountPicture$ | async"
+      width="180px" height="180px"
+      alt="Profile picture">
+    </div>
+    <div>
+      <h1 class="mat-headline-2 m-0">{{user?.fullName}}</h1>
+      <h1 class="mat-headline-4 m-0" style="opacity: 50%;">({{user?.userName}})</h1>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="settings-container">
+    <h1 class="mat-headline-5 m-2">Settings</h1>
+    <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Change username</mat-panel-title>
+          </mat-expansion-panel-header>
+          <form [formGroup]="userNameForm"
+                class="account-setting-form"
+                (ngSubmit)="onUserNameSave()">
+              <mat-form-field style="width: 70%;">
+                <mat-label>Username</mat-label>
+                <input
+                  type="text"
+                  matInput
+                  formControlName="userName"
+                  placeholder="Username"
+                  value="{{user?.userName}}">
+              </mat-form-field>
+              <button disabled="{{!userNameSaveEnabled}}" mat-icon-button color="primary">
+                <mat-icon>save</mat-icon>
+              </button>
+          </form>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Change password</mat-panel-title>
+          </mat-expansion-panel-header>
+          <form [formGroup]="passwordForm"
+                class="account-setting-form"
+                (ngSubmit)="onPasswordSave()">
+              <mat-form-field style="width: 70%;">
+                <mat-label>New password</mat-label>
+                <input
+                  type="password"
+                  matInput
+                  formControlName="password"
+                  placeholder="New password">
+              </mat-form-field>
+              <button disabled="{{!passwordSaveEnabled}}" mat-icon-button color="primary">
+                <mat-icon>save</mat-icon>
+              </button>
+          </form>
+        </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

@@ -19,6 +19,7 @@ public class User : IdentityUser<Guid>
 	public required DateOnly DateOfBirth { get; set; }
 	public DateTime Created { get; set; } = DateTime.UtcNow;
 	public DateTime LastSeen { get; set; } = DateTime.UtcNow;
+	public string? ProfilePicturePath { get; set; }
 	[NotMapped]
 	public string FullName { get => $"{FirstName} {LastName}"; }
 
@@ -29,8 +30,8 @@ public class User : IdentityUser<Guid>
 		return false;
 	}
 
-    public override int GetHashCode()
-    {
-        return (Id, UserName).GetHashCode();
-    }
+	public override int GetHashCode()
+	{
+		return (Id, UserName).GetHashCode();
+	}
 }

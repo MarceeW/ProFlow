@@ -299,4 +299,7 @@ e2e/*.map
 # System Files
 .DS_Store/
 
+API/Resources/Images/*
+!API/Resources/Images/user-icon.png
+
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore

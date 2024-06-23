@@ -1,5 +1,7 @@
-<button mat-icon-button [matMenuTriggerFor]="userMenu">
-  <mat-icon>account_circle</mat-icon>
+<button id="account-settings-btn"
+        [matMenuTriggerFor]="userMenu"
+        width="32px" height="32px"
+        style="background-image: url('{{accountService.currentAccountPicture$ | async}}');">
 </button>
 <mat-menu #userMenu="matMenu">
   <a class="menu-link" routerLink="account/settings">

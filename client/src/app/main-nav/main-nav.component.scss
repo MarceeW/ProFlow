@@ -51,3 +51,9 @@ mat-toolbar div, app-nav-menu {
 .menu-item-label {
   font-size: small;
 }
+
+#user-actions{
+  display: flex;
+  gap: 4px;
+  height: 40px;
+}

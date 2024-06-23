@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-//[Authorize]
+[Authorize]
 public class NotificationController : BaseApiController
 {
 	private readonly INotificationRepository _notificationRepository;
