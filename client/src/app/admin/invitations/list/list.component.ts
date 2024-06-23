@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserModule } from '@angular/platform-browser';
 import { DateExpiredPipe } from '../../../_pipes/date-expired.pipe';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list',
@@ -28,11 +29,13 @@ import { DateExpiredPipe } from '../../../_pipes/date-expired.pipe';
   styleUrl: './list.component.scss'
 })
 export class ListComponent implements OnInit {
-
   displayedColumns: string[] = ["key", "expires", "isActivated", "actions"];
   invitations: Invitation[] = [];
 
-  constructor(private invitationService: InvitationService) { }
+  constructor(
+    private invitationService: InvitationService,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.getInvitations();
@@ -48,5 +51,9 @@ export class ListComponent implements OnInit {
     this.invitationService.deleteInvitation(key).pipe().subscribe({
       next: _ => this.getInvitations()
     });
+  }
+
+  onInvitationIdClicked() {
+    this.toastr.info("Copied invitation link to clipboard!");
   }
 }

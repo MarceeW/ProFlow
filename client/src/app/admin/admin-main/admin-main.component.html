@@ -1,13 +1,15 @@
-<mat-tab-group (selectedIndexChange)="onTabChange($event)"
-  mat-stretch-tabs="false" mat-align-tabs="start" [(selectedIndex)]="activeTabIndex">
-  <mat-tab label="Invitation">
-    <ng-template matTabContent>
-      <app-invitations></app-invitations>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Accounts">
-    <ng-template matTabContent>
-      <app-accounts></app-accounts>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+<div class="container">
+  <mat-tab-group (selectedIndexChange)="onTabChange($event)"
+    mat-stretch-tabs="false" mat-align-tabs="start" [(selectedIndex)]="activeTabIndex">
+    <mat-tab label="Invitation">
+      <ng-template matTabContent>
+        <app-invitations></app-invitations>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Accounts">
+      <ng-template matTabContent>
+        <app-accounts></app-accounts>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
