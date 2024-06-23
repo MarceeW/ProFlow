@@ -30,9 +30,9 @@ public static class Seeder
 		var admin = new User
 		{
 			UserName = "admin",
-			FirstName = "admin",
-			LastName = "admin",
-			Email = "admin@admin.com",
+			FirstName = "ProFlow",
+			LastName = "Admin",
+			Email = "admin@proflow.com",
 			DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow),
 		};
 		
