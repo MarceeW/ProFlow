@@ -19,7 +19,7 @@
         @for (notification of notifications$ | async; track notification) {
           <div class="notification" matBadgeHidden="{{notification.viewed}}" matBadge="N" matBadgeSize="small">
             <div class="notification-timespan">
-              {{notification.created | date}}
+              {{notification.created | date: 'yyyy MM. dd. hh:mm'}}
             </div>
             <mat-icon class="notification-type">{{notification.type}}</mat-icon>
             <div class="notification-title">

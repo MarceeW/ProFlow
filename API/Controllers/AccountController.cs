@@ -20,23 +20,23 @@ public class AccountController : BaseApiController
 	private readonly RoleManager<Role> _roleManager;
 	private readonly ITokenService _tokenService;
 	private readonly IInvitationRepository _invitationRepository;
-	private readonly IAccountRepository _accountRepository;
 	private readonly IMapper _mapper;
+	private readonly INotificationService _notificationService;
 
 	public AccountController(
 		UserManager<User> userManager,
 		RoleManager<Role> roleManager,
 		ITokenService tokenService,
 		IInvitationRepository invitationRepository,
-		IAccountRepository accountRepository,
-		IMapper mapper)
+		IMapper mapper,
+		INotificationService notificationService)
 	{
 		_userManager = userManager;
 		_roleManager = roleManager;
 		_tokenService = tokenService;
 		_invitationRepository = invitationRepository;
-		_accountRepository = accountRepository;
 		_mapper = mapper;
+		_notificationService = notificationService;
 	}
 
 	[HttpPost("register")]
@@ -83,6 +83,14 @@ public class AccountController : BaseApiController
 		
 		_invitationRepository.Update(invitation);
 		await _invitationRepository.SaveAsync();
+		
+		await _notificationService.CreateNotificationAsync(new Notification
+		{
+			Type = "mail",
+			Title = "Welcome to ProFlow!",
+			Content = $"Hi {user.FirstName}! We are glad to welcome you in ProFlow!",
+			TargetUser = user
+		});
 		
 		return new AuthUserDTO
 		{
@@ -145,7 +153,7 @@ public class AccountController : BaseApiController
 	{
 		var user = (await _userManager.FindByNameAsync(User.GetUserName()!))!;
 		
-		bool changed = false;
+		List<string> changedCreds = [];
 		if(settingsModelDTO.UserName != null) 
 		{
 			if(settingsModelDTO.UserName == user.UserName!)
@@ -154,7 +162,7 @@ public class AccountController : BaseApiController
 				return BadRequest($"The username '{settingsModelDTO.UserName}' is taken!");
 			
 			user.UserName = settingsModelDTO.UserName;
-			changed = true;
+			changedCreds.Add("username");
 		}
 		
 		if(settingsModelDTO.Password != null) 
@@ -164,14 +172,22 @@ public class AccountController : BaseApiController
 				
 			await _userManager.RemovePasswordAsync(user);
 			await _userManager.AddPasswordAsync(user, settingsModelDTO.Password);
-			changed = true;
+			changedCreds.Add("password");
 		}
-		
-		if(changed)
+
+		if (changedCreds.Count > 0)
 		{
 			var result = await _userManager.UpdateAsync(user);
 			if(result.Succeeded) 
 			{
+				await _notificationService.CreateNotificationAsync(new Notification
+				{
+					Type = "report",
+					Title = "Account updated!",
+					Content = $"You have succesfully changed your creditentals! Changed creditentals: ({string.Join(", ", changedCreds)})",
+					TargetUser = user
+				});
+				
 				return new AuthUserDTO
 				{
 					UserName = user.UserName!,

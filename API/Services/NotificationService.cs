@@ -33,6 +33,13 @@ public class NotificationService : INotificationService
 		await _notificationRepository.SaveAsync();
 	}
 	
+	public async Task CreateNotificationAsync(Notification notification) 
+	{
+		await _notificationRepository.CreateAsync(notification);
+		await _notificationRepository.SaveAsync();
+		await _notificationHub.Clients.User(notification.TargetUser.UserName!).ReceiveNotification();
+	}
+	
 	private Notification GetTeamLeaderNotification(string projectName, User targetUser) => new Notification
 	{
 		Type = "flag",
