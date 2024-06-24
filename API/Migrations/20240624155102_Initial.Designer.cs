@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace API.Data.Migrations
+namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240420104758_Initial")]
+    [Migration("20240624155102_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -34,6 +34,9 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");
 
@@ -42,7 +45,67 @@ namespace API.Data.Migrations
 
                     b.HasKey("Key");
 
+                    b.HasIndex("CreatedById");
+
                     b.ToTable("Invitations");
+                });
+
+            modelBuilder.Entity("API.Models.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TargetUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<bool>("Viewed")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TargetUserId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("API.Models.Project", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProjectManagerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectManagerId");
+
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>
@@ -54,6 +117,9 @@ namespace API.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Default")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -71,6 +137,27 @@ namespace API.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("API.Models.Team", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TeamLeaderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("TeamLeaderId");
+
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("API.Models.User", b =>
@@ -137,6 +224,9 @@ namespace API.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePicturePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -162,7 +252,7 @@ namespace API.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("API.UserRole", b =>
+            modelBuilder.Entity("API.Models.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -175,6 +265,21 @@ namespace API.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("API.Models.UserTeam", b =>
+                {
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("TeamId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTeams");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -265,6 +370,56 @@ namespace API.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("API.Models.Invitation", b =>
+                {
+                    b.HasOne("API.Models.User", "CreatedBy")
+                        .WithMany("CreatedInvitations")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("API.Models.Notification", b =>
+                {
+                    b.HasOne("API.Models.User", "TargetUser")
+                        .WithMany("Notifications")
+                        .HasForeignKey("TargetUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TargetUser");
+                });
+
+            modelBuilder.Entity("API.Models.Project", b =>
+                {
+                    b.HasOne("API.Models.User", "ProjectManager")
+                        .WithMany("Projects")
+                        .HasForeignKey("ProjectManagerId");
+
+                    b.Navigation("ProjectManager");
+                });
+
+            modelBuilder.Entity("API.Models.Team", b =>
+                {
+                    b.HasOne("API.Models.Project", "Project")
+                        .WithMany("Teams")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.User", "TeamLeader")
+                        .WithMany("LedTeams")
+                        .HasForeignKey("TeamLeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("TeamLeader");
+                });
+
             modelBuilder.Entity("API.Models.User", b =>
                 {
                     b.HasOne("API.Models.Invitation", "Invitation")
@@ -274,7 +429,7 @@ namespace API.Data.Migrations
                     b.Navigation("Invitation");
                 });
 
-            modelBuilder.Entity("API.UserRole", b =>
+            modelBuilder.Entity("API.Models.UserRole", b =>
                 {
                     b.HasOne("API.Models.Role", "Role")
                         .WithMany("UserRoles")
@@ -291,6 +446,21 @@ namespace API.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Models.UserTeam", b =>
+                {
+                    b.HasOne("API.Models.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -329,6 +499,11 @@ namespace API.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("API.Models.Project", b =>
+                {
+                    b.Navigation("Teams");
+                });
+
             modelBuilder.Entity("API.Models.Role", b =>
                 {
                     b.Navigation("UserRoles");
@@ -336,6 +511,14 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Models.User", b =>
                 {
+                    b.Navigation("CreatedInvitations");
+
+                    b.Navigation("LedTeams");
+
+                    b.Navigation("Notifications");
+
+                    b.Navigation("Projects");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
