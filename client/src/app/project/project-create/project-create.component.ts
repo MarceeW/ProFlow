@@ -139,7 +139,6 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       return;
 
     const project: Project = {
-      id: '',
       name: this.projectCreateForm.controls.projectName.value!,
       projectManager: this.projectManager,
       teams: this.teamLeaders.map(tl => ({teamLeader: tl}))
