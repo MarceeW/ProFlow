@@ -1,4 +1,3 @@
-import { NotificationService } from './notification.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthUser } from '../_models/auth-user';
@@ -39,7 +38,7 @@ export class AccountService extends BaseService {
           const user = response;
           if (user) {
             this.setCurrentUser(user);
-            this.currentAccountPictureSource.next(this.getCurrentAccountProfilePictureSource());
+            this.loadProfilePicture();
           }
           return user;
         })
@@ -57,6 +56,7 @@ export class AccountService extends BaseService {
           const user = response;
           if (user) {
             this.setCurrentUser(user);
+            this.loadProfilePicture();
           }
           return user;
         })
