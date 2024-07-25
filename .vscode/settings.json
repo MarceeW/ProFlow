@@ -1,3 +1,5 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "appService.defaultWebAppToDeploy": "/subscriptions/88bd1aee-a2b1-45a7-bf45-6a2e7cb5f11d/resourceGroups/proflow-group/providers/Microsoft.Web/sites/proflow-app",
+    "appService.deploySubpath": "API\\bin\\Publish"
 }

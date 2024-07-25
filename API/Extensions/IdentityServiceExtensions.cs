@@ -29,13 +29,10 @@ public static class IdentityServiceExtensions
 				{
 					options.TokenValidationParameters = new TokenValidationParameters
 					{
-						ValidIssuer = config["JwtSettings:Issuer"]!,
-						ValidAudience = config["JwtSettings:Audience"]!,
 						IssuerSigningKey = new SymmetricSecurityKey(
 							Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
-						ValidateIssuer = true,
-						ValidateAudience = true,
-						ValidateLifetime = true,
+						ValidateIssuer = false,
+						ValidateAudience = false,
 						ValidateIssuerSigningKey = true
 					};
 					
