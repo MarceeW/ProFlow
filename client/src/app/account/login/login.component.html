@@ -6,9 +6,23 @@
   </div>
   <div class="row">
     <div class="col-2 p-3">
-      <form (ngSubmit)="login()" #form="ngForm" autocomplete="off">
-        <input name="username"  [(ngModel)]="model.userName" class="form-control mb-2" type="text" placeholder="Username">
-        <input name="password" [(ngModel)]="model.password" class="form-control mb-2" type="password" placeholder="Password">
+      <form [formGroup]="loginForm" (ngSubmit)="login()" autocomplete="off">
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input matInput name="username" formControlName="userName"
+            [errorStateMatcher]="matcher" type="text" placeholder="Username">
+          @if (loginForm.get('userName')?.hasError('required')) {
+            <mat-error>Username is <strong>required</strong></mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput name="password" formControlName="password"
+            [errorStateMatcher]="matcher" type="password" placeholder="Password">
+          @if (loginForm.get('password')?.hasError('required')) {
+            <mat-error>Password is <strong>required</strong></mat-error>
+          }
+        </mat-form-field>
         <button class="btn btn-success" type="submit">Login</button>
       </form>
     </div>
