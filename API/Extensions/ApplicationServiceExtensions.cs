@@ -32,11 +32,13 @@ public static class ApplicationServiceExtensions
 		
 		services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IProjectService, ProjectService>();
+		services.AddScoped<ITeamService, TeamService>();
 		services.AddScoped<INotificationService, NotificationService>();
 		
 		services.AddScoped<IInvitationRepository, InvitationRepository>();
 		services.AddScoped<IAccountRepository, AccountRepository>();
 		services.AddScoped<IProjectRepositoy, ProjectRepository>();
+		services.AddScoped<ITeamRepository, TeamRepository>();
 		services.AddScoped<IUserRepository, UserRepository>();
 		services.AddScoped<INotificationRepository, NotificationRepository>();
 		

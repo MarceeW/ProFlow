@@ -1,0 +1,33 @@
+<div class="member-search-control-container"
+    [attr.aria-labelledby]="_formField?.getLabelId()"
+    (focusin)="onFocusIn()"
+    (focusout)="onFocusOut($event)">
+    <mat-chip-grid #chipGrid aria-label="User selection">
+        @for (user of _addedUsers(); track $index) {
+            <mat-chip-row (removed)="remove(user)">
+                {{user.fullName}}
+                <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        }
+    </mat-chip-grid>
+    <input
+        name="member"
+        placeholder="Add new member"
+        #memberInput
+        [disabled]="disabled"
+        [matChipInputFor]="chipGrid"
+        [matAutocomplete]="auto"
+        [formControl]="_userInputControl"
+    />
+    <mat-autocomplete
+        class="autocomplete-panel"
+        [classList]="['autocomplete-panel']"
+        panelWidth="350px"
+        #auto="matAutocomplete" (optionSelected)="selected($event)">
+        @for (user of _filteredUsers(); track $index) {
+            <mat-option [value]="user">{{user.fullName}}</mat-option>
+        }
+    </mat-autocomplete>
+</div>

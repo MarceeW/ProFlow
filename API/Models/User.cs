@@ -12,7 +12,8 @@ public class User : IdentityUser<Guid>
 	public virtual ICollection<Invitation> CreatedInvitations { get; set; } = [];
 	public virtual ICollection<Team> Teams { get; set; } = [];
 	public virtual ICollection<Team> LedTeams { get; set; } = [];
-	public virtual ICollection<Project> Projects { get; set; } = [];
+	public virtual ICollection<Project> OwnedProjects { get; set; } = [];
+	public virtual ICollection<Project> TeamLeaderInProjects { get; set; } = [];
 	public virtual ICollection<Notification> Notifications { get; set; } = [];
 	public required string FirstName { get; set; }
 	public required string LastName { get; set; }

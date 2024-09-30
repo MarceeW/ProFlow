@@ -11,5 +11,6 @@ public class ProjectDTO
 	[Required]
 	public required UserDTO ProjectManager { get; set; }
 	[Required]
-	public required ICollection<TeamDTO> Teams { get; set; }
+	public required ICollection<UserDTO> TeamLeaders { get; set; }
+	public ICollection<TeamDTO>? Teams { get; set; }
 }

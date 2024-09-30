@@ -1,0 +1,24 @@
+<div class="container">
+  <h1 class="mat-headline-2 pt-3 mb-3">Your teams</h1>
+  <mat-divider></mat-divider>
+  <div class="item-tile-container pt-3">
+    @for (team of teams(); track $index) {
+      <div class="item-tile">
+        <span class="item-title mb-1">
+          {{team.name}}
+        </span>
+        <mat-divider></mat-divider>
+        <div class="item-info">
+          <div style="grid-area: p-manager;">Team size:
+            <b>{{team.members?.length ?? 0}}</b>
+          </div>
+          <div class="item-actions">
+            <button mat-mini-fab color="primary" [routerLink]="'team/' + team.id">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

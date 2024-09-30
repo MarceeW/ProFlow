@@ -35,7 +35,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this.projectService.getProject(projectId).pipe(takeUntil(this.ngDestroy$))
         .subscribe({
           next: project => this.project = project
-        })
+        });
     }
   }
 }

@@ -27,7 +27,7 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.HasMany(p => p.Teams)
 			.WithOne(t => t.Project)
 			.HasForeignKey(t => t.ProjectId)
-			.IsRequired();
+			.IsRequired(false);
 			
 		#endregion Project
 		
@@ -49,6 +49,14 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			);
 			
 		builder.Entity<User>()
+			.HasMany(u => u.TeamLeaderInProjects)
+			.WithMany(p => p.TeamLeaders)
+			.UsingEntity<TeamLeaderProject>(
+				l => l.HasOne<Project>().WithMany().HasForeignKey(tlp => tlp.ProjectId).OnDelete(DeleteBehavior.Restrict),
+				r => r.HasOne<User>().WithMany().HasForeignKey(tlp => tlp.UserId).OnDelete(DeleteBehavior.Restrict)
+			);
+			
+		builder.Entity<User>()
 			.HasMany(u => u.LedTeams)
 			.WithOne(t => t.TeamLeader)
 			.HasForeignKey(u => u.TeamLeaderId)
@@ -61,7 +69,7 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.IsRequired();
 			
 		builder.Entity<User>()
-			.HasMany(u => u.Projects)
+			.HasMany(u => u.OwnedProjects)
 			.WithOne(p => p.ProjectManager)
 			.HasForeignKey(p => p.ProjectManagerId)
 			.IsRequired(false);

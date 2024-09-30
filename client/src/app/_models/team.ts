@@ -1,6 +1,8 @@
 import { User } from "./user";
 
 export interface Team {
-  teamLeader: User,
+  id?: string,
+  name: string,
+  teamLeader?: User,
   members?: User[]
 }

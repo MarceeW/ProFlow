@@ -15,7 +15,10 @@ public class ProjectService : IProjectService
 	private readonly INotificationService _notificationService;
 	private readonly UserManager<User> _userManager;
 
-	public ProjectService(IProjectRepositoy projectRepository, INotificationService notificationService, UserManager<User> userManager)
+	public ProjectService(
+		IProjectRepositoy projectRepository, 
+		INotificationService notificationService, 
+		UserManager<User> userManager)
 	{
 		_projectRepository = projectRepository;
 		_notificationService = notificationService;
@@ -26,21 +29,12 @@ public class ProjectService : IProjectService
 		if(await IsProjectNameExistsAsync(projectDTO.Name))
 			throw new NameAlreadyExistsException(projectDTO.Name);
 		
-		Project project = new Project
-		{
+		Project project = new()
+        {
 			Name = projectDTO.Name,
 			ProjectManager = (await _userManager.FindByNameAsync(projectDTO.ProjectManager.UserName))!,
+			TeamLeaders = await GetTeamLeadersFromDTO(projectDTO.TeamLeaders)
 		};
-		
-		foreach(var teamDTO in projectDTO.Teams) 
-		{
-			Team team = new Team
-			{
-				TeamLeader = (await _userManager.FindByNameAsync(teamDTO.TeamLeader.UserName))!,
-				Project = project
-			};
-			project.Teams.Add(team);
-		}
 
 		await _projectRepository.CreateAsync(project);
 		await _projectRepository.SaveAsync();
@@ -51,5 +45,18 @@ public class ProjectService : IProjectService
 	private async Task<bool> IsProjectNameExistsAsync(string name) 
 	{
 		return await _projectRepository.Get().AnyAsync(p => p.Name == name);
+	}
+	private async Task<ICollection<User>> GetTeamLeadersFromDTO(ICollection<UserDTO> teamLeaders) 
+	{
+		var users = new List<User>();
+		foreach(var teamLeader in teamLeaders) 
+		{
+			var user = await _userManager.FindByNameAsync(teamLeader.UserName);
+			if(user == null)
+				throw new UserNotFoundException(teamLeader.UserName);
+			
+			users.Add(user);
+		}
+		return users;
 	}
 }

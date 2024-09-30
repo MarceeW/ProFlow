@@ -1,0 +1,11 @@
+<div class="container">
+  <h1 class="mat-headline-2 pt-3 mb-3"><b>{{_team()?.name}}</b></h1>
+  <mat-divider></mat-divider>
+  @let members = _team()?.members!;
+  <mat-form-field>
+    <app-member-search-control [bannedMembers]="members" [formControl]="memberControl"/>
+  </mat-form-field>
+  @for(member of members; track $index) {
+    <div>{{member.fullName}}</div>
+  }
+</div>

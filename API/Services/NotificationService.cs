@@ -21,12 +21,12 @@ public class NotificationService : INotificationService
 	}
 	public async Task CreateNotificationsForProject(Project project)
 	{
-		foreach(var team in project.Teams!) 
+		foreach(var teamLeader in project.TeamLeaders) 
 		{
 			await _notificationRepository
-				.CreateAsync(GetTeamLeaderNotification(project.Name, team.TeamLeader));
+				.CreateAsync(GetTeamLeaderNotification(project.Name, teamLeader));
 				
-			await _notificationHub.Clients.User(team.TeamLeader.UserName!)
+			await _notificationHub.Clients.User(teamLeader.UserName!)
 				.ReceiveNotification();
 		}
 			
@@ -40,8 +40,8 @@ public class NotificationService : INotificationService
 		await _notificationHub.Clients.User(notification.TargetUser.UserName!).ReceiveNotification();
 	}
 	
-	private Notification GetTeamLeaderNotification(string projectName, User targetUser) => new Notification
-	{
+	private Notification GetTeamLeaderNotification(string projectName, User targetUser) => new()
+    {
 		Type = "flag",
 		Title = $"Teamleader invitation!",
 		Content = $"You have been invited as a teamleader in {projectName} project!",

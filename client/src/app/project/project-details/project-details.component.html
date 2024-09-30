@@ -10,7 +10,7 @@
     <mat-list>
       @for (team of project?.teams; track $index) {
         <mat-list-item class="team">
-          Teamleader: <b>{{team.teamLeader.fullName}}</b>
+          Teamleader: <b>{{team.teamLeader!.fullName}}</b>
           @if (team.members && team.members.length > 0) {
             <mat-list>
               <div mat-subheader>Members</div>

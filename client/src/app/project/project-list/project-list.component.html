@@ -1,21 +1,23 @@
 <div class="container">
   <h1 class="mat-headline-2 pt-3 mb-3">Ongoing projects</h1>
   <mat-divider></mat-divider>
-  <div class="project-tile-container pt-3">
+  <div class="item-tile-container pt-3">
     @for (project of projects; track project) {
-      <div class="project-tile">
-        <span class="project-title mb-1">
+      <div class="item-tile">
+        <span class="item-title mb-1">
           {{project.name}}
         </span>
         <mat-divider></mat-divider>
-        <div class="project-info">
+        <div class="item-info">
           <div style="grid-area: p-manager;">Project manager:
             <b>{{project.projectManager.fullName}}</b>
           </div>
-          <div style="grid-area: p-teams-count;">Teams:
-            <b>{{project.teams.length}}</b>
-          </div>
-          <div class="project-actions">
+          @if(project.teams) {
+            <div style="grid-area: p-teams-count;">Teams:
+              <b>{{project.teams.length}}</b>
+            </div>
+          }
+          <div class="item-actions">
             <button mat-mini-fab color="primary" [routerLink]="'project/' + project.id">
               <mat-icon>visibility</mat-icon>
             </button>

@@ -14,12 +14,12 @@ public static class Seeder
 			
 		var roles = new List<Role>
 		{
-			new Role { Name = RoleConstant.Administrator },
-			new Role { Name = RoleConstant.ProjectManager },
-			new Role { Name = RoleConstant.TeamLeader },
-			new Role { Name = RoleConstant.FunctionalManager },
-			new Role { Name = RoleConstant.TeamMember },
-			new Role { Name = RoleConstant.User, Default = true },
+			new() { Name = RoleConstant.Administrator },
+			new() { Name = RoleConstant.ProjectManager },
+			new() { Name = RoleConstant.TeamLeader },
+			new() { Name = RoleConstant.FunctionalManager },
+			new() { Name = RoleConstant.TeamMember },
+			new() { Name = RoleConstant.User, Default = true },
 		};
 		
 		foreach (var role in roles) 
@@ -36,7 +36,30 @@ public static class Seeder
 			DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow),
 		};
 		
+		var developer = new User
+		{
+			UserName = "developer",
+			FirstName = "ProFlow",
+			LastName = "Developer",
+			Email = "developer@proflow.com",
+			DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow),
+		};
+		
 		await userManager.CreateAsync(admin, "admin");
-		await userManager.AddToRolesAsync(admin, [RoleConstant.Administrator, RoleConstant.User]);
+		await userManager.CreateAsync(developer, "dev");
+		
+		await userManager.AddToRolesAsync(admin, [
+			RoleConstant.Administrator,
+			RoleConstant.User, 
+			RoleConstant.TeamLeader, 
+			RoleConstant.ProjectManager
+		]);
+		
+		await userManager.AddToRolesAsync(developer, [
+			RoleConstant.Administrator,
+			RoleConstant.User, 
+			RoleConstant.TeamLeader, 
+			RoleConstant.ProjectManager
+		]);
 	} 
 }

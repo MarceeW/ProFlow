@@ -54,7 +54,7 @@ public class AdminController : BaseApiController
 		if(loggedInUser == null) 
 			return Unauthorized("Logged in user's username claim not found!");
 		
-		Invitation invitation = new Invitation { Expires = expirationDate, CreatedBy = loggedInUser };
+		Invitation invitation = new() { Expires = expirationDate, CreatedBy = loggedInUser };
 		
 		await _invitationRepository.CreateAsync(invitation);
 		await _invitationRepository.SaveAsync();
