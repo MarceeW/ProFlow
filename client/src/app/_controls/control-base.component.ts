@@ -33,6 +33,7 @@ export abstract class ControlBase<T>  implements ControlValueAccessor, MatFormFi
     protected readonly _disabledByCva = signal(false);
     protected readonly _disabled = computed(() => this._disabledByInput() || this._disabledByCva());
     protected readonly _requiredByValidators = signal(false);
+    protected readonly _destroy$ = new Subject<void>();
 
     onChange = (_: any) => {};
     onTouched = () => {};
@@ -107,6 +108,8 @@ export abstract class ControlBase<T>  implements ControlValueAccessor, MatFormFi
 
     ngOnDestroy(): void {
         this.stateChanges.complete();
+        this._destroy$.next();
+        this._destroy$.complete();
     }
 
     onFocusIn(): void {

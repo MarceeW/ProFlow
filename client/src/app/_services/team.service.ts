@@ -29,10 +29,10 @@ export class TeamService extends BaseService {
   }
 
   addMembers(id: string, members: User[]) {
-    return this.http.post(this.apiUrl + 'teams/add-to-team/' + id, members);
+    return this.http.patch(this.apiUrl + 'teams/add-to-team/' + id, members);
   }
 
   removeMembers(id: string, members: User[]) {
-    return this.http.post(this.apiUrl + 'teams/remove-to-team/' + id, members);
+    return this.http.patch(this.apiUrl + 'teams/remove-from-team/' + id, members);
   }
 }

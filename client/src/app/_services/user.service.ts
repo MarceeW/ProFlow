@@ -1,8 +1,8 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BaseService } from './base.service';
 import { User } from '../_models/user';
 import { AccountService } from './account.service';
-import { HttpParams } from '@angular/common/http';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,8 @@ import { HttpParams } from '@angular/common/http';
 export class UserService extends BaseService {
   private accountService: AccountService = inject(AccountService);
 
-  getUsers(filter?: string | null) {
-    return this.http.get<User[]>(this.apiUrl + 'user/' + (filter ? filter : ''));
+  getUsers(query?: string | null) {
+    return this.http.get<User[]>(this.apiUrl + 'user/' + (query ? query : ''));
   }
 
   getCurrentUser() {

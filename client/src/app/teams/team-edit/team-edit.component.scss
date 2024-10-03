@@ -1,0 +1,50 @@
+.edit-settings-container {
+  margin-top: 16px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.member-container {
+  gap: 8px;
+  padding: 16px;
+  border-radius: 24px;
+  background-color: rgba(0, 0, 0, 0.05);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &, * {
+    display: flex;
+  }
+  .title {
+    justify-content: center;
+    font-weight: 500;
+    border-width: 1px;
+    border-bottom-style: solid;
+    border-color: rgba(0, 0, 0, 0.2);
+    width: 80%;
+  }
+  .member {
+    align-items: center;
+    border-radius: 24px;
+    padding: 4px 16px;
+    user-select: none;
+    background-color: rgba(0, 0, 0, 0.1);
+
+    .member-remove-icon-container {
+      cursor: pointer;
+      padding-left: 4px;
+      opacity: 50%;
+      scale: 0.75;
+      transition: opacity 0.3s ease-in-out;
+      &:hover {
+        opacity: 100%;
+      }
+    }
+  }
+  .marked-to-remove {
+    background-color: rgba(207, 43, 43, 0.3);
+  }
+}
+

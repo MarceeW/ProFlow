@@ -59,7 +59,7 @@ public class TeamService : ITeamService
 		foreach(var userDTO in users) 
 		{
 			var user = (await _userManager.FindByNameAsync(userDTO.UserName))!;
-			if(await team.Members.AsQueryable().AnyAsync(u => u.UserName == user.UserName))
+			if(team.Members.Any(u => u.UserName == user.UserName))
 				continue;
 				
 			team.Members.Add(user);
@@ -71,6 +71,8 @@ public class TeamService : ITeamService
 				TargetUser = user
 			});
 		}
+		
+		await _teamRepository.SaveAsync();
 	}
 
 	public async Task RemoveFromTeamAsync(User loggedInUser, Guid teamId, IEnumerable<UserDTO> users)
@@ -86,6 +88,8 @@ public class TeamService : ITeamService
 			var user = (await _userManager.FindByNameAsync(userDTO.UserName))!;
 			team.Members.Remove(user);
 		}
+		
+		await _teamRepository.SaveAsync();
 	}
 	
 	public async Task RenameAsync(User loggedInUser, TeamDTO teamDTO)

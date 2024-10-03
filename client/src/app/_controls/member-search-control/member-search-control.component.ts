@@ -37,17 +37,18 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
   override id: string = `app-member-search-control-${MemberSearchControlComponent.nextId++}`;
   override controlType: string = 'app-member-search-control';
 
-  readonly bannedMembers = input<User[]>([]);
+  readonly notAllowedMembers = input<User[]>([]);
   readonly _addedUsers = signal<User[]>([]);
   readonly _users = signal<User[]>([]);
   readonly _userInputControl = new FormControl('');
   readonly _filteredUsers = computed<User[]>(() => {
     return this._users()
       .filter(user =>
-        user.fullName.startsWith(this._currentUsersName()) &&
+        user.userName != this._accountService.getCurrentUser()?.userName &&
+        user.fullName.toLowerCase()
+          .includes(this._currentUsersName().toLowerCase()) &&
         !this._addedUsers().includes(user) &&
-        !this.bannedMembers().includes(user) &&
-        user.userName != this._accountService.getCurrentUser()?.userName);
+        !this.notAllowedMembers().filter(n => n.userName == user.userName).length);
   });
 
   private readonly _currentUsersName = signal<string>('');
@@ -56,10 +57,12 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
 
   override ngOnInit() {
     super.ngOnInit();
-    this._userService.getUsers().subscribe({
-      next: users => {
-        this._users.set(users);
-      }
+    this._userService.getUsers()
+      .pipe(takeUntil(this._destroy$))
+      .subscribe({
+        next: users => {
+          this._users.set(users);
+        }
     });
 
     this._userInputControl.valueChanges.subscribe({

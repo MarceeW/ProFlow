@@ -98,7 +98,7 @@ namespace API.Controllers
 			}
 		}
 		
-		[HttpPost("add-to-team/{teamId}")]
+		[HttpPatch("add-to-team/{teamId}")]
 		[Authorize(Roles = RoleConstant.TeamLeader)]
 		public async Task<ActionResult> AddToTeam(Guid teamId, IEnumerable<UserDTO> users) 
 		{
@@ -113,7 +113,7 @@ namespace API.Controllers
 			}
 		}
 		
-		[HttpPost("remove-from-team/{teamId}")]
+		[HttpPatch("remove-from-team/{teamId}")]
 		[Authorize(Roles = RoleConstant.TeamLeader)]
 		public async Task<ActionResult> RemoveFromTeam(Guid teamId, IEnumerable<UserDTO> users) 
 		{
@@ -128,9 +128,9 @@ namespace API.Controllers
 			}
 		}
 		
-		[HttpPost("rename")]
+		[HttpPatch("rename")]
 		[Authorize(Roles = RoleConstant.TeamLeader)]
-		public async Task<ActionResult> RemoveFromTeam(Guid teamId, TeamDTO teamDTO) 
+		public async Task<ActionResult> Rename(Guid teamId, TeamDTO teamDTO) 
 		{
 			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
 			try
