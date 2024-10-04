@@ -1,0 +1,33 @@
+<div class="project-search-control-container"
+    [attr.aria-labelledby]="_formField?.getLabelId()"
+    (focusin)="onFocusIn()"
+    (focusout)="onFocusOut($event)">
+    <mat-chip-grid #chipGrid aria-label="Project selection">
+        @for (project of _addedProjects(); track $index) {
+            <mat-chip-row (removed)="remove(project)">
+                {{project.name}}
+                <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        }
+    </mat-chip-grid>
+    <input
+        name="project"
+        placeholder="Add new project"
+        #projectInput
+        [disabled]="disabled"
+        [matChipInputFor]="chipGrid"
+        [matAutocomplete]="auto"
+        [formControl]="_projectInputControl"
+    />
+    <mat-autocomplete
+        class="autocomplete-panel"
+        [classList]="['autocomplete-panel']"
+        panelWidth="350px"
+        #auto="matAutocomplete" (optionSelected)="selected($event)">
+        @for (project of _filteredProjects(); track $index) {
+            <mat-option [value]="project">{{project.name}}</mat-option>
+        }
+    </mat-autocomplete>
+</div>

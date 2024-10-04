@@ -12,6 +12,8 @@ import { MemberSearchControlComponent } from '../../_controls/member-search-cont
 import { Team } from '../../_models/team';
 import { User } from '../../_models/user';
 import { TeamService } from './../../_services/team.service';
+import { Project } from '../../_models/project';
+import { ProjectSearchControlComponent } from '../../_controls/project-search-control/project-search-control.component';
 
 @Component({
   selector: 'app-team-edit',
@@ -24,7 +26,8 @@ import { TeamService } from './../../_services/team.service';
     MatTooltipModule,
     FormsModule,
     ReactiveFormsModule,
-    MemberSearchControlComponent
+    MemberSearchControlComponent,
+    ProjectSearchControlComponent
   ],
   templateUrl: './team-edit.component.html',
   styleUrl: './team-edit.component.scss'
@@ -32,9 +35,11 @@ import { TeamService } from './../../_services/team.service';
 export class TeamEditComponent implements OnInit, OnDestroy {
 
   readonly memberControl = new FormControl<User[]>([]);
+  readonly projectControl = new FormControl<Project[]>([]);
 
   readonly team = signal<Team | null>(null);
   readonly membersToRemove = signal<User[]>([]);
+  readonly projectsToRemove = signal<Project[]>([]);
 
   private readonly _teamService = inject(TeamService);
   private readonly _toastr = inject(ToastrService);
@@ -51,7 +56,8 @@ export class TeamEditComponent implements OnInit, OnDestroy {
   }
 
   canSaveHappen() {
-    return this.canRemovedMembersSave() || this.canAddedMembersSave();
+    return this.canRemovedMembersSave() || this.canAddedMembersSave()
+      || this.canRemovedProjectsSave() || this.canAddedProjectsSave();
   }
 
   onSave() {
@@ -61,9 +67,15 @@ export class TeamEditComponent implements OnInit, OnDestroy {
     if(this.canAddedMembersSave()) {
       this.onAddMembersSave();
     }
+    if(this.canRemovedProjectsSave()) {
+      this.onRemoveProjectsSave();
+    }
+    if(this.canAddedProjectsSave()) {
+      this.onAddProjectsSave();
+    }
   }
 
-  onRemoveClicked(member: User) {
+  onMemberRemoveClicked(member: User) {
     const idx = this.getMemberIdxInRemovedMembers(member);
     if(idx == -1)
       this.membersToRemove.update(members => [...members, member]);
@@ -74,13 +86,50 @@ export class TeamEditComponent implements OnInit, OnDestroy {
       });
   }
 
+  onProjectRemoveClicked(project: Project) {
+    const idx = this.getProjectIdxInRemovedProjects(project);
+    if(idx == -1)
+      this.projectsToRemove.update(projects => [...projects, project]);
+    else
+      this.projectsToRemove.update(projects => {
+        projects.splice(idx, 1);
+        return projects;
+      });
+  }
+
+  onRemoveProjectsSave() {
+    this._teamService
+      .removeProjects(this.team()!.id!, this.projectsToRemove())
+      .pipe(takeUntil(this._destroy$))
+      .subscribe({
+        next: _ => {
+          this._toastr.success('Succesfully removed from project(s)!');
+          this.projectsToRemove.set([]);
+          this.readTeam();
+        }
+      });
+  }
+
+  onAddProjectsSave() {
+    this._teamService
+      .addToProject(this.team()!.id!, this.projectControl.value!)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe({
+        next: _ => {
+          this._toastr.success('Succesfully added to project(s)!');
+          this.projectControl.setValue([]);
+          this.readTeam();
+        }
+      });
+  }
+
   onAddMembersSave() {
     this._teamService
       .addMembers(this.team()!.id!, this.memberControl.value!)
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: _ => {
-          this._toastr.success('Team members added!');
+          this._toastr.success('Team member(s) added succesfully!');
           this.memberControl.setValue([]);
           this.readTeam();
         }
@@ -93,11 +142,31 @@ export class TeamEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: _ => {
-          this._toastr.success('Team members removed!');
+          this._toastr.success('Team member(s) removed succesfully!');
           this.membersToRemove.set([]);
           this.readTeam();
         }
       });
+  }
+
+  isMemberMarkedToRemove(member: User) {
+    return this.getMemberIdxInRemovedMembers(member) != -1;
+  }
+
+  isProjectMarkedToRemove(project: Project) {
+    return this.getProjectIdxInRemovedProjects(project) != -1;
+  }
+
+  private getProjectIdxInRemovedProjects(project: Project) {
+    return this.projectsToRemove().indexOf(project);
+  }
+
+  private canRemovedProjectsSave() {
+    return !!this.projectsToRemove().length;
+  }
+
+  private canAddedProjectsSave() {
+    return this.projectControl.value!.length > 0
   }
 
   private canRemovedMembersSave() {
@@ -110,10 +179,6 @@ export class TeamEditComponent implements OnInit, OnDestroy {
 
   private getMemberIdxInRemovedMembers(member: User) {
     return this.membersToRemove().indexOf(member);
-  }
-
-  isMemberMarkedToRemove(member: User) {
-    return this.getMemberIdxInRemovedMembers(member) != -1;
   }
 
   private readTeam() {

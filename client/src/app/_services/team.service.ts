@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Team } from '../_models/team';
 import { User } from '../_models/user';
+import { Project } from '../_models/project';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,13 @@ export class TeamService extends BaseService {
 
   removeMembers(id: string, members: User[]) {
     return this.http.patch(this.apiUrl + 'teams/remove-from-team/' + id, members);
+  }
+
+  addToProject(id: string, projects: Project[]) {
+    return this.http.patch(this.apiUrl + 'teams/add-to-project/' + id, projects);
+  }
+
+  removeProjects(id: string, projects: Project[]) {
+    return this.http.patch(this.apiUrl + 'teams/remove-from-project/' + id, projects);
   }
 }

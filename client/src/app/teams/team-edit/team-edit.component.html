@@ -2,32 +2,62 @@
   <div class="mat-headline-4 pt-3 mb-3">{{team()?.name + ' '}}<b>settings</b></div>
   <mat-divider></mat-divider>
   <div class="edit-settings-container">
-    <div class="member-container">
-      <div class="title">
-        Team members:
-      </div>
-      @let members = team()?.members ?? [];
-      @if(members.length == 0) {
-        This team has no members yet!
-      }
-      @for(member of members; track $index) {
-        @let isMarkedToRemove = isMemberMarkedToRemove(member);
-        <div class="member" [class.marked-to-remove]="isMarkedToRemove">
-          {{member.fullName}}
-          <div class="member-remove-icon-container">
-            <mat-icon
-              (click)="onRemoveClicked(member)"
-              [matTooltip]="isMarkedToRemove ?
-                'Undo member remove' : 'Remove member from the team'">
-              {{isMarkedToRemove ? 'undo' : 'close'}}
-            </mat-icon>
-          </div>
+    <div class="member-settings-container" role="group">
+      <div class="member-container">
+        <div class="title">
+          Team members:
         </div>
-      }
+        @let members = team()?.members ?? [];
+        @if(members.length == 0) {
+          This team has no members yet!
+        }
+        @for(member of members; track $index) {
+          @let _isMemberMarkedToRemove = isMemberMarkedToRemove(member);
+          <div class="member" [class.marked-to-remove]="_isMemberMarkedToRemove">
+            {{member.fullName}}
+            <div class="remove-icon-container">
+              <mat-icon
+                (click)="onMemberRemoveClicked(member)"
+                [matTooltip]="_isMemberMarkedToRemove ?
+                  'Undo member remove' : 'Remove member from the team'">
+                {{_isMemberMarkedToRemove ? 'undo' : 'close'}}
+              </mat-icon>
+            </div>
+          </div>
+        }
+      </div>
+      <mat-form-field>
+        <app-member-search-control [notAllowedMembers]="members ?? []" [formControl]="memberControl"/>
+      </mat-form-field>
     </div>
-    <mat-form-field>
-      <app-member-search-control [notAllowedMembers]="members ?? []" [formControl]="memberControl"/>
-    </mat-form-field>
+    <div class="project-settings-container" role="group">
+      <div class="project-container">
+        <div class="title">
+          Team projects:
+        </div>
+        @let projects = team()?.projects ?? [];
+        @if(projects.length == 0) {
+          This team has no projects yet!
+        }
+        @for(project of projects; track $index) {
+          @let _isProjectMarkedToRemove = isProjectMarkedToRemove(project);
+          <div class="member" [class.marked-to-remove]="_isProjectMarkedToRemove">
+            {{project.name}}
+            <div class="remove-icon-container">
+              <mat-icon
+                (click)="onProjectRemoveClicked(project)"
+                [matTooltip]="_isProjectMarkedToRemove ?
+                  'Undo project remove' : 'Remove project from the team'">
+                {{_isProjectMarkedToRemove ? 'undo' : 'close'}}
+              </mat-icon>
+            </div>
+          </div>
+        }
+      </div>
+      <mat-form-field>
+        <app-project-search-control [notAllowedProjects]="projects ?? []" [formControl]="projectControl"/>
+      </mat-form-field>
+    </div>
   </div>
   <button
     mat-flat-button color="primary"

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Project } from '../_models/project';
+import { Team } from '../_models/team';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,14 @@ export class ProjectService extends BaseService {
 
   getProjects() {
     return this.http.get<Project[]>(this.apiUrl + 'project');
+  }
+
+  getProjectTeams(id: string) {
+    return this.http.get<Team[]>(this.apiUrl + 'project/teams/' + id);
+  }
+
+  getMyProjects() {
+    return this.http.get<Project[]>(this.apiUrl + 'project/my-projects');
   }
 
   getProject(id: string) {

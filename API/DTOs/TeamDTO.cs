@@ -11,5 +11,6 @@ public class TeamDTO
 	[MaxLength(50)]
 	public required string Name { get; set; }
 	public UserDTO? TeamLeader { get; set; }
+	public ICollection<ProjectDTO>? Projects { get; set; }
 	public ICollection<UserDTO>? Members { get; set; }
 }

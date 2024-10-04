@@ -48,11 +48,10 @@ namespace API.Controllers
 		public async Task<IEnumerable<TeamDTO>> GetMyTeams() 
 		{
 			var user = (await _userManager.GetLoggedInUserAsync(User))!;
-			return await _teamRepository
-				.Get()
-				.Where(t => t.TeamLeader == user)
-				.ProjectTo<TeamDTO>(_mapper.ConfigurationProvider)
-				.ToListAsync();
+			var teams = user.LedTeams
+				.AsQueryable()
+				.ProjectTo<TeamDTO>(_mapper.ConfigurationProvider);
+			return teams;
 		}
 		
 		[HttpGet("{id}")]
@@ -73,8 +72,8 @@ namespace API.Controllers
 		{
 			try
 			{
-				var user = (await _userManager.GetLoggedInUserAsync(User))!;
-				await _teamService.CreateTeamAsync(teamDTO, user);
+				var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+				await _teamService.CreateTeamAsync(teamDTO, loggedInUser);
 				return Created();
 			}
 			catch (Exception e)
@@ -130,12 +129,44 @@ namespace API.Controllers
 		
 		[HttpPatch("rename")]
 		[Authorize(Roles = RoleConstant.TeamLeader)]
-		public async Task<ActionResult> Rename(Guid teamId, TeamDTO teamDTO) 
+		public async Task<ActionResult> Rename(TeamDTO teamDTO) 
 		{
 			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
 			try
 			{
 				await _teamService.RenameAsync(loggedInUser, teamDTO);
+				return Ok();
+			} catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+		}
+		
+		[HttpPatch("add-to-project/{teamId}")]
+		[Authorize(Roles = RoleConstant.TeamLeader)]
+		public async Task<ActionResult> AddToProject(
+			Guid teamId, IEnumerable<ProjectDTO> projects) 
+		{
+			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+			try
+			{
+				await _teamService.AddToProjectAsync(loggedInUser, teamId, projects);
+				return Ok();
+			} catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+		}
+		
+		[HttpPatch("remove-from-project/{teamId}")]
+		[Authorize(Roles = RoleConstant.TeamLeader)]
+		public async Task<ActionResult> RemoveFromProject(
+			Guid teamId, IEnumerable<ProjectDTO> projects) 
+		{
+			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+			try
+			{
+				await _teamService.RemoveFromProjectAsync(loggedInUser, teamId, projects);
 				return Ok();
 			} catch (Exception e)
 			{

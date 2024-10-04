@@ -11,4 +11,6 @@ public interface ITeamService
 	Task AddToTeamAsync(User loggedInUser, Guid teamId, IEnumerable<UserDTO> users);
 	Task RemoveFromTeamAsync(User loggedInUser, Guid teamId, IEnumerable<UserDTO> users);
 	Task RenameAsync(User loggedInUser, TeamDTO teamDTO);
+	Task AddToProjectAsync(User loggedInUser, Guid teamId, IEnumerable<ProjectDTO> projects);
+	Task RemoveFromProjectAsync(User loggedInUser, Guid teamId, IEnumerable<ProjectDTO> projects);
 }

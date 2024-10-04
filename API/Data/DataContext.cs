@@ -1,4 +1,5 @@
-﻿using API.Models;
+﻿using API.Migrations;
+using API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +26,11 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 		
 		builder.Entity<Project>()
 			.HasMany(p => p.Teams)
-			.WithOne(t => t.Project)
-			.HasForeignKey(t => t.ProjectId)
-			.IsRequired(false);
+			.WithMany(t => t.Projects)
+			.UsingEntity<TeamProject>(
+				l => l.HasOne<Team>().WithMany().HasForeignKey(tp => tp.TeamId).OnDelete(DeleteBehavior.Restrict),
+				r => r.HasOne<Project>().WithMany().HasForeignKey(tp => tp.ProjectId).OnDelete(DeleteBehavior.Restrict)
+			);
 			
 		#endregion Project
 		

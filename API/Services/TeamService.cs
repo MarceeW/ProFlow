@@ -11,17 +11,20 @@ namespace API.Services;
 public class TeamService : ITeamService
 { 
 	private readonly ITeamRepository _teamRepository;
+	private readonly IProjectRepositoy _projectRepositoy;
 	private readonly UserManager<User> _userManager;
 	private readonly INotificationService _notificationService;
 
 	public TeamService(
 		ITeamRepository teamRepository,
 		UserManager<User> userManager,
-		INotificationService notificationService)
+		INotificationService notificationService,
+		IProjectRepositoy projectRepositoy)
 	{
 		_teamRepository = teamRepository;
 		_userManager = userManager;
 		_notificationService = notificationService;
+		_projectRepositoy = projectRepositoy;
 	}
 
 	public async Task CreateTeamAsync(TeamDTO teamDTO, User user) 
@@ -32,8 +35,10 @@ public class TeamService : ITeamService
 		Team team = new()
 		{
 			TeamLeader = user,
-			Name = teamDTO.Name
+			Name = teamDTO.Name,
+			Members = [user]
 		};
+		
 		await _teamRepository.CreateAsync(team);
 		await _teamRepository.SaveAsync();
 	}
@@ -109,4 +114,37 @@ public class TeamService : ITeamService
 		return await _teamRepository.Get().AnyAsync(t => t.Name == name);
 	}
 
+	public async Task AddToProjectAsync(User loggedInUser, Guid teamId, IEnumerable<ProjectDTO> projects)
+	{
+		var team = await _teamRepository.ReadAsync(teamId) 
+			?? throw new KeyNotFoundException();
+		
+		if(team.TeamLeader != loggedInUser)
+			throw new NotAllowedException();
+			
+		foreach(var projectDTO in projects) 
+		{
+			var project = await _projectRepositoy.ReadAsync(projectDTO.Id)!;
+			project.Teams.Add(team);
+		}	
+			
+		await _projectRepositoy.SaveAsync();
+	}
+
+    public async Task RemoveFromProjectAsync(User loggedInUser, Guid teamId, IEnumerable<ProjectDTO> projects)
+    {
+        var team = await _teamRepository.ReadAsync(teamId) 
+			?? throw new KeyNotFoundException();
+		
+		if(team.TeamLeader != loggedInUser)
+			throw new NotAllowedException();
+		
+		foreach(var projectDTO in projects) 
+		{
+			var project = await _projectRepositoy.ReadAsync(projectDTO.Id)!;
+			team.Projects.Remove(project);
+		}
+		
+		await _teamRepository.SaveAsync();
+    }
 }

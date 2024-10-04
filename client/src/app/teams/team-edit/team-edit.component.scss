@@ -1,13 +1,35 @@
 .edit-settings-container {
   margin-top: 16px;
-  width: 300px;
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 32px;
+}
+
+.member-settings-container {
+  padding-right: 32px;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-right-style: solid;
+}
+
+.member-settings-container, .project-settings-container {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.member-container {
-  gap: 8px;
+.title {
+  justify-content: center;
+  font-weight: 500;
+  border-width: 1px;
+  border-bottom-style: solid;
+  border-color: rgba(0, 0, 0, 0.2);
+  width: 80%;
+}
+
+.member-container, .project-container {
+  gap: 4px;
   padding: 16px;
   border-radius: 24px;
   background-color: rgba(0, 0, 0, 0.05);
@@ -17,34 +39,32 @@
   &, * {
     display: flex;
   }
-  .title {
-    justify-content: center;
-    font-weight: 500;
-    border-width: 1px;
-    border-bottom-style: solid;
-    border-color: rgba(0, 0, 0, 0.2);
-    width: 80%;
-  }
-  .member {
-    align-items: center;
-    border-radius: 24px;
-    padding: 4px 16px;
-    user-select: none;
-    background-color: rgba(0, 0, 0, 0.1);
 
-    .member-remove-icon-container {
-      cursor: pointer;
-      padding-left: 4px;
-      opacity: 50%;
-      scale: 0.75;
-      transition: opacity 0.3s ease-in-out;
-      &:hover {
-        opacity: 100%;
-      }
-    }
-  }
   .marked-to-remove {
-    background-color: rgba(207, 43, 43, 0.3);
+    color: white;
+    background-color: rgb(255, 9, 9);
   }
 }
 
+.member, .project {
+  align-items: center;
+  font-weight: 500;
+  border-radius: 24px;
+  padding: 4px 16px;
+  user-select: none;
+  transition: background-color 0.3s ease-in-out;
+  &:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.remove-icon-container {
+  cursor: pointer;
+  padding-left: 4px;
+  opacity: 75%;
+  scale: 0.75;
+  transition: opacity 0.3s ease-in-out;
+  &:hover {
+    opacity: 100%;
+  }
+}
