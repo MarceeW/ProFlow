@@ -5,6 +5,5 @@ export interface Project {
   id?: string,
   name: string,
   projectManager: User,
-  teamLeaders: User[],
-  teams?: Team[]
+  teamLeaders: User[]
 }

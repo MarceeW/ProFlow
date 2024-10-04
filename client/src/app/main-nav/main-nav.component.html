@@ -25,7 +25,7 @@
         [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="((isHandset$ | async) || sidenavExpanded)">
       <mat-nav-list>
-        <a *ngIf="accountService.isCurrentUserInRole(RoleType.Administrator) | async"
+        <a *ngIf="accountService.isCurrentUserInRole(RoleType.Administrator)"
           mat-list-item routerLink="/admin"
           routerLinkActive="mat-list-item-active">
           <div class="d-flex align-content-center">

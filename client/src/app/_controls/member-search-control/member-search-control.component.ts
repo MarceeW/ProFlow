@@ -35,16 +35,16 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
   static nextId = 0;
 
   override id: string = `app-member-search-control-${MemberSearchControlComponent.nextId++}`;
-  override controlType: string = 'app-member-search-control';
+  override controlType: string = 'app-project-search-control';
 
   readonly notAllowedMembers = input<User[]>([]);
+
   readonly _addedUsers = signal<User[]>([]);
   readonly _users = signal<User[]>([]);
   readonly _userInputControl = new FormControl('');
   readonly _filteredUsers = computed<User[]>(() => {
     return this._users()
       .filter(user =>
-        user.userName != this._accountService.getCurrentUser()?.userName &&
         user.fullName.toLowerCase()
           .includes(this._currentUsersName().toLowerCase()) &&
         !this._addedUsers().includes(user) &&
@@ -53,7 +53,6 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
 
   private readonly _currentUsersName = signal<string>('');
   private readonly _userService = inject(UserService);
-  private readonly _accountService = inject(AccountService)
 
   override ngOnInit() {
     super.ngOnInit();

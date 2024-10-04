@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipGrid, MatChipsModule } from '@angular/material/chips';
@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { TeamService } from '../../_services/team.service';
 import { Team } from '../../_models/team';
+import { MemberSearchControlComponent } from "../../_controls/member-search-control/member-search-control.component";
 
 @Component({
   selector: 'app-team-create',
@@ -41,31 +42,19 @@ import { Team } from '../../_models/team';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-  ],
+    MemberSearchControlComponent
+],
   templateUrl: './team-create.component.html',
   styleUrl: './team-create.component.scss'
 })
-export class TeamCreateComponent {
-  teamCreateForm = new FormGroup({
+export class TeamCreateComponent implements OnInit, OnDestroy {
+  readonly currentUser = signal<User | null>(null);
+  readonly teamCreateForm = new FormGroup({
     teamName: new FormControl('', [Validators.required]),
-    members: new FormControl(new Array<User>(), [Validators.required]),
-    member: new FormControl('')
+    members: new FormControl<User[]>([], [Validators.required]),
   });
-  @ViewChild('memberInput')
-  memberInput!: ElementRef<HTMLInputElement>;
-
-  @ViewChild('memberChipGrid')
-  memberChipGrid!: MatChipGrid;
-
-  filteredUsers$!: Observable<User[]>;
-  members: User[] = [];
-  errorStateMatcher = new FormErrorStateMatcher();
-  private announcer = inject(LiveAnnouncer);
-  private users!: User[];
-  private member!: User;
 
   private ngDestroy$ = new ReplaySubject();
-  private displayedmemberCount = 10;
 
   constructor(
     private userService: UserService,
@@ -73,70 +62,19 @@ export class TeamCreateComponent {
     private toastr: ToastrService,
     private router: Router) {}
 
-  ngOnDestroy(): void {
-    this.ngDestroy$.next(true);
-    this.ngDestroy$.complete();
-  }
-
   ngOnInit(): void {
-    this.userService.getUsers().pipe(
-      takeUntil(this.ngDestroy$)
-    ).subscribe({
-      next: users => {
-        this.users = users;
-        this._setupFilteredUsers();
-      }
-    });
-
     this.userService.getCurrentUser()?.pipe(
       takeUntil(this.ngDestroy$)
     ).subscribe({
-        next: user => {
-          this.member = user;
-        }
+      next: user => {
+        this.currentUser.set(user);
+      }
     });
   }
 
-  private _setupFilteredUsers() {
-    const memberCtrl = this.teamCreateForm.controls.member;
-    this.filteredUsers$ = memberCtrl.valueChanges.pipe(
-      startWith(null),
-      map((filter: string | null) => (filter ? this._filter(filter).splice(0, this.displayedmemberCount) :
-        this._getAvailableUsers().slice(0, this.displayedmemberCount))),
-    )
-  }
-
-  private _filter(filter: string): User[] {
-    const filterValue = filter.toLowerCase();
-    return this._getAvailableUsers().filter(u => u.fullName.toLowerCase().startsWith(filterValue));
-  }
-
-  private _getAvailableUsers(): User[] {
-    return this.users.filter(user => this.members.indexOf(user) < 0);
-  }
-
-  memberselected(event: MatAutocompleteSelectedEvent) {
-    const name = event.option.viewValue;
-    const user: User = this.users.filter(u => u.fullName === name)[0];
-
-    this.members.push(user);
-    this.memberInput.nativeElement.value = '';
-
-    const memberCtrl = this.teamCreateForm.controls.member;
-    memberCtrl.setValue(null);
-
-    const membersCtrl = this.teamCreateForm.controls.members;
-    membersCtrl.setValue(this.members);
-  }
-
-  removeMember(memberName: User) {
-    const index = this.members.indexOf(memberName);
-
-    this.members.splice(index, 1);
-    this.announcer.announce(`Removed ${memberName}`);
-
-    const memberCtrl = this.teamCreateForm.controls.member;
-    memberCtrl.setValue(null);
+  ngOnDestroy(): void {
+    this.ngDestroy$.next(true);
+    this.ngDestroy$.complete();
   }
 
   createTeam() {
@@ -145,8 +83,9 @@ export class TeamCreateComponent {
 
     const team: Team = {
       name: this.teamCreateForm.controls.teamName.value!,
-      members: this.members
+      members: this.teamCreateForm.controls.members.value!
     };
+
     this.teamService.createTeam(team).pipe(
       takeUntil(this.ngDestroy$)
     ).subscribe({

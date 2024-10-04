@@ -9,7 +9,7 @@
         <span class="menu-item-label">View projects</span>
       </button>
     </a>
-    @if (accountService.isCurrentUserInRole(RoleType.ProjectManager) | async) {
+    @if (accountService.isCurrentUserInRole(RoleType.ProjectManager)) {
       <a class="menu-link" routerLink="projects/create">
         <button mat-menu-item>
           <mat-icon>add_circle</mat-icon>
@@ -18,7 +18,7 @@
       </a>
     }
   </mat-menu>
-  @if (accountService.isCurrentUserInRole(RoleType.TeamLeader) | async) {
+  @if (accountService.isCurrentUserInRole(RoleType.TeamLeader)) {
     <button class="nav-button" [matMenuTriggerFor]="teamsMenu" mat-button>
       Teams
     </button>

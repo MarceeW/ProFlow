@@ -97,16 +97,13 @@ export class AccountService extends BaseService {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
-  isCurrentUserInRole(role: RoleType | string) {
-    return this.currentUser$.pipe(map(
-      user => {
-        if(!user)
-          return false;
+  isCurrentUserInRole(...role: (RoleType | string)[]) {
+    const user = this.getCurrentUser();
 
-      const isInRole = user.roles.indexOf(role) >= 0;
-      return isInRole;
-      }
-    ));
+    if(!user)
+      return false;
+
+    return user.roles.filter(_role => role.includes(_role)).length > 0;
   }
 
   uploadProfilePicture(image: File) {
