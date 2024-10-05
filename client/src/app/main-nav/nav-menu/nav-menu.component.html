@@ -9,7 +9,7 @@
         <span class="menu-item-label">View projects</span>
       </button>
     </a>
-    @if (accountService.isCurrentUserInRole(RoleType.ProjectManager)) {
+    @if (accountService.isCurrentUserInRole(RoleType.ProjectManager, RoleType.Administrator)) {
       <a class="menu-link" routerLink="projects/create">
         <button mat-menu-item>
           <mat-icon>add_circle</mat-icon>
@@ -18,7 +18,7 @@
       </a>
     }
   </mat-menu>
-  @if (accountService.isCurrentUserInRole(RoleType.TeamLeader)) {
+  @if (accountService.isCurrentUserInRole(RoleType.TeamLeader, RoleType.Administrator)) {
     <button class="nav-button" [matMenuTriggerFor]="teamsMenu" mat-button>
       Teams
     </button>
@@ -36,5 +36,10 @@
           </button>
         </a>
     </mat-menu>
+    @if(accountService.isCurrentUserInRole(RoleType.Administrator)) {
+      <button class="nav-button" mat-button routerLink="/admin">
+        Admin settings
+      </button>
+    }
   }
 </div>

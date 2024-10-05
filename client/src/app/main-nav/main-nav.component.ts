@@ -15,6 +15,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { NotificationMenuComponent } from './notification-menu/notification-menu.component';
 import { AccountMenuComponent } from './account-menu/account-menu.component';
 import { RoleType } from '../_enums/role-type.enum';
+import { SidenavItemService } from '../_services/sidenav-item.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -39,6 +40,7 @@ import { RoleType } from '../_enums/role-type.enum';
   encapsulation: ViewEncapsulation.None
 })
 export class MainNavComponent {
+  readonly sidenavItemService = inject(SidenavItemService);
   private breakpointObserver = inject(BreakpointObserver);
   sidenavExpanded = false;
 

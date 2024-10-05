@@ -1,6 +1,7 @@
 <ng-container>
   <mat-toolbar class="align-self-center" color="primary">
-    <button *ngIf="(accountService.currentUser$ | async)"
+    <button *ngIf="(accountService.currentUser$ | async) &&
+      sidenavItemService.items.length > 0"
       mat-icon-button (click)="sidenavExpanded = !sidenavExpanded">
       <mat-icon>menu</mat-icon>
     </button>
@@ -23,16 +24,16 @@
     <mat-sidenav *ngIf="(accountService.currentUser$ | async)" class="sidenav"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
         [mode]="(isHandset$ | async) ? 'over' : 'side'"
-        [opened]="((isHandset$ | async) || sidenavExpanded)">
+        [opened]="((isHandset$ | async) || sidenavExpanded) && sidenavItemService.items.length > 0">
       <mat-nav-list>
-        <a *ngIf="accountService.isCurrentUserInRole(RoleType.Administrator)"
-          mat-list-item routerLink="/admin"
-          routerLinkActive="mat-list-item-active">
-          <div class="d-flex align-content-center">
-            <mat-icon class="me-1">admin_panel_settings</mat-icon>
-            Administration
-          </div>
-        </a>
+        @for (item of sidenavItemService.items; track $index) {
+          <a mat-list-item [routerLink]="item.routerLink">
+            @if(item.icon) {
+              <mat-icon>{{item.icon}}</mat-icon>
+            }
+            {{item.label}}
+          </a>
+        }
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
