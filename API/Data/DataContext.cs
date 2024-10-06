@@ -1,5 +1,4 @@
-﻿using API.Migrations;
-using API.Models;
+﻿using API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +12,9 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 	public DbSet<Invitation> Invitations { get; set; }
 	public DbSet<Project> Projects { get; set; }
 	public DbSet<Team> Teams { get; set; }
-	public DbSet<UserTeam> UserTeams { get; set; }
 	public DbSet<Notification> Notifications { get; set; }
+	public DbSet<Sprint> Sprints { get; set; }
+	public DbSet<Story> Stories { get; set; }
 	public DataContext(DbContextOptions options) : base(options)
 	{
 	}
@@ -32,7 +32,29 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 				r => r.HasOne<Project>().WithMany().HasForeignKey(tp => tp.ProjectId).OnDelete(DeleteBehavior.Restrict)
 			);
 			
+		builder.Entity<Project>()
+			.HasMany(p => p.Sprints)
+			.WithOne(s => s.Project)
+			.HasForeignKey(s => s.ProjectId)
+			.IsRequired();
+			
+		builder.Entity<Project>()
+			.HasMany(p => p.ProductBacklog)
+			.WithOne(pb => pb.Project)
+			.HasForeignKey(pb => pb.ProjectId)
+			.IsRequired();
+			
 		#endregion Project
+		
+		#region Sprint
+		
+		builder.Entity<Sprint>()
+			.HasMany(s => s.SprintBacklog)
+			.WithOne(sb => sb.Sprint)
+			.HasForeignKey(sb => sb.SprintId)
+			.IsRequired(false);
+		
+		#endregion Sprint
 		
 		#region UserRole
 		
@@ -58,6 +80,18 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 				l => l.HasOne<Project>().WithMany().HasForeignKey(tlp => tlp.ProjectId).OnDelete(DeleteBehavior.Restrict),
 				r => r.HasOne<User>().WithMany().HasForeignKey(tlp => tlp.UserId).OnDelete(DeleteBehavior.Restrict)
 			);
+			
+		builder.Entity<User>()
+			.HasMany(u => u.StoryCommits)
+			.WithOne(tc => tc.Commiter)
+			.HasForeignKey(tc => tc.CommiterId)
+			.IsRequired();
+			
+		builder.Entity<User>()
+			.HasMany(u => u.AssignedStories)
+			.WithOne(t => t.AssignedTo)
+			.HasForeignKey(t => t.AssignedToId)
+			.IsRequired(false);
 			
 		builder.Entity<User>()
 			.HasMany(u => u.LedTeams)

@@ -15,6 +15,8 @@ public class User : IdentityUser<Guid>
 	public virtual ICollection<Project> OwnedProjects { get; set; } = [];
 	public virtual ICollection<Project> TeamLeaderInProjects { get; set; } = [];
 	public virtual ICollection<Notification> Notifications { get; set; } = [];
+	public virtual ICollection<StoryCommit> StoryCommits { get; set; } = [];
+	public virtual ICollection<Story> AssignedStories { get; set; } = [];
 	public required string FirstName { get; set; }
 	public required string LastName { get; set; }
 	public required DateOnly DateOfBirth { get; set; }
