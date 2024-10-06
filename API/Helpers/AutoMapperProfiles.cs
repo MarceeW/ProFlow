@@ -1,4 +1,5 @@
 ﻿using API.DTO;
+using API.DTOs;
 using API.Models;
 using AutoMapper;
 
@@ -21,5 +22,17 @@ public class AutoMapperProfiles : Profile
 		
 		CreateMap<Project, ProjectDTO>();
 		CreateMap<Team, TeamDTO>();
+		
+		CreateMap<Story, StoryDTO>()
+			.ForMember(dest => dest.StoryPriority,
+				opt => opt.MapFrom(src => Enum.GetName(src.StoryPriority)))
+			.ForMember(dest => dest.StoryType,
+				opt => opt.MapFrom(src => Enum.GetName(src.StoryType)));
+				
+		CreateMap<StoryCommit, StoryCommitDTO>()
+			.ForMember(dest => dest.StoryCommitType,
+				opt => opt.MapFrom(src => Enum.GetName(src.StoryCommitType)));
+				
+		CreateMap<Sprint, SprintDTO>();
 	}
 }
