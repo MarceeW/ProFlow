@@ -1,45 +1,24 @@
 <div class="container">
   <div class="row">
-    <h1 class="mat-headline-3 pt-3 mb-3">New Project</h1>
+    <h4 class="pt-3">New Project</h4>
   </div>
   <mat-divider class="pb-3"></mat-divider>
   <div class="row">
-    <form [formGroup]="projectCreateForm" (ngSubmit)="createProject()" class="d-flex flex-column w-50">
+    <form [formGroup]="projectCreateForm" (ngSubmit)="createProject()">
       <mat-form-field>
         <mat-label>Project name</mat-label>
-        <input matInput type="text" formControlName="projectName" [errorStateMatcher]="errorStateMatcher"
+        <input matInput type="text" formControlName="projectName"
                 placeholder="Example project"/>
         @if (projectCreateForm.get('projectName')!.hasError('required')) {
           <mat-error>Project name is <strong>required</strong></mat-error>
         }
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Team leader(s)</mat-label>
-        <mat-chip-grid #teamLeaderChipGrid formControlName="teamLeaders">
-          @for (teamLeader of teamLeaders; track teamLeader) {
-            <mat-chip-row (removed)="removeTeamLeader(teamLeader)">
-              {{teamLeader.fullName}}
-              <button matChipRemove [attr.aria-label]="'remove teamleader'">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-          }
-        </mat-chip-grid>
+        <mat-label>Project name</mat-label>
+        <app-member-search-control formControlName="teamLeaders" />
         @if (projectCreateForm.get('teamLeaders')!.hasError('required')) {
-          <mat-error>Project needs at least <strong>one team leader</strong>!</mat-error>
+          <mat-error>At least one team leader is <strong>required</strong> to add!</mat-error>
         }
-        <input
-          placeholder="Select Team leader(s)"
-          #teamLeaderInput formControlName="teamLeader"
-          [matChipInputFor]="teamLeaderChipGrid"
-          [matAutocomplete]="auto"/>
-        <mat-autocomplete
-          #auto="matAutocomplete"
-          (optionSelected)="teamLeaderSelected($event)">
-          @for (user of filteredUsers$ | async; track user) {
-            <mat-option [value]="user.fullName">{{user.fullName}}</mat-option>
-          }
-        </mat-autocomplete>
       </mat-form-field>
       <button mat-flat-button color="primary" type="submit">Create project</button>
     </form>

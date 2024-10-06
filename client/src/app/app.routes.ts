@@ -9,12 +9,16 @@ import { RegisterComponent } from './account/register/register.component';
 import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
 import { ProjectListComponent } from './project/project-list/project-list.component';
 import { ProjectCreateComponent } from './project/project-create/project-create.component';
-import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 import { HomeComponent } from './home/home.component';
 import { TeamListComponent } from './teams/team-list/team-list.component';
 import { TeamCreateComponent } from './teams/team-create/team-create.component';
 import { TeamEditComponent } from './teams/team-edit/team-edit.component';
 import { RoleType } from './_enums/role-type.enum';
+import { ProjectDashboardComponent } from './project/project-dashboard/project-dashboard.component';
+import { ProjectTimelineComponent } from './project/project-dashboard/project-timeline/project-timeline.component';
+import { ProjectReportsComponent } from './project/project-dashboard/project-reports/project-reports.component';
+import { ProjectBacklogComponent } from './project/project-dashboard/project-backlog/project-backlog.component';
+import { ProjectSettingsComponent } from './project/project-dashboard/project-settings/project-settings.component';
 
 export const routes: Routes = [
   { path: '',
@@ -53,8 +57,29 @@ export const routes: Routes = [
             component: ProjectListComponent
           },
           {
-            path: 'project/:id',
-            component: ProjectDetailsComponent
+            path: 'project-dashboard',
+            children: [
+              {
+                path: ':id',
+                component: ProjectDashboardComponent,
+              },
+              {
+                path: 'timeline/:id',
+                component: ProjectTimelineComponent
+              },
+              {
+                path: 'backlog/:id',
+                component: ProjectBacklogComponent
+              },
+              {
+                path: 'reports/:id',
+                component: ProjectReportsComponent
+              },
+              {
+                path: 'settings/:id',
+                component: ProjectSettingsComponent
+              }
+            ]
           },
           {
             path: 'create',
