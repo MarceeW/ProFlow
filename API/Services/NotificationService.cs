@@ -1,4 +1,5 @@
 ﻿using API.Interfaces;
+using API.Interfaces.Repository;
 using API.Interfaces.Service;
 using API.Interfaces.SignalR;
 using API.Models;

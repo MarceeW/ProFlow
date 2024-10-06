@@ -1,7 +1,6 @@
-﻿using API.Interfaces.Repository;
-using API.Models;
+﻿using API.Models;
 
-namespace API.Interfaces;
+namespace API.Interfaces.Repository;
 
 public interface INotificationRepository : IRepository<Notification, Guid>
 {
