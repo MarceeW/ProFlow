@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using API.DTO;
+using API.Enums;
 
 namespace API.DTOs;
 
@@ -19,5 +20,6 @@ public class StoryDTO
 	public required string StoryType { get; set; }
 	[Required]
 	public required int StoryPoints { get; set; }
+	public StoryStatus StoryStatus { get; set; }
 	public ICollection<StoryCommitDTO> StoryCommits { get; set; } = [];
 }
