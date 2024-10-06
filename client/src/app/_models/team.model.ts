@@ -1,4 +1,4 @@
-import { Project } from "./project";
+import { Project } from "./project.model";
 import { User } from "./user";
 
 export interface Team {

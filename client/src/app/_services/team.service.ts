@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
-import { Team } from '../_models/team';
+import { Team } from '../_models/team.model';
 import { User } from '../_models/user';
-import { Project } from '../_models/project';
+import { Project } from '../_models/project.model';
 
 @Injectable({
   providedIn: 'root'
