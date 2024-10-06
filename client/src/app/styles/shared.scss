@@ -40,3 +40,8 @@
   display: flex;
   justify-content: end;
 }
+
+.menu-link, a {
+  text-decoration: none !important;
+  cursor: pointer;
+}

@@ -1,1 +1,52 @@
-<app-main-nav></app-main-nav>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      mode="side"
+      [opened]="sidenavItemService.items().length > 0">
+    <mat-toolbar>
+      <div class="d-flex justify-content-center w-100">
+        Menu
+      </div>
+    </mat-toolbar>
+    <mat-nav-list>
+      @for (item of sidenavItemService.items(); track $index) {
+        <mat-list-item
+          [activated]="item.activated ?? false"
+          [routerLink]="item.routerLink">
+          <div class="sidenav-menu-item">
+            {{item.label}}
+            <mat-icon>{{item.icon}}</mat-icon>
+          </div>
+        </mat-list-item>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar>
+        @if(sidenavItemService.items().length > 0) {
+          <button
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button
+            (click)="drawer.toggle()">
+            <mat-icon aria-label="Side nav toggle icon" style="color:  white;">menu</mat-icon>
+          </button>
+        }
+        <div
+      class="d-flex w-100 navbar">
+      <div class="d-flex justify-content-center">
+        <a class="navbar-brand" routerLink="/">{{title}}</a>
+      </div>
+      @if(accountService.currentUser$ | async) {
+        <div class="container d-flex justify-content-between">
+          <app-nav-menu></app-nav-menu>
+          <div id="user-actions">
+            <app-notification-menu></app-notification-menu>
+            <app-account-menu></app-account-menu>
+          </div>
+        </div>
+      }
+    </div>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

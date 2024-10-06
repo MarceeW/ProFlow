@@ -1,24 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
-import { AccountService } from './_services/account.service';
+import { AsyncPipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { RoleType } from './_enums/role-type.enum';
 import { AuthUser } from './_models/auth-user';
-import { LoginComponent } from './account/login/login.component';
-import { MainNavComponent } from './main-nav/main-nav.component';
+import { AccountService } from './_services/account.service';
+import { SidenavItemService } from './_services/sidenav-item.service';
+import { AccountMenuComponent } from './main-nav/account-menu/account-menu.component';
+import { NavMenuComponent } from './main-nav/nav-menu/nav-menu.component';
+import { NotificationMenuComponent } from './main-nav/notification-menu/notification-menu.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    LoginComponent,
-    MainNavComponent
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    AsyncPipe,
+    RouterOutlet,
+    RouterModule,
+    NavMenuComponent,
+    NotificationMenuComponent,
+    AccountMenuComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'ProFlow';
+  roleType = RoleType;
 
-  constructor(private accountService: AccountService) {}
+  readonly sidenavItemService = inject(SidenavItemService);
+  readonly accountService = inject(AccountService);
 
   ngOnInit(): void {
     this.setupCurrentUser();

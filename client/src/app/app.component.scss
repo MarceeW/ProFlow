@@ -1,3 +1,62 @@
-main {
+@use '@angular/material' as mat;
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$blue-palette,
+  )
+));
+
+.sidenav-container {
   height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.mat-toolbar {
+  background-color: #006cc4;
+}
+
+.menu-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navbar {
+  user-select: none;
+  z-index: 2 !important;
+  min-height: 65px !important;
+  max-height: 65px !important;
+}
+
+.navbar-brand {
+  color: white !important;
+}
+
+.menu-item-label {
+  font-size: small;
+}
+
+.sidenav-menu-item {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 8px;
+}
+
+#user-actions {
+  display: flex;
+  gap: 4px;
+  height: 40px;
 }

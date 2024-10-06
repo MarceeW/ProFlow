@@ -1,14 +1,14 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
-import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { routes } from './app.routes';
 
-import { provideToastr } from 'ngx-toastr';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { jwtInterceptor } from './_interceptors/jwt.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideToastr } from 'ngx-toastr';
 import { errorInterceptor } from './_interceptors/error.interceptor';
+import { jwtInterceptor } from './_interceptors/jwt.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,5 +25,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
+    provideAnimationsAsync(),
   ]
 };
