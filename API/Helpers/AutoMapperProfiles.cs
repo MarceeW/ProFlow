@@ -20,7 +20,11 @@ public class AutoMapperProfiles : Profile
 		
 		CreateMap<Notification, NotificationDTO>();
 		
-		CreateMap<Project, ProjectDTO>();
+		CreateMap<Project, ProjectDTO>()
+			.ForMember(dest => dest.SprintIds,
+				opt => opt.MapFrom(src => 
+					src.Sprints.OrderByDescending(s => s.Start).Select(s => s.Id)));
+					
 		CreateMap<Team, TeamDTO>();
 		
 		CreateMap<Story, StoryDTO>()
