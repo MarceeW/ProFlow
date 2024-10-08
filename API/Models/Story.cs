@@ -7,7 +7,7 @@ namespace API.Models;
 public class Story
 {
 	[Key]
-	public Guid Id { get; set; } = Guid.NewGuid();
+	public Guid Id { get; set; }
 	public DateTime Created { get; set; } = DateTime.UtcNow;
 	public required string Title { get; set; }
 	public required string Description { get; set; }
@@ -18,11 +18,23 @@ public class Story
 	public required StoryType StoryType { get; set; }
 	[ForeignKey(nameof(ProjectId))]
 	public virtual required Project Project { get; set; }
-	public required Guid ProjectId { get; set; }
+	public Guid ProjectId { get; set; }
 	[ForeignKey(nameof(SprintId))]
 	public virtual Sprint? Sprint { get; set; }
 	public Guid? SprintId { get; set; }
 	public required int StoryPoints { get; set; }
 	public required StoryStatus StoryStatus { get; set; } = StoryStatus.Backlog;
 	public virtual ICollection<StoryCommit> StoryCommits { get; set; } = [];
+
+	public override bool Equals(object? obj)
+	{
+		if(obj is Story s) 
+			return s.Id == Id;
+		throw new InvalidOperationException();
+	}
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
 }

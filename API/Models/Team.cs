@@ -7,7 +7,7 @@ namespace API.Models;
 public class Team
 {
 	[Key]
-	public Guid Id { get; set; } = Guid.NewGuid();
+	public Guid Id { get; set; }
 	public required string Name { get; set; }
 	public virtual ICollection<Project> Projects { get; set; } = [];
 	[ForeignKey(nameof(TeamLeaderId))]

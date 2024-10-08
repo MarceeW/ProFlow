@@ -6,7 +6,7 @@ namespace API.Models;
 public class Notification
 {
 	[Key]
-	public Guid Id { get; set; } = Guid.NewGuid();
+	public Guid Id { get; set; }
 	[MaxLength(32)]
 	public required string Type { get; set; }
 	public required string Title { get; set; }

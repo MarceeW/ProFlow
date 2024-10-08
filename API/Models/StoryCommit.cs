@@ -8,14 +8,26 @@ namespace API.Models;
 public class StoryCommit
 {
 	[Key]
-	public Guid Id { get; set; } = Guid.NewGuid();
+	public Guid Id { get; set; }
 	public DateTime Created { get; set; } = DateTime.UtcNow;
 	[ForeignKey(nameof(CommiterId))]
 	public virtual required User Commiter { get; set; }
-	public required Guid CommiterId { get; set; }
+	public Guid CommiterId { get; set; }
 	[ForeignKey(nameof(StoryId))]
 	public virtual required Story Story { get; set; }
-	public required Guid StoryId { get; set; }
+	public Guid StoryId { get; set; }
 	public required StoryCommitType StoryCommitType { get; set; }
 	public required int Hours { get; set; }
+	
+	public override bool Equals(object? obj)
+	{
+		if(obj is StoryCommit s) 
+			return s.Id == Id;
+		throw new InvalidOperationException();
+	}
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
 }

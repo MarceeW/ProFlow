@@ -6,7 +6,7 @@ namespace API.Models;
 public class Project
 {
 	[Key]
-	public Guid Id { get; set;} = Guid.NewGuid();
+	public Guid Id { get; set;}
 	public DateTime Created { get; set; } = DateTime.UtcNow;
 	public required string Name { get; set;}
 	[ForeignKey(nameof(ProjectManagerId))]
