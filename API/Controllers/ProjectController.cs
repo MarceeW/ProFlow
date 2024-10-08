@@ -1,5 +1,6 @@
 ﻿using API.Constants;
 using API.DTO;
+using API.DTOs;
 using API.Exceptions;
 using API.Extensions;
 using API.Interfaces.Repository;
@@ -17,7 +18,9 @@ namespace API.Controllers;
 public class ProjectController : BaseApiController
 {
 	private readonly IProjectService _projectService;
+	private readonly ISprintService _sprintService;
 	private readonly IProjectRepositoy _projectRepository;
+	private readonly ISprintRepository _sprintRepository;
 	private readonly IMapper _mapper;
 	private readonly UserManager<User> _userManager;
 
@@ -25,12 +28,16 @@ public class ProjectController : BaseApiController
 		IProjectService projectService,
 		IProjectRepositoy projectRepositoy,
 		IMapper mapper,
-		UserManager<User> userManager)
+		UserManager<User> userManager,
+		ISprintRepository sprintRepository,
+		ISprintService sprintService)
 	{
 		_projectService = projectService;
 		_projectRepository = projectRepositoy;
 		_mapper = mapper;
 		_userManager = userManager;
+		_sprintRepository = sprintRepository;
+		_sprintService = sprintService;
 	}
 
 	[HttpPost("create")]
@@ -40,12 +47,12 @@ public class ProjectController : BaseApiController
 		try
 		{
 			await _projectService.CreateProjectAsync(projectDTO);
+			return Created();
 		}
 		catch (NameAlreadyExistsException e)
 		{
 			return BadRequest(e.Message);
 		}
-		return Created();
 	}
 	
 	[HttpGet]
@@ -110,5 +117,55 @@ public class ProjectController : BaseApiController
 		return _projectRepository.GetMyProjects(loggedInUser)
 			.AsQueryable()
 			.ProjectTo<ProjectDTO>(_mapper.ConfigurationProvider);
+	}
+	
+	[HttpPost("add-sprint/{projectId}")]
+	// policy based authorization
+	public async Task<ActionResult> AddSprint(
+		Guid projectId, 
+		SprintDTO sprintDTO) 
+	{
+		try
+		{
+			await _sprintService.AddSprintAsync(projectId, sprintDTO);
+			return Ok("Created sprint successfully");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpPost("add-story/{projectId}")]
+	// TODO: policy based authorization
+	public async Task<ActionResult> AddStoryToBacklog(
+		Guid projectId, 
+		StoryDTO story) 
+	{
+		try
+		{
+			await _projectService.AddStoryToBacklog(projectId, story);
+			return Ok("Story added to product backlog successfully");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpDelete("remove-story/{storyId}")]
+	// TODO: policy based authorization
+	public async Task<ActionResult> RemoveStoryFromBacklog( 
+		Guid storyId) 
+	{
+		try
+		{
+			await _projectService.RemoveStoryFromBacklog(storyId);
+			return Ok("Story removed from product backlog successfully");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
 	}
 }

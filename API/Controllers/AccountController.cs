@@ -184,7 +184,7 @@ public class AccountController : BaseApiController
 				{
 					Type = "report",
 					Title = "Account updated!",
-					Content = $"You have succesfully changed your creditentals! Changed creditentals: ({string.Join(", ", changedCreds)})",
+					Content = $"You have successfully changed your creditentals! Changed creditentals: ({string.Join(", ", changedCreds)})",
 					TargetUser = user
 				});
 				
