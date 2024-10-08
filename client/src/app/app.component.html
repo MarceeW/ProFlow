@@ -4,7 +4,7 @@
       [opened]="sidenavItemService.items().length > 0">
     <mat-toolbar>
       <div class="d-flex justify-content-center w-100">
-        Menu
+        Navigation
       </div>
     </mat-toolbar>
     <mat-nav-list>
@@ -20,33 +20,34 @@
       }
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar>
-        @if(sidenavItemService.items().length > 0) {
-          <button
-            type="button"
-            aria-label="Toggle sidenav"
-            mat-icon-button
-            (click)="drawer.toggle()">
-            <mat-icon aria-label="Side nav toggle icon" style="color:  white;">menu</mat-icon>
-          </button>
-        }
-        <div
-      class="d-flex w-100 navbar">
-      <div class="d-flex justify-content-center">
-        <a class="navbar-brand" routerLink="/">{{title}}</a>
-      </div>
-      @if(accountService.currentUser$ | async) {
-        <div class="container d-flex justify-content-between">
-          <app-nav-menu></app-nav-menu>
-          <div id="user-actions">
-            <app-notification-menu></app-notification-menu>
-            <app-account-menu></app-account-menu>
-          </div>
+  <mat-sidenav-content class="sidenav-content">
+    <mat-toolbar class="toolbar">
+      <div class="navbar">
+        <div class="d-flex justify-content-center">
+          @if(sidenavItemService.items().length > 0) {
+            <button
+              type="button"
+              aria-label="Toggle sidenav"
+              mat-icon-button
+              (click)="drawer.toggle()">
+              <mat-icon aria-label="Side nav toggle icon" style="color:  white;">menu</mat-icon>
+            </button>
+          }
+          <a class="navbar-brand" routerLink="/">{{title}}</a>
         </div>
-      }
+        @if(accountService.currentUser$ | async) {
+          <div class="d-flex justify-content-between">
+            <app-nav-menu></app-nav-menu>
+            <div id="user-actions">
+              <app-notification-menu></app-notification-menu>
+              <app-account-menu></app-account-menu>
+            </div>
+          </div>
+        }
     </div>
     </mat-toolbar>
-    <router-outlet></router-outlet>
+    <div class="router-outlet-container">
+      <router-outlet></router-outlet>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
