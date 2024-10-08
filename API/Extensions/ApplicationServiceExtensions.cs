@@ -30,10 +30,18 @@ public static class ApplicationServiceExtensions
 
 		services.AddAutoMapper(typeof(AutoMapperProfiles));
 		
+		#region Services
+		
 		services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IProjectService, ProjectService>();
 		services.AddScoped<ITeamService, TeamService>();
 		services.AddScoped<INotificationService, NotificationService>();
+		services.AddScoped<IStoryService, StoryService>();
+		services.AddScoped<ISprintService, SprintService>();
+		
+		#endregion Services
+		
+		#region Repositories
 		
 		services.AddScoped<IInvitationRepository, InvitationRepository>();
 		services.AddScoped<IAccountRepository, AccountRepository>();
@@ -41,6 +49,11 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<ITeamRepository, TeamRepository>();
 		services.AddScoped<IUserRepository, UserRepository>();
 		services.AddScoped<INotificationRepository, NotificationRepository>();
+		services.AddScoped<IStoryRepository, StoryRepository>();
+		services.AddScoped<IStoryCommitRepository, StoryCommitRepository>();
+		services.AddScoped<ISprintRepository, SprintRepository>();
+		
+		#endregion Repositories
 		
 		return services;
 	}
