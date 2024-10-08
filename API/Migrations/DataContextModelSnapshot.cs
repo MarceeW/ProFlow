@@ -44,7 +44,7 @@ namespace API.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Invitations");
+                    b.ToTable("Invitations", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.Notification", b =>
@@ -79,7 +79,7 @@ namespace API.Migrations
 
                     b.HasIndex("TargetUserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.Project", b =>
@@ -102,7 +102,7 @@ namespace API.Migrations
 
                     b.HasIndex("ProjectManagerId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>
@@ -155,7 +155,7 @@ namespace API.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Sprints");
+                    b.ToTable("Sprints", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.Story", b =>
@@ -204,7 +204,7 @@ namespace API.Migrations
 
                     b.HasIndex("SprintId");
 
-                    b.ToTable("Stories");
+                    b.ToTable("Stories", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.StoryCommit", b =>
@@ -234,7 +234,7 @@ namespace API.Migrations
 
                     b.HasIndex("StoryId");
 
-                    b.ToTable("StoryCommit");
+                    b.ToTable("StoryCommits", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.Team", b =>
@@ -254,7 +254,7 @@ namespace API.Migrations
 
                     b.HasIndex("TeamLeaderId");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Teams", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.TeamLeaderProject", b =>
@@ -269,7 +269,7 @@ namespace API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TeamLeaderProject");
+                    b.ToTable("TeamLeaderProject", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.TeamProject", b =>
@@ -284,7 +284,7 @@ namespace API.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("TeamProject");
+                    b.ToTable("TeamProject", (string)null);
                 });
 
             modelBuilder.Entity("API.Models.User", b =>
@@ -406,7 +406,7 @@ namespace API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserTeam");
+                    b.ToTable("UserTeam", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
