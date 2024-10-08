@@ -15,6 +15,7 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 	public DbSet<Notification> Notifications { get; set; }
 	public DbSet<Sprint> Sprints { get; set; }
 	public DbSet<Story> Stories { get; set; }
+	public DbSet<StoryCommit> StoryCommits { get; set; }
 	public DataContext(DbContextOptions options) : base(options)
 	{
 	}
