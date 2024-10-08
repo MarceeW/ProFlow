@@ -1,4 +1,6 @@
-﻿using API.Models;
+﻿using API.DTO;
+using API.DTOs;
+using API.Models;
 
 namespace API.Interfaces.Repository;
 
