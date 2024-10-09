@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Models;
 
+[Index(nameof(Start), AllDescending = true)]
 public class Sprint
 {
 	[Key]
