@@ -8,6 +8,5 @@ export interface Project {
   name: string,
   projectManager: User,
   teamLeaders: User[],
-  productBacklog?: Story[],
-  sprints?: Sprint[]
+  productBacklog?: Story[]
 }
