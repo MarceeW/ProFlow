@@ -300,4 +300,6 @@ e2e/*.map
 API/Resources/Images/*
 !API/Resources/Images/user-icon.png
 
+.VSCodeCounter/*
+
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
