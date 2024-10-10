@@ -23,3 +23,51 @@ html, body {
 .mat-mdc-autocomplete-panel {
   margin: 16px -24px;
 }
+
+.mat-horizontal-content-container {
+  padding: 12px !important;
+}
+
+.mat-mdc-form-field {
+  margin-bottom: 1rem;
+}
+
+.mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 24px !important;
+  --mat-form-field-container-vertical-padding: 12px;
+  --mat-form-field-container-height: 40px !important;
+  --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, 0.2) !important;
+  --mdc-outlined-text-field-outline-width: 2px !important;
+  --mdc-outlined-text-field-focus-outline-width: 3px !important;
+  --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.mat-mdc-form-field-error-wrapper {
+  position: initial !important;
+  padding: 4px 16px !important;
+}
+
+.mat-mdc-form-field-error {
+  font-weight: 500 !important;
+}
+
+.mat-mdc-form-field-bottom-align::before {
+  content: none !important;
+}
+
+.mat-mdc-select-panel, .mat-mdc-autocomplete-panel {
+  border-radius: 12px !important;
+}
+
+.mat-mdc-paginator-page-size-select {
+  min-width: unset !important;
+}
+
+.mat-mdc-tab-group {
+  display: grid !important;
+  grid-template-rows: auto 1fr;
+}
+
+.mat-mdc-standard-chip {
+  --mdc-chip-container-shape-radius: 24px;
+}
