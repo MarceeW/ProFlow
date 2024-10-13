@@ -14,6 +14,6 @@ public class Notification
 	[ForeignKey(nameof(TargetUserId))]
 	public required virtual User TargetUser { get; set; }
 	public Guid TargetUserId { get; set; }
-	public DateTime Created { get; set; } = DateTime.UtcNow;
+	public DateTime Created { get; set; } = DateTime.Now;
 	public bool Viewed { get; set; }
 }
