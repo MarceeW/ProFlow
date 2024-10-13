@@ -11,7 +11,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { RoleType } from './_enums/role-type.enum';
 import { AuthUser } from './_models/auth-user';
 import { AccountService } from './_services/account.service';
-import { ComponentLoadStatusService } from './_services/component-load-status.service';
+import { ComponentArgsService } from './_services/component-args.service';
 import { SidenavItemService } from './_services/sidenav-item.service';
 import { AccountMenuButtonComponent } from './main-nav/account-menu-button/account-menu-button.component';
 import { NavMenuComponent } from './main-nav/nav-menu/nav-menu.component';
@@ -43,7 +43,7 @@ export class AppComponent {
 
   readonly sidenavItemService = inject(SidenavItemService);
   readonly accountService = inject(AccountService);
-  readonly loadService = inject(ComponentLoadStatusService);
+  readonly loadService = inject(ComponentArgsService);
 
   ngOnInit(): void {
     this.setupCurrentUser();
