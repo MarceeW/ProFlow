@@ -41,6 +41,8 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
-    this._componentArgsService.title.set(undefined);
+
+    if(this.defaultConfig.setupTitle)
+      this._componentArgsService.title.set(undefined);
   }
 }
