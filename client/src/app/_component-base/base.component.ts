@@ -2,7 +2,7 @@ import { Component, effect, inject, OnDestroy, OnInit, signal, untracked } from 
 import { Subject } from "rxjs";
 import { ComponentArgsService } from "../_services/component-args.service";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { BASE_COMPONENT_SETUPloading } from "../injection-tokens.config";
+import { BASE_COMPONENT_DEFAULT_CONFIG } from "../injection-tokens.config";
 
 @Component({
   template: ''
@@ -15,21 +15,22 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
   protected readonly _destroy$ = new Subject<void>();
   protected readonly _toastr = inject(ToastrService);
   private readonly _componentArgsService = inject(ComponentArgsService);
-  private readonly setupLoading = inject(BASE_COMPONENT_SETUPloading);
+  private readonly defaultConfig = inject(BASE_COMPONENT_DEFAULT_CONFIG);
 
   constructor() {
-    if(!this.setupLoading)
-      return;
+    if(this.defaultConfig.setupLoading) {
+      effect(() => {
+        this.loading();
+        untracked(() => this._componentArgsService.loading.set(this.loading()));
+      });
+    }
 
-    effect(() => {
-      this.loading();
-      untracked(() => this._componentArgsService.loading.set(this.loading()));
-    });
-
-    effect(() => {
-      this.title();
-      untracked(() => this._componentArgsService.title.set(this.title()));
-    });
+    if(this.defaultConfig.setupTitle) {
+      effect(() => {
+        this.title();
+        untracked(() => this._componentArgsService.title.set(this.title()));
+      });
+    }
   }
 
   ngOnInit(): void {

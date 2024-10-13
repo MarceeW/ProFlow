@@ -13,7 +13,7 @@ import { BaseComponent } from '../../_component-base/base.component';
 import { UserNotification } from '../../_models/user-notification.model';
 import { NotificationService } from '../../_services/notification.service';
 import { NotificationSignalRService } from '../../_services/signalR/notification-signalr.service';
-import { BASE_COMPONENT_SETUPloading } from '../../injection-tokens.config';
+import { BASE_COMPONENT_DEFAULT_CONFIG, BASE_COMPONENT_DIALOG_CONFIG } from '../../injection-tokens.config';
 
 
 @Component({
@@ -34,7 +34,10 @@ import { BASE_COMPONENT_SETUPloading } from '../../injection-tokens.config';
   templateUrl: './notification-button.component.html',
   styleUrl: './notification-button.component.scss',
   providers: [
-    {provide: BASE_COMPONENT_SETUPloading, useValue: false}
+    {
+      provide: BASE_COMPONENT_DEFAULT_CONFIG,
+      useValue: BASE_COMPONENT_DIALOG_CONFIG
+    }
   ]
 })
 export class NotificationButtonComponent extends BaseComponent implements OnInit {
