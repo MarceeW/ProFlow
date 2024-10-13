@@ -42,10 +42,18 @@ public class NotificationService : INotificationService
 	}
 	
 	private Notification GetTeamLeaderNotification(string projectName, User targetUser) => new()
-    {
+	{
 		Type = "flag",
 		Title = $"Teamleader invitation!",
 		Content = $"You have been invited as a teamleader in {projectName} project!",
 		TargetUser = targetUser,
 	};
+
+	public async Task CreateNotificationsAsync(IEnumerable<Notification> notifications)
+	{
+		foreach(var notification in notifications) 
+			await _notificationRepository.CreateAsync(notification);
+		await _notificationRepository.SaveAsync();
+		await _notificationHub.Clients.Users(notifications.Select(n => n.TargetUser.UserName!)).ReceiveNotification();
+	}
 }
