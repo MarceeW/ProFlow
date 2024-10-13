@@ -42,9 +42,13 @@
         }
     </div>
     </mat-toolbar>
-    @if(loadService.loading()) {
-      <mat-spinner></mat-spinner>
-    }
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOpen]="loadService.loading()">
+      <div class="spinner-container">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-template>
     <div class="router-outlet-container">
       <router-outlet></router-outlet>
     </div>

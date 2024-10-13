@@ -16,6 +16,7 @@ import { SidenavItemService } from './_services/sidenav-item.service';
 import { AccountMenuButtonComponent } from './main-nav/account-menu-button/account-menu-button.component';
 import { NavMenuComponent } from './main-nav/nav-menu/nav-menu.component';
 import { NotificationButtonComponent } from './main-nav/notification-button/notification-button.component';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,8 @@ import { NotificationButtonComponent } from './main-nav/notification-button/noti
     NavMenuComponent,
     NotificationButtonComponent,
     AccountMenuButtonComponent,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    OverlayModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

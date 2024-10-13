@@ -71,3 +71,10 @@ $theme: mat.define-theme((
 .router-outlet-container {
   overflow: auto;
 }
+
+.spinner-container {
+  position: absolute;
+  scale: 0.5;
+  margin-left: 50vw;
+  margin-top: 50vh;
+}
