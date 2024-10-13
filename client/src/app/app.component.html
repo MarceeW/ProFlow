@@ -47,7 +47,7 @@
         <mat-spinner></mat-spinner>
       </div>
     }
-    <div class="page-content">
+    <div class="page-content" [class.has-title]="loadService.title()">
       @if(loadService.title()) {
         <div class="page-title-container">
           <div class="page-title">
@@ -55,7 +55,7 @@
           </div>
         </div>
       }
-      <div class="container h-100">
+      <div class="container">
         <router-outlet></router-outlet>
       </div>
     </div>
