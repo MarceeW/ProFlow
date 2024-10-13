@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 import { NotificationSignalRService } from './signalR/notification-signalr.service';
 import { RoleType } from '../_enums/role-type.enum';
 import { AccountSettingsModel } from '../_models/account-settings-model';
-import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
