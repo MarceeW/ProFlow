@@ -29,8 +29,8 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.HasMany(p => p.Teams)
 			.WithMany(t => t.Projects)
 			.UsingEntity<TeamProject>(
-				l => l.HasOne<Team>().WithMany().HasForeignKey(tp => tp.TeamId).OnDelete(DeleteBehavior.Restrict),
-				r => r.HasOne<Project>().WithMany().HasForeignKey(tp => tp.ProjectId).OnDelete(DeleteBehavior.Restrict)
+				l => l.HasOne<Team>().WithMany().HasForeignKey(tp => tp.TeamId).OnDelete(DeleteBehavior.Cascade),
+				r => r.HasOne<Project>().WithMany().HasForeignKey(tp => tp.ProjectId).OnDelete(DeleteBehavior.Cascade)
 			);
 			
 		builder.Entity<Project>()
@@ -70,16 +70,16 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.HasMany(u => u.Teams)
 			.WithMany(t => t.Members)
 			.UsingEntity<UserTeam>(
-				l => l.HasOne<Team>().WithMany().HasForeignKey(ut => ut.TeamId).OnDelete(DeleteBehavior.Restrict),
-				r => r.HasOne<User>().WithMany().HasForeignKey(ut => ut.UserId).OnDelete(DeleteBehavior.Restrict)
+				l => l.HasOne<Team>().WithMany().HasForeignKey(ut => ut.TeamId).OnDelete(DeleteBehavior.Cascade),
+				r => r.HasOne<User>().WithMany().HasForeignKey(ut => ut.MemberId).OnDelete(DeleteBehavior.Cascade)
 			);
 			
 		builder.Entity<User>()
 			.HasMany(u => u.TeamLeaderInProjects)
 			.WithMany(p => p.TeamLeaders)
 			.UsingEntity<TeamLeaderProject>(
-				l => l.HasOne<Project>().WithMany().HasForeignKey(tlp => tlp.ProjectId).OnDelete(DeleteBehavior.Restrict),
-				r => r.HasOne<User>().WithMany().HasForeignKey(tlp => tlp.UserId).OnDelete(DeleteBehavior.Restrict)
+				l => l.HasOne<Project>().WithMany().HasForeignKey(tlp => tlp.ProjectId).OnDelete(DeleteBehavior.Cascade),
+				r => r.HasOne<User>().WithMany().HasForeignKey(tlp => tlp.UserId).OnDelete(DeleteBehavior.Cascade)
 			);
 			
 		builder.Entity<User>()
@@ -98,7 +98,8 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.HasMany(u => u.LedTeams)
 			.WithOne(t => t.TeamLeader)
 			.HasForeignKey(u => u.TeamLeaderId)
-			.IsRequired();
+			.IsRequired()
+			.OnDelete(DeleteBehavior.Restrict);
 			
 		builder.Entity<User>()
 			.HasMany(u => u.CreatedInvitations)
