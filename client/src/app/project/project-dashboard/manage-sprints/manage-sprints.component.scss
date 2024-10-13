@@ -1,0 +1,21 @@
+.functions-container {
+  &, .sprint-create-form-container, .function-container, .function {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+  }
+  width: 400px;
+  gap: 16px;
+  padding: 16px;
+}
+
+.function-container {
+  border-radius: 8px;
+  padding: 16px;
+  background-color: rgba(0,0,0, 0.05);
+}
+
+.function-title {
+  margin-bottom: 8px;
+}
