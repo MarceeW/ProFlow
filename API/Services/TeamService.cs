@@ -11,7 +11,7 @@ namespace API.Services;
 public class TeamService : ITeamService
 { 
 	private readonly ITeamRepository _teamRepository;
-	private readonly IProjectRepositoy _projectRepositoy;
+	private readonly IProjectRepositoy _projectRepository;
 	private readonly UserManager<User> _userManager;
 	private readonly INotificationService _notificationService;
 
@@ -24,7 +24,7 @@ public class TeamService : ITeamService
 		_teamRepository = teamRepository;
 		_userManager = userManager;
 		_notificationService = notificationService;
-		_projectRepositoy = projectRepositoy;
+		_projectRepository = projectRepositoy;
 	}
 
 	public async Task CreateTeamAsync(TeamDTO teamDTO, User user) 
@@ -124,11 +124,11 @@ public class TeamService : ITeamService
 			
 		foreach(var projectDTO in projects) 
 		{
-			var project = await _projectRepositoy.ReadAsync(projectDTO.Id)!;
+			var project = await _projectRepository.ReadAsync(projectDTO.Id)!;
 			project.Teams.Add(team);
 		}	
 			
-		await _projectRepositoy.SaveAsync();
+		await _projectRepository.SaveAsync();
 	}
 
     public async Task RemoveFromProjectAsync(User loggedInUser, Guid teamId, IEnumerable<ProjectDTO> projects)
@@ -141,7 +141,7 @@ public class TeamService : ITeamService
 		
 		foreach(var projectDTO in projects) 
 		{
-			var project = await _projectRepositoy.ReadAsync(projectDTO.Id)!;
+			var project = await _projectRepository.ReadAsync(projectDTO.Id)!;
 			team.Projects.Remove(project);
 		}
 		

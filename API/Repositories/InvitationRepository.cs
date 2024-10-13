@@ -32,6 +32,6 @@ public sealed class InvitationRepository : AbstractRepository<Invitation, Guid>,
 	}
 	public async Task<bool> IsValidInvitationExistsAsync()
 	{
-		return await _values.AnyAsync(i => i.Expires > DateTime.UtcNow && !i.IsActivated);
+		return await _values.AnyAsync(i => i.Expires > DateTime.Now && !i.IsActivated);
 	}
 }

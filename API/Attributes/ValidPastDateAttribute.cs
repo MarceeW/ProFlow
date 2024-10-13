@@ -8,7 +8,7 @@ public class ValidPastDateAttribute : ValidationAttribute
 	{
 		if(value is DateTime d) 
 		{
-			return d < DateTime.UtcNow;
+			return d < DateTime.Now;
 		}
 		return false;
 	}

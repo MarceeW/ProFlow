@@ -7,7 +7,7 @@ public class Project
 {
 	[Key]
 	public Guid Id { get; set;}
-	public DateTime Created { get; set; } = DateTime.UtcNow;
+	public DateTime Created { get; set; } = DateTime.Now;
 	public required string Name { get; set;}
 	[ForeignKey(nameof(ProjectManagerId))]
 	public virtual required User ProjectManager { get; set; }

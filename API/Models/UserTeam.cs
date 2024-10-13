@@ -2,6 +2,6 @@
 
 public class UserTeam
 {
-	public Guid UserId { get; set; }
+	public Guid MemberId { get; set; }
 	public Guid TeamId { get; set; }
 }

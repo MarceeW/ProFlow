@@ -8,7 +8,8 @@ public class Story
 {
 	[Key]
 	public Guid Id { get; set; }
-	public DateTime Created { get; set; } = DateTime.UtcNow;
+	public DateTime Created { get; set; } = DateTime.Now;
+	public DateTime? Closed { get; set; }
 	public required string Title { get; set; }
 	public required string Description { get; set; }
 	[ForeignKey(nameof(AssignedToId))]
@@ -33,8 +34,8 @@ public class Story
 		throw new InvalidOperationException();
 	}
 
-    public override int GetHashCode()
-    {
-        return Id.GetHashCode();
-    }
+	public override int GetHashCode()
+	{
+		return Id.GetHashCode();
+	}
 }

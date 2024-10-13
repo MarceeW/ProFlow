@@ -8,7 +8,7 @@ namespace API.Services;
 
 public class SprintService : ISprintService
 {
-	private readonly IProjectRepositoy _projectRepositoy;
+	private readonly IProjectRepositoy _projectRepository;
 	private readonly ISprintRepository _sprintRepository;
 	private readonly IStoryRepository _storyRepository;
 
@@ -17,7 +17,7 @@ public class SprintService : ISprintService
 		IStoryRepository storyRepository,
 		ISprintRepository sprintRepository)
 	{
-		_projectRepositoy = projectRepositoy;
+		_projectRepository = projectRepositoy;
 		_storyRepository = storyRepository;
 		_sprintRepository = sprintRepository;
 	}
@@ -56,18 +56,16 @@ public class SprintService : ISprintService
 		await _sprintRepository.SaveAsync();
 	}
 
-	public async Task AddSprintAsync(Guid projectId, SprintDTO sprintDTO)
+	public async Task Close(Guid sprintId)
 	{
-		var project = await _projectRepositoy.ReadAsync(projectId) 
-			?? throw new KeyNotFoundException();
-		Sprint sprint = new() 
-		{
-			Start = sprintDTO.Start,
-			End = sprintDTO.End,
-			Project = project,
-		};
+		var sprint = await _sprintRepository.ReadAsync(sprintId)
+				?? throw new KeyNotFoundException("Invalid sprint id!");
+				
+		sprint.EarlyClose = DateTime.Now;
 		
-		project.Sprints.Add(sprint);
+		foreach(var story in sprint.SprintBacklog) 
+			story.Closed = DateTime.Now;
+			
 		await _sprintRepository.SaveAsync();
 	}
 }

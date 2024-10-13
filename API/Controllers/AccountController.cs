@@ -49,7 +49,7 @@ public class AccountController : BaseApiController
 		if (invitation == null)
 			return BadRequest("Invalid invitation key!");
 			
-		if (invitation.Expires < DateTime.UtcNow)
+		if (invitation.Expires < DateTime.Now)
 			return BadRequest("The invitation has expired!");
 			
 		if (invitation.IsActivated)

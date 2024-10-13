@@ -33,33 +33,20 @@ public static class Seeder
 			FirstName = "ProFlow",
 			LastName = "Admin",
 			Email = "admin@proflow.com",
-			DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow),
-		};
-		
-		var developer = new User
-		{
-			UserName = "developer",
-			FirstName = "ProFlow",
-			LastName = "Developer",
-			Email = "developer@proflow.com",
-			DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow),
+			DateOfBirth = DateOnly.FromDateTime(DateTime.Now),
+			SecurityStamp = Guid.NewGuid().ToString()
 		};
 		
 		await userManager.CreateAsync(admin, "admin");
-		await userManager.CreateAsync(developer, "dev");
 		
-		await userManager.AddToRolesAsync(admin, [
-			RoleConstant.Administrator,
-			RoleConstant.User, 
-			RoleConstant.TeamLeader, 
-			RoleConstant.ProjectManager
-		]);
-		
-		await userManager.AddToRolesAsync(developer, [
-			RoleConstant.Administrator,
-			RoleConstant.User, 
-			RoleConstant.TeamLeader, 
-			RoleConstant.ProjectManager
-		]);
-	} 
+		foreach(var user in await userManager.Users.ToListAsync()) 
+		{
+			await userManager.AddToRolesAsync(user, [
+				RoleConstant.Administrator,
+				RoleConstant.User, 
+				RoleConstant.TeamLeader, 
+				RoleConstant.ProjectManager
+			]);
+		}
+	}
 }

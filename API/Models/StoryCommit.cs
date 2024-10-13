@@ -9,7 +9,7 @@ public class StoryCommit
 {
 	[Key]
 	public Guid Id { get; set; }
-	public DateTime Created { get; set; } = DateTime.UtcNow;
+	public DateTime Created { get; set; } = DateTime.Now;
 	[ForeignKey(nameof(CommiterId))]
 	public virtual required User Commiter { get; set; }
 	public Guid CommiterId { get; set; }
