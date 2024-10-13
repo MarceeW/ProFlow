@@ -75,4 +75,19 @@ public class SprintController : BaseApiController
 			return BadRequest(e.Message);
 		}
 	}
+	
+	[HttpGet("close/{sprintId}")]
+	// TODO: policy based authorization
+	public async Task<ActionResult> CloseSprint(Guid sprintId)
+	{
+		try
+		{
+			await _sprintService.Close(sprintId);
+			return Ok("Sprint closed successfully");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
 }

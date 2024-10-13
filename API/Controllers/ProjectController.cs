@@ -73,6 +73,7 @@ public class ProjectController : BaseApiController
 		{
 			Project project = await _projectRepository.ReadAsync(id);
 			_projectRepository.Delete(project);
+			await _projectRepository.SaveAsync();
 			return Ok(id);
 		} catch (KeyNotFoundException e) 
 		{
@@ -127,8 +128,59 @@ public class ProjectController : BaseApiController
 	{
 		try
 		{
-			await _sprintService.AddSprintAsync(projectId, sprintDTO);
+			await _projectService.AddSprintAsync(projectId, sprintDTO);
 			return Ok("Created sprint successfully");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpGet("nth-sprint/{projectId}")]
+	// policy based authorization
+	public async Task<ActionResult<SprintDTO>> GetNthSprint(Guid projectId, [FromQuery] int n) 
+	{
+		try
+		{
+			return _mapper
+				.Map<SprintDTO>(await _projectService.GetNthSprint(projectId, n));
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpGet("sprints/{projectId}")]
+	// policy based authorization
+	public async Task<ActionResult<IEnumerable<SprintDTO>>> GetSprints(Guid projectId) 
+	{
+		try
+		{
+			var project = await _projectRepository.ReadAsync(projectId);
+			if(project == null)
+				throw new KeyNotFoundException("Project does not exists");
+			return Ok(project.Sprints.AsQueryable().ProjectTo<SprintDTO>(_mapper.ConfigurationProvider));
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpGet("backlog/{projectId}")]
+	// policy based authorization
+	public async Task<ActionResult<IEnumerable<StoryDTO>>> GetBacklog(Guid projectId) 
+	{
+		try
+		{
+			var project = await _projectRepository.ReadAsync(projectId);
+			if(project == null)
+				throw new KeyNotFoundException("Project does not exists");
+			return Ok(project.ProductBacklog
+				.AsQueryable()
+				.ProjectTo<StoryDTO>(_mapper.ConfigurationProvider));
 		}
 		catch (Exception e)
 		{

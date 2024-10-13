@@ -110,6 +110,7 @@ public class StoryController : BaseApiController
 			return BadRequest($"Invalid story id: {id}");
 			
 		_storyRepository.Delete(story);
+		await _storyRepository.SaveAsync();
 		return Ok($"Deleted story: {id}");
 	}
 }
