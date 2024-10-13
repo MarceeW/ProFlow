@@ -9,14 +9,16 @@
     </mat-toolbar>
     <mat-nav-list>
       @for (item of sidenavItemService.items(); track $index) {
-        <mat-list-item
-          [activated]="item.activated ?? false"
-          [routerLink]="item.routerLink">
-          <div class="sidenav-menu-item">
-            {{item.label}}
-            <mat-icon>{{item.icon}}</mat-icon>
-          </div>
-        </mat-list-item>
+        @if(item.enabled ?? true) {
+          <mat-list-item
+            [activated]="item.activated ?? false"
+            [routerLink]="item.routerLink">
+            <div class="sidenav-menu-item">
+              {{item.label}}
+              <mat-icon>{{item.icon}}</mat-icon>
+            </div>
+          </mat-list-item>
+        }
       }
     </mat-nav-list>
   </mat-sidenav>
@@ -46,6 +48,9 @@
         }
     </div>
     </mat-toolbar>
+    @if(loadService.loading()) {
+      <mat-spinner></mat-spinner>
+    }
     <div class="router-outlet-container">
       <router-outlet></router-outlet>
     </div>

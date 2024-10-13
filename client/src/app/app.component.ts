@@ -14,6 +14,8 @@ import { SidenavItemService } from './_services/sidenav-item.service';
 import { AccountMenuComponent } from './main-nav/account-menu/account-menu.component';
 import { NavMenuComponent } from './main-nav/nav-menu/nav-menu.component';
 import { NotificationMenuComponent } from './main-nav/notification-menu/notification-menu.component';
+import { ComponentLoadStatusService } from './_services/component-load-status.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +32,7 @@ import { NotificationMenuComponent } from './main-nav/notification-menu/notifica
     NavMenuComponent,
     NotificationMenuComponent,
     AccountMenuComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -40,6 +43,7 @@ export class AppComponent {
 
   readonly sidenavItemService = inject(SidenavItemService);
   readonly accountService = inject(AccountService);
+  readonly loadService = inject(ComponentLoadStatusService);
 
   ngOnInit(): void {
     this.setupCurrentUser();
