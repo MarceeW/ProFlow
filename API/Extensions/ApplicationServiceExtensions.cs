@@ -4,7 +4,6 @@ using API.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 using API.Services;
 using API.Repositories;
-using API.Interfaces;
 using API.Helpers;
 
 namespace API.Extensions;
@@ -38,6 +37,7 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<INotificationService, NotificationService>();
 		services.AddScoped<IStoryService, StoryService>();
 		services.AddScoped<ISprintService, SprintService>();
+		services.AddScoped<ILoggingService, LoggingService>();
 		
 		#endregion Services
 		
@@ -52,6 +52,7 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<IStoryRepository, StoryRepository>();
 		services.AddScoped<IStoryCommitRepository, StoryCommitRepository>();
 		services.AddScoped<ISprintRepository, SprintRepository>();
+		services.AddScoped<ILogRepository, LogRepository>();
 		
 		#endregion Repositories
 		
