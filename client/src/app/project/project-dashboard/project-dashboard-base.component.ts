@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, signal } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { takeUntil } from "rxjs";
 import { HasSideNav } from "../../_component-base/has-sidenav.component";
 import { Project } from "../../_models/project.model";
@@ -20,6 +20,7 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
   protected readonly _projectService = inject(ProjectService);
 
   private readonly _authService = inject(AccountService);
+  private readonly _router = inject(Router);
 
   constructor() {
     super();
@@ -34,11 +35,17 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
     this._loading.set(true);
     this._projectService.getProject(this.projectId)
     .pipe(takeUntil(this._destroy$))
-    .subscribe(project => {
+    .subscribe({
+      next: project => {
         this.onProjectLoaded(project);
         this.setSidenavItems();
         this._loading.set(false);
-      });
+      },
+      error: _ => {
+        this._loading.set(false);
+        this._router.navigateByUrl('');
+      }
+    });
   }
 
   onProjectLoaded(project: Project) {
