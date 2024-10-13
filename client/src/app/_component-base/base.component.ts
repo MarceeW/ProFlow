@@ -14,7 +14,7 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
   protected _title?: string;
   protected readonly _destroy$ = new Subject<void>();
   protected readonly _toastr = inject(ToastrService);
-  private readonly _loadService = inject(ComponentArgsService);
+  private readonly _componentArgsService = inject(ComponentArgsService);
   private readonly setupLoading = inject(BASE_COMPONENT_SETUPloading);
 
   constructor() {
@@ -23,12 +23,12 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
 
     effect(() => {
       this.loading();
-      untracked(() => this._loadService.loading.set(this.loading()));
+      untracked(() => this._componentArgsService.loading.set(this.loading()));
     });
 
     effect(() => {
       this.title();
-      untracked(() => this._loadService.title.set(this.title()));
+      untracked(() => this._componentArgsService.title.set(this.title()));
     });
   }
 
@@ -40,5 +40,6 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
+    this._componentArgsService.title.set(undefined);
   }
 }
