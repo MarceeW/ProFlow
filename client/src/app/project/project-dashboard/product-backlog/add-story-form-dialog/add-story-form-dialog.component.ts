@@ -10,6 +10,7 @@ import { BaseComponent } from '../../../../_component-base/base.component';
 import { takeUntil } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { Story } from '../../../../_models/story.model';
+import { BASE_COMPONENT_DEFAULT_CONFIG, BASE_COMPONENT_DIALOG_CONFIG } from '../../../../injection-tokens.config';
 
 @Component({
   selector: 'app-add-story-form-dialog',
@@ -24,7 +25,13 @@ import { Story } from '../../../../_models/story.model';
     MatSelectModule
   ],
   templateUrl: './add-story-form-dialog.component.html',
-  styleUrl: './add-story-form-dialog.component.scss'
+  styleUrl: './add-story-form-dialog.component.scss',
+  providers: [
+    {
+      provide: BASE_COMPONENT_DEFAULT_CONFIG,
+      useValue: BASE_COMPONENT_DIALOG_CONFIG
+    }
+  ]
 })
 export class AddStoryFormDialog extends BaseComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<AddStoryFormDialog>);
