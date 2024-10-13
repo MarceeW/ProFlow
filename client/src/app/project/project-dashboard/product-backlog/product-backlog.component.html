@@ -1,0 +1,11 @@
+<div class="container p-4">
+  <div class="header-row">
+    <div class="create-story-btn"
+      matTooltip="Create new story"
+      (click)="openCreateStoryDialog()">
+      <mat-icon class="icon">add</mat-icon>
+    </div>
+    <div class="backlog-title">{{project()?.name}}'s backlog</div>
+    <app-backlog-table [projectId]="projectId"></app-backlog-table>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+.create-story-btn {
+  position: absolute;
+  left: 0;
+  top: -8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.05);
+  width: 75px;
+  height: 75px;
+  transition: all 0.2s ease-in-out;
+  border-radius: 12px;
+  scale: 1;
+  cursor: pointer;
+
+  .icon {
+    scale: 1.5;
+  }
+
+  &:hover {
+    background-color: rgba(0,0,0,0.1);
+    scale: 1.02;
+  }
+}
+
+.header-row {
+  box-sizing: border-box;
+  position: relative;
+  align-items: center;
+  height: 75px;
+  gap: 8px;
+  color: rgba(0,0,0,0.5);
+  margin-bottom: 8px;
+}
+
+.backlog-title {
+  font-weight: 500;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  padding-bottom: 8px;
+}
