@@ -1,6 +1,6 @@
 import { ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -57,7 +57,17 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
 
   constructor() {
     super();
+    effect(() => {
+      this.notificationsOpen();
+      untracked(() => {
+        if(this.unseenNotificationCount() > 0 || !this.notifications()) {
+          this.loadNotifications();
 
+          if(this.unseenNotificationCount() > 0 && !this.notificationsOpen())
+            this.setNotificationsViewed();
+        }
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -87,12 +97,6 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
   }
 
   toggleNotifications() {
-    if(this.unseenNotificationCount() > 0 || !this.notifications()) {
-      this.loadNotifications();
-
-      if(this.unseenNotificationCount() > 0 && this.notificationsOpen())
-        this.setNotificationsViewed();
-    }
     this.notificationsOpen.set(!this.notificationsOpen());
   }
 
