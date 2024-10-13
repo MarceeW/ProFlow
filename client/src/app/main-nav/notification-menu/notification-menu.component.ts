@@ -32,6 +32,8 @@ import { Subject } from '@microsoft/signalr';
   styleUrl: './notification-menu.component.scss'
 })
 export class NotificationMenuComponent implements OnInit, OnDestroy {
+  // TODO: Fix component template
+
   private notificationSource = new BehaviorSubject<UserNotification[]>([]);
   notifications$ = this.notificationSource.asObservable();
 
