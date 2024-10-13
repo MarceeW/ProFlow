@@ -1,0 +1,53 @@
+<h3 mat-dialog-title>Create new story</h3>
+<mat-dialog-content>
+  <form [formGroup]="storyFormGroup" class="d-flex flex-column p-2">
+    <mat-form-field>
+      <mat-label>Story title</mat-label>
+      <input type="text" formControlName="title" matInput placeholder="Story title" />
+      <mat-error>Story title is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Story description</mat-label>
+      <textarea formControlName="description"
+      cdkTextareaAutosize cdkAutosizeMinRows="3"
+      matInput placeholder="Story description">
+      </textarea>
+      <mat-error>Story description is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Story priority</mat-label>
+      <mat-select formControlName="storyPriority">
+        @for (priority of storyPriorities(); track $index) {
+          <mat-option [value]="priority">{{priority}}</mat-option>
+        }
+      </mat-select>
+      <mat-error>Story priority is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Story type</mat-label>
+      <mat-select formControlName="storyType">
+        @for (storyType of storyTypes(); track $index) {
+          <mat-option [value]="storyType">{{storyType}}</mat-option>
+        }
+      </mat-select>
+      <mat-error>Story type is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Story points</mat-label>
+      <input type="number" [min]="0" formControlName="storyPoints" matInput />
+      <mat-error>Story points is required</mat-error>
+    </mat-form-field>
+
+    <mat-dialog-actions>
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button type="submit"
+        mat-button [mat-dialog-close]="getFormValue()" [disabled]="storyFormGroup.invalid">
+        Create story
+      </button>
+    </mat-dialog-actions>
+  </form>
+</mat-dialog-content>
