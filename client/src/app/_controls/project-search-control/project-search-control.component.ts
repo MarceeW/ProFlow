@@ -6,7 +6,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntil } from 'rxjs';
-import { AccountService } from '../../_services/account.service';
 import { ControlBase } from '../control-base.component';
 import { Project } from '../../_models/project.model';
 import { ProjectService } from '../../_services/project.service';
