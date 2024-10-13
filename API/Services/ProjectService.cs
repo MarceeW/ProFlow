@@ -14,6 +14,7 @@ namespace API.Services;
 public class ProjectService : IProjectService
 {
 	private readonly IProjectRepositoy _projectRepository;
+	private readonly ISprintRepository _sprintRepository;
 	private readonly IStoryRepository _storyRepository;
 	private readonly INotificationService _notificationService;
 	private readonly UserManager<User> _userManager;
@@ -22,12 +23,14 @@ public class ProjectService : IProjectService
 		IProjectRepositoy projectRepository,
 		INotificationService notificationService,
 		UserManager<User> userManager,
-		IStoryRepository storyRepository)
+		IStoryRepository storyRepository,
+		ISprintRepository sprintRepository)
 	{
 		_projectRepository = projectRepository;
 		_notificationService = notificationService;
 		_userManager = userManager;
 		_storyRepository = storyRepository;
+		_sprintRepository = sprintRepository;
 	}
 	public async Task CreateProjectAsync(ProjectDTO projectDTO)
 	{
@@ -83,6 +86,21 @@ public class ProjectService : IProjectService
 		project.ProductBacklog.Add(story);
 		await _projectRepository.SaveAsync();
 	}
+	
+	public async Task AddSprintAsync(Guid projectId, SprintDTO sprintDTO)
+	{
+		var project = await _projectRepository.ReadAsync(projectId) 
+			?? throw new KeyNotFoundException();
+		Sprint sprint = new() 
+		{
+			Start = sprintDTO.Start,
+			End = sprintDTO.End,
+			Project = project,
+		};
+		
+		project.Sprints.Add(sprint);
+		await _sprintRepository.SaveAsync();
+	}
 
 	public async Task RemoveStoryFromBacklog(Guid storyId)
 	{
@@ -91,5 +109,41 @@ public class ProjectService : IProjectService
 			
 		_storyRepository.Delete(story);
 		await _storyRepository.SaveAsync();
+	}
+
+	public async Task<Sprint> GetNthSprint(Guid projectId, int n)
+	{
+		var project = await _projectRepository.ReadAsync(projectId) 
+			?? throw new KeyNotFoundException();
+		return project.Sprints.OrderByDescending(s => s.Start).ElementAt(n);
+	}
+
+	public async Task DeleteProject(Guid projectId)
+	{
+		Project project = await _projectRepository.ReadAsync(projectId);
+		_projectRepository.Delete(project);
+		await _projectRepository.SaveAsync();
+		
+		var notificationTargets = project.Teams.SelectMany(t => t.Members);
+		await _notificationService.CreateNotificationAsync(new Notification
+		{
+			Type = "report",
+			Title = "Project abortion",
+			Content = $"{project.Name} project had been aborted, You are no longer part of it!",
+			TargetUser = project.ProjectManager
+		});
+		
+		foreach(var target in notificationTargets) 
+		{
+			if(target == project.ProjectManager)
+				continue;
+			await _notificationService.CreateNotificationAsync(new Notification
+			{
+				Type = "report",
+				Title = "Project abortion",
+				Content = $"{project.Name} project had been aborted, You are no longer part of it!",
+				TargetUser = target
+			});
+		}
 	}
 }
