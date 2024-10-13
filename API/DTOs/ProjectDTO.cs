@@ -13,4 +13,5 @@ public class ProjectDTO
 	public required UserDTO ProjectManager { get; set; }
 	[Required]
 	public required ICollection<UserDTO> TeamLeaders { get; set; }
+	public ICollection<SprintDateDTO> Sprints { get; set; } = [];
 }
