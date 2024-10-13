@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { ProjectService } from '../../_services/project.service';
-import { Project } from '../../_models/project';
+import { Project } from '../../_models/project.model';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { MatDivider } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { BaseComponent } from '../../_component-base/base.component';
 
 @Component({
   selector: 'app-project-list',
@@ -25,26 +26,32 @@ import { MatMenuModule } from '@angular/material/menu';
   templateUrl: './project-list.component.html',
   styleUrl: './project-list.component.scss'
 })
-export class ProjectListComponent implements OnInit, OnDestroy {
+export class ProjectListComponent extends BaseComponent implements OnInit {
   readonly projects = signal<Project[]>([]);
   readonly cols = ['name', 'projectManager', 'action'];
+  readonly router = inject(Router);
 
-  private readonly ngDestroy$ = new ReplaySubject<boolean>(1);
-
-  constructor(
-    public projectService: ProjectService,
-    public router: Router) {}
+  private readonly _projectService = inject(ProjectService);
 
   ngOnInit(): void {
-    this.projectService.getProjects().pipe(takeUntil(this.ngDestroy$))
-      .subscribe({
-        next: projects => this.projects.set(projects),
-        error: error => console.error(error)
-    });
+    this.loadProjects();
   }
 
-  ngOnDestroy(): void {
-    this.ngDestroy$.next(true);
-    this.ngDestroy$.complete();
+  loadProjects() {
+    this._loading.set(true);
+    this._projectService.getProjects().pipe(takeUntil(this._destroy$))
+      .subscribe(projects => {
+        this.projects.set(projects);
+        this._loading.set(false);
+      });
+  }
+
+  deleteProject(project: Project) {
+    this._projectService.deleteProject(project.id!)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(_ => {
+        this._toastr.info(`Deleted [${project.name}] successfully`);
+        this.loadProjects();
+      });
   }
 }

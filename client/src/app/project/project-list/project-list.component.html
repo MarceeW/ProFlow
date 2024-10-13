@@ -25,7 +25,15 @@
           <button
             mat-menu-item
             [routerLink]="'project-dashboard/settings/' + project.id">
+            <mat-icon>settings</mat-icon>
             Project settings
+          </button>
+          <button
+            class="delete-project-btn"
+            mat-menu-item
+            (click)="deleteProject(project)">
+            <mat-icon>delete</mat-icon>
+            Delete
           </button>
         </mat-menu>
       </td>
