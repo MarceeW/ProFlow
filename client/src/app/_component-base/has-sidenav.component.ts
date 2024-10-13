@@ -10,10 +10,12 @@ export abstract class HasSideNav extends BaseComponent implements OnInit {
 
   abstract itemKey: string;
   protected readonly _sidenavItemService = inject(SidenavItemService);
+  protected readonly _loadSidenavItemsOnInit: boolean = true;
 
   override ngOnInit(): void {
     super.ngOnInit();
-    this.setSidenavItems();
+    if(this._loadSidenavItemsOnInit)
+      this.setSidenavItems();
   }
 
   setSidenavItems() {

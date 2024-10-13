@@ -16,14 +16,15 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
   projectId!: string;
   readonly project = signal<Project | null>(null);
 
-  protected readonly route = inject(ActivatedRoute);
+  protected override _loadSidenavItemsOnInit = false;
+  protected readonly _route = inject(ActivatedRoute);
   protected readonly _projectService = inject(ProjectService);
 
   private readonly _authService = inject(AccountService);
   private readonly _router = inject(Router);
 
   override ngOnInit(): void {
-    this.projectId = this.route.snapshot.paramMap.get('id')!;
+    this.projectId = this._route.snapshot.paramMap.get('id')!;
     this.loadProject();
     super.ngOnInit();
   }
@@ -49,7 +50,7 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
     this.project.set(project);
   }
 
-  getSidenavItems(): {[key: string]: SidenavItem} {
+  override getSidenavItems(): {[key: string]: SidenavItem} {
     const prefix = '/projects/project-dashboard/';
     const items: {[key: string]: SidenavItem} = {
       dashboard: {
@@ -98,8 +99,7 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
     return (this.project()?.sprints ?? []).length > 0;
   }
 
-  protected onSprintLoaded(sprint: Sprint): void {
-  }
+  protected onSprintLoaded(sprint: Sprint): void {}
 
   protected loadNthSprint(n: number) {
     if(!this.isProjectHasSprints())
