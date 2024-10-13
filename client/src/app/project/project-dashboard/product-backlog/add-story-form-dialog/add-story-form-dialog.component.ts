@@ -42,7 +42,8 @@ export class AddStoryFormDialog extends BaseComponent implements OnInit {
 
   private readonly _enumService = inject(EnumService);
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
+    super.ngOnInit();
     this._enumService.getEnumValues('StoryPriority')
       .pipe(takeUntil(this._destroy$))
       .subscribe(priorities => {

@@ -22,13 +22,10 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
   private readonly _authService = inject(AccountService);
   private readonly _router = inject(Router);
 
-  constructor() {
-    super();
-    this.projectId = this.route.snapshot.paramMap.get('id')!;
-  }
-
   override ngOnInit(): void {
+    this.projectId = this.route.snapshot.paramMap.get('id')!;
     this.loadProject();
+    super.ngOnInit();
   }
 
   loadProject() {

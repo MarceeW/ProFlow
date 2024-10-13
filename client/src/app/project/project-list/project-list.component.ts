@@ -31,9 +31,11 @@ export class ProjectListComponent extends BaseComponent implements OnInit {
   readonly cols = ['name', 'projectManager', 'action'];
   readonly router = inject(Router);
 
+  protected override _title = 'Ongoing projects';
   private readonly _projectService = inject(ProjectService);
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
+    super.ngOnInit();
     this.loadProjects();
   }
 

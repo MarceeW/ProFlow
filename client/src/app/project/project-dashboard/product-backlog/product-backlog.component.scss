@@ -1,16 +1,14 @@
 .create-story-btn {
-  position: absolute;
-  left: 0;
-  top: -8px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0,0,0,0.05);
-  width: 75px;
-  height: 75px;
+  width: 56px;
+  height: 56px;
   transition: all 0.2s ease-in-out;
   border-radius: 12px;
   scale: 1;
+  margin-bottom: 8px;
   cursor: pointer;
 
   .icon {

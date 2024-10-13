@@ -1,45 +1,41 @@
-<div class="container">
-  <h2 class="mat-headline-2 pt-3 mb-3">Ongoing projects</h2>
-  <mat-divider></mat-divider>
-  <table mat-table [dataSource]="projects()">
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Project name </th>
-      <td mat-cell *matCellDef="let project">
-        <a [matTooltip]="project.name + ' dashboard'" [routerLink]="'project-dashboard/' + project.id">
-          {{project.name}}</a>
-      </td>
-    </ng-container>
+<table mat-table [dataSource]="projects()">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Project name </th>
+    <td mat-cell *matCellDef="let project">
+      <a [matTooltip]="project.name + ' dashboard'" [routerLink]="'project-dashboard/' + project.id">
+        {{project.name}}</a>
+    </td>
+  </ng-container>
 
-    <ng-container matColumnDef="projectManager">
-      <th mat-header-cell *matHeaderCellDef> Project manager name </th>
-      <td mat-cell *matCellDef="let project"> {{project.projectManager?.fullName}}</td>
-    </ng-container>
+  <ng-container matColumnDef="projectManager">
+    <th mat-header-cell *matHeaderCellDef> Project manager name </th>
+    <td mat-cell *matCellDef="let project"> {{project.projectManager?.fullName}}</td>
+  </ng-container>
 
-    <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let project">
-        <button mat-icon-button [matMenuTriggerFor]="detailsMenu">
-          <mat-icon>more_vert</mat-icon>
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let project">
+      <button mat-icon-button [matMenuTriggerFor]="detailsMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #detailsMenu="matMenu">
+        <button
+          mat-menu-item
+          [routerLink]="'project-dashboard/settings/' + project.id">
+          <mat-icon>settings</mat-icon>
+          Project settings
         </button>
-        <mat-menu #detailsMenu="matMenu">
-          <button
-            mat-menu-item
-            [routerLink]="'project-dashboard/settings/' + project.id">
-            <mat-icon>settings</mat-icon>
-            Project settings
-          </button>
-          <button
-            class="delete-project-btn"
-            mat-menu-item
-            (click)="deleteProject(project)">
-            <mat-icon>delete</mat-icon>
-            Delete
-          </button>
-        </mat-menu>
-      </td>
-    </ng-container>
+        <button
+          class="delete-project-btn"
+          mat-menu-item
+          (click)="deleteProject(project)">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="cols"></tr>
-    <tr mat-row *matRowDef="let row; columns: cols;"></tr>
-  </table>
-</div>
+  <tr mat-header-row *matHeaderRowDef="cols"></tr>
+  <tr mat-row *matRowDef="let row; columns: cols;"></tr>
+</table>

@@ -1,26 +1,20 @@
-<div class="container">
-  <div class="row">
-    <h4 class="pt-3">New Project</h4>
-  </div>
-  <mat-divider class="pb-3"></mat-divider>
-  <div class="row">
-    <form [formGroup]="projectCreateForm" (ngSubmit)="createProject()">
-      <mat-form-field>
-        <mat-label>Project name</mat-label>
-        <input matInput type="text" formControlName="projectName"
-                placeholder="Example project"/>
-        @if (projectCreateForm.get('projectName')!.hasError('required')) {
-          <mat-error>Project name is <strong>required</strong></mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Teamleaders</mat-label>
-        <app-member-search-control formControlName="teamLeaders" />
-        @if (projectCreateForm.get('teamLeaders')!.hasError('required')) {
-          <mat-error>At least one team leader is <strong>required</strong> to add!</mat-error>
-        }
-      </mat-form-field>
-      <button mat-flat-button color="primary" type="submit">Create project</button>
-    </form>
-  </div>
+<div class="row">
+  <form [formGroup]="projectCreateForm" (ngSubmit)="createProject()">
+    <mat-form-field>
+      <mat-label>Project name</mat-label>
+      <input matInput type="text" formControlName="projectName"
+              placeholder="Example project"/>
+      @if (projectCreateForm.get('projectName')!.hasError('required')) {
+        <mat-error>Project name is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Teamleaders</mat-label>
+      <app-member-search-control formControlName="teamLeaders" />
+      @if (projectCreateForm.get('teamLeaders')!.hasError('required')) {
+        <mat-error>At least one team leader is <strong>required</strong> to add!</mat-error>
+      }
+    </mat-form-field>
+    <button mat-flat-button color="primary" type="submit">Create project</button>
+  </form>
 </div>

@@ -23,6 +23,7 @@ import { BacklogTableComponent } from './backlog-table/backlog-table.component';
 export class ProductBacklogComponent extends ProjectDashBoardBase {
   override itemKey: string = 'productbacklog';
 
+  protected override _title = 'Product backlog';
   private readonly _dialog = inject(MatDialog);
   private readonly backlogTable = viewChild(BacklogTableComponent);
 

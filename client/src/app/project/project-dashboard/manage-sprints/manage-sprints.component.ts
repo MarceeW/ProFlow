@@ -37,6 +37,8 @@ export class ManageSprintsComponent extends ProjectDashBoardBase {
   readonly lastSprint = signal<Sprint | undefined>(undefined);
   readonly minStartDate = new Date();
 
+  protected override _title = "Manage sprints";
+
   private readonly _sprintService = inject(SprintService);
 
   override onProjectLoaded(project: Project): void {

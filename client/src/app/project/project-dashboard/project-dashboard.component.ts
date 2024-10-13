@@ -13,4 +13,5 @@ import { ProjectDashBoardBase } from './project-dashboard-base.component';
 })
 export class ProjectDashboardComponent extends ProjectDashBoardBase implements OnDestroy {
   override itemKey: string = 'dashboard';
+  protected override _title = 'Dashboard';
 }

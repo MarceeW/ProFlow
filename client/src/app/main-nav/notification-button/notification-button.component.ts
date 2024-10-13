@@ -70,7 +70,8 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
     });
   }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
+    super.ngOnInit();
     this._notificationHubService.notificationReceivedEvent
       .subscribe(() => this.getUnseenNotificationCount());
   }
