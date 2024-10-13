@@ -3,5 +3,6 @@ export interface SidenavItem {
   routerLink: string,
   activated?: boolean,
   icon?: string,
-  children?: SidenavItem[]
+  children?: SidenavItem[],
+  enabled?: boolean
 }

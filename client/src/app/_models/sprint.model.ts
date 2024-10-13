@@ -2,7 +2,9 @@ import { Story } from "./story.model";
 
 export interface Sprint {
   id?: string,
-  start: Date,
-  end: Date,
-  sprintBacklog?: Story[]
+  start: string,
+  end: string,
+  earlyClose?: string,
+  sprintBacklog?: Story[],
+  isActive?: boolean
 }
