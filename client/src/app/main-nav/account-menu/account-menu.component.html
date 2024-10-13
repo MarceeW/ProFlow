@@ -1,6 +1,6 @@
-<button id="account-settings-btn"
+<button class="account-settings-btn"
         [matMenuTriggerFor]="userMenu"
-        width="32px" height="32px"
+        width="40px" height="40px"
         style="background-image: url('{{accountService.currentAccountPicture$ | async}}');">
 </button>
 <mat-menu #userMenu="matMenu">
