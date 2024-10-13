@@ -1,5 +1,6 @@
+import { ConnectedPosition, OverlayModule } from '@angular/cdk/overlay';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { Component, inject, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,7 +13,6 @@ import { BaseComponent } from '../../_component-base/base.component';
 import { UserNotification } from '../../_models/user-notification.model';
 import { NotificationService } from '../../_services/notification.service';
 import { NotificationSignalRService } from '../../_services/signalR/notification-signalr.service';
-import { ConnectedPosition, Overlay, OverlayModule, PositionStrategy } from '@angular/cdk/overlay';
 import { BASE_COMPONENT_SETUP_LOADING } from '../../injection-tokens.config';
 
 
@@ -55,19 +55,25 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
     }
   ];
 
+  constructor() {
+    super();
+
+  }
+
   ngOnInit(): void {
     this._notificationHubService.notificationReceivedEvent
       .subscribe(() => this.getUnseenNotificationCount());
   }
 
-  onNotificationButtonClicked() {
-    this.loadNotifications();
-    this.setNotificationsViewed();
-  }
-
   setNotificationsViewed() {
     this._notificationService.setNotificationsViewed()
-      ?.pipe(takeUntil(this._destroy$)).subscribe(_ => this.unseenNotificationCount.set(0));
+      ?.pipe(takeUntil(this._destroy$)).subscribe(_ => {
+        this.notifications.update(notifications => {
+          notifications?.forEach(n => n.viewed = true);
+          return notifications;
+        });
+        this.unseenNotificationCount.set(0);
+      });
   }
 
   loadNotifications() {
@@ -81,12 +87,12 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
   }
 
   toggleNotifications() {
-    if(!this.notifications())
+    if(this.unseenNotificationCount() > 0 || !this.notifications()) {
       this.loadNotifications();
 
-    if(this.unseenNotificationCount() > 0)
-      this.setNotificationsViewed();
-
+      if(this.unseenNotificationCount() > 0 && this.notificationsOpen())
+        this.setNotificationsViewed();
+    }
     this.notificationsOpen.set(!this.notificationsOpen());
   }
 
