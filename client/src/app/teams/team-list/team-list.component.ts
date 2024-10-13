@@ -1,11 +1,11 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { Team } from '../../_models/team';
-import { TeamService } from '../../_services/team.service';
-import { Subject, takeUntil } from 'rxjs';
 import { RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
+import { Subject, takeUntil } from 'rxjs';
+import { Team } from '../../_models/team.model';
+import { TeamService } from '../../_services/team.service';
 
 @Component({
   selector: 'app-team-list',
