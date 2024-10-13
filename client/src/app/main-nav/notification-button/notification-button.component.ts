@@ -9,10 +9,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { takeUntil } from 'rxjs';
 import { BaseComponent } from '../../_component-base/base.component';
-import { UserNotification } from '../../_models/user-notification';
+import { UserNotification } from '../../_models/user-notification.model';
 import { NotificationService } from '../../_services/notification.service';
 import { NotificationSignalRService } from '../../_services/signalR/notification-signalr.service';
-import { Overlay, OverlayModule } from '@angular/cdk/overlay';
+import { ConnectedPosition, Overlay, OverlayModule, PositionStrategy } from '@angular/cdk/overlay';
+import { BASE_COMPONENT_SETUP_LOADING } from '../../injection-tokens.config';
 
 
 @Component({
@@ -31,16 +32,28 @@ import { Overlay, OverlayModule } from '@angular/cdk/overlay';
     OverlayModule
   ],
   templateUrl: './notification-button.component.html',
-  styleUrl: './notification-button.component.scss'
+  styleUrl: './notification-button.component.scss',
+  providers: [
+    {provide: BASE_COMPONENT_SETUP_LOADING, useValue: false}
+  ]
 })
 export class NotificationButtonComponent extends BaseComponent implements OnInit {
-  readonly notifications = signal<UserNotification[]>([]);
+  readonly notifications = signal<UserNotification[] | undefined>(undefined);
   readonly unseenNotificationCount = signal(0);
   readonly notificationsOpen = signal(false);
 
   private readonly _notificationService = inject(NotificationService);
   private readonly _notificationHubService = inject(NotificationSignalRService);
-  private readonly _overlay = inject(Overlay);
+
+  readonly overlayPositions: ConnectedPosition[] = [
+    {
+      originX: 'end',
+      originY: 'bottom',
+      overlayX: 'end',
+      overlayY: 'top',
+      offsetY: 15
+    }
+  ];
 
   ngOnInit(): void {
     this._notificationHubService.notificationReceivedEvent
@@ -54,18 +67,26 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
 
   setNotificationsViewed() {
     this._notificationService.setNotificationsViewed()
-      ?.pipe(takeUntil(this._destroy$)).subscribe();
+      ?.pipe(takeUntil(this._destroy$)).subscribe(_ => this.unseenNotificationCount.set(0));
   }
 
   loadNotifications() {
+    this._loading.set(true);
     this._notificationService.getNotifications()
       ?.pipe(takeUntil(this._destroy$))
       .subscribe(notifications => {
         this.notifications.set(notifications);
+        this._loading.set(false);
       });
   }
 
   toggleNotifications() {
+    if(!this.notifications())
+      this.loadNotifications();
+
+    if(this.unseenNotificationCount() > 0)
+      this.setNotificationsViewed();
+
     this.notificationsOpen.set(!this.notificationsOpen());
   }
 
