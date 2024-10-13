@@ -1,45 +1,51 @@
-<div>
-  <button class="nav-button" [matMenuTriggerFor]="projectMenu" mat-button>
-    Projects
-  </button>
-  <mat-menu #projectMenu="matMenu">
-    <a class="menu-link" routerLink="projects">
-      <button mat-menu-item>
-        <mat-icon>visibility</mat-icon>
-        <span class="menu-item-label">View projects</span>
-      </button>
-    </a>
-    @if (accountService.isCurrentUserInRole(RoleType.ProjectManager, RoleType.Administrator)) {
-      <a class="menu-link" routerLink="projects/create">
-        <button mat-menu-item>
-          <mat-icon>add_circle</mat-icon>
-          <span class="menu-item-label">New project</span>
-        </button>
-      </a>
-    }
-  </mat-menu>
-  @if (accountService.isCurrentUserInRole(RoleType.TeamLeader, RoleType.Administrator)) {
-    <button class="nav-button" [matMenuTriggerFor]="teamsMenu" mat-button>
-      Teams
+<div class="nav-menu">
+  <div class="nav-menu-items">
+    <button class="nav-button" [matMenuTriggerFor]="projectMenu" mat-button>
+      Projects
     </button>
-    <mat-menu #teamsMenu>
-      <a class="menu-link" routerLink="teams">
+    <mat-menu #projectMenu="matMenu">
+      <a class="menu-link" routerLink="projects">
         <button mat-menu-item>
           <mat-icon>visibility</mat-icon>
-          <span class="menu-item-label">View teams</span>
+          <span class="menu-item-label">View projects</span>
         </button>
       </a>
-        <a class="menu-link" routerLink="teams/create">
+      @if (accountService.isCurrentUserInRole(RoleType.ProjectManager, RoleType.Administrator)) {
+        <a class="menu-link" routerLink="projects/create">
           <button mat-menu-item>
             <mat-icon>add_circle</mat-icon>
-            <span class="menu-item-label">New team</span>
+            <span class="menu-item-label">New project</span>
           </button>
         </a>
+      }
     </mat-menu>
-    @if(accountService.isCurrentUserInRole(RoleType.Administrator)) {
-      <button class="nav-button" mat-button routerLink="/admin">
-        Admin settings
+    @if (accountService.isCurrentUserInRole(RoleType.TeamLeader, RoleType.Administrator)) {
+      <button class="nav-button" [matMenuTriggerFor]="teamsMenu" mat-button>
+        Teams
       </button>
+      <mat-menu #teamsMenu>
+        <a class="menu-link" routerLink="teams">
+          <button mat-menu-item>
+            <mat-icon>visibility</mat-icon>
+            <span class="menu-item-label">View teams</span>
+          </button>
+        </a>
+          <a class="menu-link" routerLink="teams/create">
+            <button mat-menu-item>
+              <mat-icon>add_circle</mat-icon>
+              <span class="menu-item-label">New team</span>
+            </button>
+          </a>
+      </mat-menu>
+      @if(accountService.isCurrentUserInRole(RoleType.Administrator)) {
+        <button class="nav-button" mat-button routerLink="/admin">
+          Admin settings
+        </button>
+      }
     }
-  }
+  </div>
+  <div class="user-actions">
+    <app-notification-button></app-notification-button>
+    <app-account-menu-button></app-account-menu-button>
+  </div>
 </div>
