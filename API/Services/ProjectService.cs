@@ -122,28 +122,24 @@ public class ProjectService : IProjectService
 	{
 		Project project = await _projectRepository.ReadAsync(projectId);
 		_projectRepository.Delete(project);
-		await _projectRepository.SaveAsync();
 		
-		var notificationTargets = project.Teams.SelectMany(t => t.Members);
-		await _notificationService.CreateNotificationAsync(new Notification
-		{
-			Type = "report",
-			Title = "Project abortion",
-			Content = $"{project.Name} project had been aborted, You are no longer part of it!",
-			TargetUser = project.ProjectManager
-		});
+		var notificationTargetIds = project.Teams
+			.SelectMany(t => t.Members)
+			.Select(t => t.Id)
+			.Where(t => t != project.ProjectManagerId)
+			.Append(project.ProjectManagerId);
 		
-		foreach(var target in notificationTargets) 
+		foreach(var target in notificationTargetIds) 
 		{
-			if(target == project.ProjectManager)
-				continue;
-			await _notificationService.CreateNotificationAsync(new Notification
+			var notification = new Notification
 			{
 				Type = "report",
 				Title = "Project abortion",
-				Content = $"{project.Name} project had been aborted, You are no longer part of it!",
-				TargetUser = target
-			});
+				Content = $"{project.Name} project had been aborted!",
+				TargetUser = (await _userManager.FindByIdAsync(target.ToString()))!
+			};
+			await _notificationService.CreateNotificationAsync(notification);
 		}
+		await _projectRepository.SaveAsync();
 	}
 }

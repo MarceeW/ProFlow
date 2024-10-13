@@ -71,9 +71,7 @@ public class ProjectController : BaseApiController
 	{
 		try
 		{
-			Project project = await _projectRepository.ReadAsync(id);
-			_projectRepository.Delete(project);
-			await _projectRepository.SaveAsync();
+			await _projectService.DeleteProject(id);
 			return Ok(id);
 		} catch (KeyNotFoundException e) 
 		{
