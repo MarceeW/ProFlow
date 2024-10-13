@@ -38,11 +38,11 @@ export class ProjectListComponent extends BaseComponent implements OnInit {
   }
 
   loadProjects() {
-    this._loading.set(true);
+    this.loading.set(true);
     this._projectService.getProjects().pipe(takeUntil(this._destroy$))
       .subscribe(projects => {
         this.projects.set(projects);
-        this._loading.set(false);
+        this.loading.set(false);
       });
   }
 

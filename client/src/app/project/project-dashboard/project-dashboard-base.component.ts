@@ -32,17 +32,17 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
   }
 
   loadProject() {
-    this._loading.set(true);
+    this.loading.set(true);
     this._projectService.getProject(this.projectId)
     .pipe(takeUntil(this._destroy$))
     .subscribe({
       next: project => {
         this.onProjectLoaded(project);
         this.setSidenavItems();
-        this._loading.set(false);
+        this.loading.set(false);
       },
       error: _ => {
-        this._loading.set(false);
+        this.loading.set(false);
         this._router.navigateByUrl('');
       }
     });
@@ -108,12 +108,12 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
     if(!this.isProjectHasSprints())
       return;
 
-    this._loading.set(true);
+    this.loading.set(true);
     this._projectService.getNthSprint(this.projectId, n)
       .pipe(takeUntil(this._destroy$))
       .subscribe(sprint => {
         this.onSprintLoaded(sprint);
-        this._loading.set(false);
+        this.loading.set(false);
       });
   }
 

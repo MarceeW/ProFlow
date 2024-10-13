@@ -13,7 +13,7 @@ import { BaseComponent } from '../../_component-base/base.component';
 import { UserNotification } from '../../_models/user-notification.model';
 import { NotificationService } from '../../_services/notification.service';
 import { NotificationSignalRService } from '../../_services/signalR/notification-signalr.service';
-import { BASE_COMPONENT_SETUP_LOADING } from '../../injection-tokens.config';
+import { BASE_COMPONENT_SETUPloading } from '../../injection-tokens.config';
 
 
 @Component({
@@ -34,7 +34,7 @@ import { BASE_COMPONENT_SETUP_LOADING } from '../../injection-tokens.config';
   templateUrl: './notification-button.component.html',
   styleUrl: './notification-button.component.scss',
   providers: [
-    {provide: BASE_COMPONENT_SETUP_LOADING, useValue: false}
+    {provide: BASE_COMPONENT_SETUPloading, useValue: false}
   ]
 })
 export class NotificationButtonComponent extends BaseComponent implements OnInit {
@@ -87,12 +87,12 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
   }
 
   loadNotifications() {
-    this._loading.set(true);
+    this.loading.set(true);
     this._notificationService.getNotifications()
       ?.pipe(takeUntil(this._destroy$))
       .subscribe(notifications => {
         this.notifications.set(notifications);
-        this._loading.set(false);
+        this.loading.set(false);
       });
   }
 

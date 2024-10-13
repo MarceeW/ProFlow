@@ -1,25 +1,25 @@
 import { Component, effect, inject, OnDestroy, signal, untracked } from "@angular/core";
 import { Subject } from "rxjs";
-import { ComponentLoadStatusService } from "../_services/component-load-status.service";
+import { ComponentArgsService } from "../_services/component-args.service";
 import { ToastrModule, ToastrService } from "ngx-toastr";
-import { BASE_COMPONENT_SETUP_LOADING } from "../injection-tokens.config";
+import { BASE_COMPONENT_SETUPloading } from "../injection-tokens.config";
 
 @Component({
   template: ''
 })
 export abstract class BaseComponent implements OnDestroy {
-  readonly _loading = signal<boolean>(false);
+  readonly loading = signal<boolean>(false);
   protected readonly _destroy$ = new Subject<void>();
   protected readonly _toastr = inject(ToastrService);
-  private readonly _loadService = inject(ComponentLoadStatusService);
-  private readonly setupLoading = inject(BASE_COMPONENT_SETUP_LOADING);
+  private readonly _loadService = inject(ComponentArgsService);
+  private readonly setupLoading = inject(BASE_COMPONENT_SETUPloading);
 
   constructor() {
     if(!this.setupLoading)
       return;
     effect(() => {
-      this._loading();
-      untracked(() => this._loadService.loading.set(this._loading()));
+      this.loading();
+      untracked(() => this._loadService.loading.set(this.loading()));
     })
   }
 
