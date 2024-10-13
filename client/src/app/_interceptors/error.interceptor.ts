@@ -15,7 +15,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (error) {
         switch (error.status) {
           case 400:
-            router.navigateByUrl('');
             if (error.error.errors) {
               const modelStateErrors = [];
               for (const key in error.error.errors) {
@@ -24,7 +23,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 }
               }
               const errorMessage = modelStateErrors.flat();
-              toastr.error(errorMessage[0]);
               throw errorMessage;
             } else {
               const errorMessage = error.error[0]["description"] ? error.error[0]["description"] : error.error;
