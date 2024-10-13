@@ -2,6 +2,7 @@
 @use './app/styles/shared.scss';
 
 @include mat.core();
+@import '@angular/cdk/overlay-prebuilt.css';
 
 html, body {
   height: 100%;
@@ -70,4 +71,10 @@ html, body {
 
 .mat-mdc-standard-chip {
   --mdc-chip-container-shape-radius: 24px;
+}
+
+.mat-mdc-progress-spinner {
+  position: fixed !important;
+  top: 50%;
+  left: 50%;
 }
