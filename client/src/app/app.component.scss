@@ -68,7 +68,7 @@ $theme: mat.define-theme((
   grid-template-rows: auto 1fr;
 }
 
-.router-outlet-container {
+.page-content {
   overflow: auto;
 }
 
@@ -77,4 +77,9 @@ $theme: mat.define-theme((
   scale: 0.5;
   margin-left: 50vw;
   margin-top: 50vh;
+}
+
+.page-title-container {
+  display: flex;
+  justify-content: center;
 }

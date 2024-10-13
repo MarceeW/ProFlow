@@ -47,7 +47,14 @@
         <mat-spinner></mat-spinner>
       </div>
     }
-    <div class="router-outlet-container">
+    <div class="page-content">
+      @if(loadService.title()) {
+        <div class="page-title-container">
+          <div class="page-title">
+            {{loadService.title()}}
+          </div>
+        </div>
+      }
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
