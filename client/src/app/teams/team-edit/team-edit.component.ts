@@ -9,11 +9,11 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { MemberSearchControlComponent } from '../../_controls/member-search-control/member-search-control.component';
-import { Team } from '../../_models/team';
+import { ProjectSearchControlComponent } from '../../_controls/project-search-control/project-search-control.component';
+import { Project } from '../../_models/project.model';
+import { Team } from '../../_models/team.model';
 import { User } from '../../_models/user';
 import { TeamService } from './../../_services/team.service';
-import { Project } from '../../_models/project';
-import { ProjectSearchControlComponent } from '../../_controls/project-search-control/project-search-control.component';
 
 @Component({
   selector: 'app-team-edit',
@@ -103,7 +103,7 @@ export class TeamEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: _ => {
-          this._toastr.success('Succesfully removed from project(s)!');
+          this._toastr.success('Successfully removed from project(s)!');
           this.projectsToRemove.set([]);
           this.readTeam();
         }
@@ -116,7 +116,7 @@ export class TeamEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: _ => {
-          this._toastr.success('Succesfully added to project(s)!');
+          this._toastr.success('Successfully added to project(s)!');
           this.projectControl.setValue([]);
           this.readTeam();
         }
@@ -129,7 +129,7 @@ export class TeamEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: _ => {
-          this._toastr.success('Team member(s) added succesfully!');
+          this._toastr.success('Team member(s) added successfully!');
           this.memberControl.setValue([]);
           this.readTeam();
         }
@@ -142,7 +142,7 @@ export class TeamEditComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: _ => {
-          this._toastr.success('Team member(s) removed succesfully!');
+          this._toastr.success('Team member(s) removed successfully!');
           this.membersToRemove.set([]);
           this.readTeam();
         }

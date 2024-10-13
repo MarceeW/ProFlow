@@ -82,7 +82,7 @@ export class ManageComponent implements OnInit {
       .subscribe({
         next: result => {
           this.user = result;
-          this.toastr.success("Saved succesfully!");
+          this.toastr.success("Saved successfully!");
           this.saveEvent.emit(this.user);
           this.reset(result);
         }

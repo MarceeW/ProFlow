@@ -1,26 +1,22 @@
-import { User } from './../../_models/user';
-import { Project } from './../../_models/project';
-import { MatChipGrid, MatChipsModule } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipGrid } from '@angular/material/chips';
+import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterModule } from '@angular/router';
-import { FormErrorStateMatcher } from '../../_state-matchers/form-error-state-matcher';
-import { UserService } from '../../_services/user.service';
-import { MatOptionModule } from '@angular/material/core';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Observable, ReplaySubject, map, startWith, takeUntil } from 'rxjs';
-import { ProjectService } from '../../_services/project.service';
 import { ToastrService } from 'ngx-toastr';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { MemberSearchControlComponent } from '../../_controls/member-search-control/member-search-control.component';
+import { Project } from '../../_models/project.model';
+import { ProjectService } from '../../_services/project.service';
+import { UserService } from '../../_services/user.service';
+import { User } from './../../_models/user';
 
 @Component({
   selector: 'app-project-create',
@@ -87,7 +83,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       takeUntil(this.ngDestroy$)
     ).subscribe({
       next: _ => {
-        this.toastr.success(`Project ${project.name} created succesfully!`);
+        this.toastr.success(`Project ${project.name} created successfully!`);
         this.router.navigateByUrl('projects');
       }
     });

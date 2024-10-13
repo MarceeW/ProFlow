@@ -1,18 +1,9 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipGrid, MatChipsModule } from '@angular/material/chips';
-import { Router, RouterModule } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, ReplaySubject, takeUntil, startWith, map } from 'rxjs';
-import { Project } from '../../_models/project';
-import { User } from '../../_models/user';
-import { ProjectService } from '../../_services/project.service';
-import { UserService } from '../../_services/user.service';
-import { FormErrorStateMatcher } from '../../_state-matchers/form-error-state-matcher';
 import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
@@ -20,9 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { TeamService } from '../../_services/team.service';
-import { Team } from '../../_models/team';
+import { Router, RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { MemberSearchControlComponent } from "../../_controls/member-search-control/member-search-control.component";
+import { Team } from '../../_models/team.model';
+import { User } from '../../_models/user';
+import { TeamService } from '../../_services/team.service';
+import { UserService } from '../../_services/user.service';
 
 @Component({
   selector: 'app-team-create',
@@ -90,7 +86,7 @@ export class TeamCreateComponent implements OnInit, OnDestroy {
       takeUntil(this.ngDestroy$)
     ).subscribe({
       next: _ => {
-        this.toastr.success(`Team ${team.name} created succesfully!`);
+        this.toastr.success(`Team ${team.name} created successfully!`);
         this.router.navigateByUrl('teams');
       }
     });

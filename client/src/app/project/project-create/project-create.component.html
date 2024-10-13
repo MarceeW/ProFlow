@@ -14,7 +14,7 @@
         }
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Project name</mat-label>
+        <mat-label>Teamleaders</mat-label>
         <app-member-search-control formControlName="teamLeaders" />
         @if (projectCreateForm.get('teamLeaders')!.hasError('required')) {
           <mat-error>At least one team leader is <strong>required</strong> to add!</mat-error>
