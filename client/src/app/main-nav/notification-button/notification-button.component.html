@@ -1,0 +1,28 @@
+<button mat-icon-button class="notification-btn"
+  (click)="toggleNotifications()" 
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin">
+  <mat-icon
+    matBadge="{{unseenNotificationCount()}}"
+    [matBadgeHidden]="!unseenNotificationCount()">
+    notifications
+  </mat-icon>
+</button>
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="notificationsOpen()">
+  <div class="notification-menu">
+    <div class="notification-menu-header">
+      Notifications
+    </div>
+    <div class="notification-list">
+      @for (notification of notifications(); track $index) {
+        <div class="notification">
+          <div class="notification-header">{{notification.title}}</div>
+          <div class="notification-content">{{notification.content}}</div>
+        </div>
+      }
+    </div>
+  </div>
+</ng-template>
