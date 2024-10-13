@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { UserNotification } from '../_models/user-notification';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserNotification } from '../_models/user-notification.model';
 import { AccountService } from './account.service';
 import { BaseService } from './base.service';
 
