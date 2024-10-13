@@ -25,7 +25,7 @@
   <mat-sidenav-content class="sidenav-content">
     <mat-toolbar class="toolbar">
       <div class="navbar">
-        <div class="d-flex justify-content-center">
+        <div class="d-flex align-items-center">
           @if(sidenavItemService.items().length > 0) {
             <button
               type="button"
@@ -38,13 +38,7 @@
           <a class="navbar-brand" routerLink="/">{{title}}</a>
         </div>
         @if(accountService.currentUser$ | async) {
-          <div class="d-flex justify-content-between">
             <app-nav-menu></app-nav-menu>
-            <div id="user-actions">
-              <app-notification-menu></app-notification-menu>
-              <app-account-menu></app-account-menu>
-            </div>
-          </div>
         }
     </div>
     </mat-toolbar>
