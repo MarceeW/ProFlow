@@ -177,6 +177,7 @@ public class ProjectController : BaseApiController
 			if(project == null)
 				throw new KeyNotFoundException("Project does not exists");
 			return Ok(project.ProductBacklog
+				.Where(p => p.SprintId == null)
 				.AsQueryable()
 				.ProjectTo<StoryDTO>(_mapper.ConfigurationProvider));
 		}
