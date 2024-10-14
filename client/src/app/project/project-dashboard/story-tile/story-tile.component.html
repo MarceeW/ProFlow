@@ -1,0 +1,16 @@
+<div class="story-box" [class.disabled]="disabled()">
+  <div class="title">{{story().title}}</div>
+  <div class="points">
+    <div>
+      {{story().storyPoints}}
+    </div>
+  </div>
+  <div class="metadata-container">
+    <div class="priority">{{story().storyPriority}}</div>
+    <div class="type">{{story().storyType}}</div>
+  </div>
+  <div class="assignee">{{story().assignedTo?.userName ?? 'Unassigned'}}</div>
+  <div class="open-btn" (click)="openStoryDialog()">
+      <mat-icon>fullscreen</mat-icon>
+  </div>
+</div>

@@ -12,6 +12,8 @@ import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
 import { ProjectDashBoardBase } from '../project-dashboard-base.component';
+import { MatIconModule } from '@angular/material/icon';
+import { StoryTileComponent } from '../story-tile/story-tile.component';
 
 @Component({
   selector: 'app-manage-sprints',
@@ -23,10 +25,12 @@ import { ProjectDashBoardBase } from '../project-dashboard-base.component';
     MatDatepickerModule,
     MatDividerModule,
     MatButtonModule,
+    MatIconModule,
     DatePipe,
     CdkDropList,
     CdkDropListGroup,
-    CdkDrag
+    CdkDrag,
+    StoryTileComponent
   ],
   templateUrl: './manage-sprints.component.html',
   styleUrl: './manage-sprints.component.scss'

@@ -1,0 +1,67 @@
+.story-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  padding: 8px;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  min-height: 6rem;
+  max-height: 6rem;
+
+  .title {
+    font-weight: 500;
+  }
+
+  .points {
+    display: flex;
+    justify-content: end;
+    font-weight: 500;
+    & * {
+      font-size: 10px;
+      background-color: #d9eeff;
+      border-radius: 12px;
+      padding: 0 6px;
+    }
+  }
+
+  .open-btn {
+    display: flex;
+    padding: 4px;
+    border-radius: 50%;
+    scale: 0.8;
+    justify-content: end;
+    transition: scale 0.1s ease-in-out;
+    &:hover {
+      scale: 1;
+      cursor: pointer;
+    }
+
+    .mat-icon {
+      width: 20px;
+    }
+  }
+
+  .metadata-container {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 8px;
+
+    & * {
+      padding: 0 8px;
+      border-radius: 12px;
+      color: white;
+    }
+
+    .priority {
+      display: inline-block;
+      background-color: #8214ff;
+    }
+
+    .type {
+      display: inline-block;
+      background-color: #2be9f0;
+    }
+  }
+}
