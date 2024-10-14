@@ -1,47 +1,81 @@
-
-<div class="container">
-  <div class="functions-container">
-    <div class="function-container">
-      @if(lastSprint()?.isActive) {
-        <div class="function-title">
-          The current sprint ends on {{lastSprint()?.end | date}}
+<div class="backlog-column-container" cdkDropListGroup>
+  <div class="column">
+    <div class="column-header">Product backlog</div>
+    <div
+      id="product-backlog"
+      cdkDropList
+      #productBacklogList="cdkDropList"
+      [cdkDropListData]="productBacklog"
+      [cdkDropListConnectedTo]="sprintBacklogList"
+      class="story-list"
+      (cdkDropListDropped)="drop($event, 'product')">
+      @for (story of productBacklog; track story) {
+        <div class="story-box" [class.disabled]="!lastSprint()?.isActive"
+          cdkDrag [cdkDragDisabled]="!lastSprint()?.isActive">{{story.title}}
         </div>
-        <div class="function">
-          <button mat-flat-button
-          (click)="closeSprint()"
-          [disabled]="!canCreateSprint()">Close current sprint</button>
-        </div>
-      } @else {
-        <b>Currently the project doesn't have active sprint.</b>
       }
     </div>
-    <div class="function-container">
-      <div class="function-title">
-        Create new sprint
-      </div>
-      <div class="function sprint-create-form-container">
-        <mat-form-field>
-          <mat-label>Sprint duration</mat-label>
-          <mat-date-range-input [min]="minStartDate" [disabled]="canCreateSprint()" [formGroup]="sprintCreateFormGroup" [rangePicker]="picker">
-            <input matStartDate formControlName="startDate" placeholder="Start date">
-            <input matEndDate formControlName="endDate" placeholder="End date">
-          </mat-date-range-input>
-          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker></mat-date-range-picker>
-          @if(sprintCreateFormGroup.controls.startDate.hasError('matStartDateInvalid') ||
-            sprintCreateFormGroup.controls.startDate.hasError('matEndDateInvalid')) {
-            <mat-error>Invalid date!</mat-error>
-          }
-          @if(sprintCreateFormGroup.controls.startDate.hasError('required') ||
-            sprintCreateFormGroup.controls.startDate.hasError('required')) {
-            <mat-error>You must enter the sprint duration!</mat-error>
-          }
-        </mat-form-field>
-        <button mat-flat-button
-          [disabled]="sprintCreateFormGroup.invalid"
-          (click)="createSprint()">Create sprint</button>
-      </div>
+  </div>
+  <div class="column">
+    <div class="column-header">Sprint backlog</div>
+    <div
+      id="product-backlog"
+      cdkDropList
+      #sprintBacklogList="cdkDropList"
+      [cdkDropListData]="sprintBacklog"
+      [cdkDropListConnectedTo]="productBacklogList"
+      class="story-list"
+      (cdkDropListDropped)="drop($event, 'sprint')">
+      @for (story of sprintBacklog; track story) {
+        <div class="story-box" [class.disabled]="!lastSprint()?.isActive"
+          cdkDrag [cdkDragDisabled]="!lastSprint()?.isActive">{{story.title}}
+        </div>
+      }
     </div>
+  </div>
+  <button mat-flat-button (click)="saveBacklogChanges()" [disabled]="!changeHappened()">Save changes</button>
+</div>
+<div class="functions-container">
+  <div class="function-container">
+    <div class="function-title">
+      Create new sprint
+    </div>
+    <div class="function sprint-create-form-container">
+      <mat-form-field>
+        <mat-label>Sprint duration</mat-label>
+        <mat-date-range-input [min]="minStartDate" [disabled]="canCreateSprint()" [formGroup]="sprintCreateFormGroup" [rangePicker]="picker">
+          <input matStartDate formControlName="startDate" placeholder="Start date">
+          <input matEndDate formControlName="endDate" placeholder="End date">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        @if(sprintCreateFormGroup.controls.startDate.hasError('matStartDateInvalid') ||
+          sprintCreateFormGroup.controls.startDate.hasError('matEndDateInvalid')) {
+          <mat-error>Invalid date!</mat-error>
+        }
+        @if(sprintCreateFormGroup.controls.startDate.hasError('required') ||
+          sprintCreateFormGroup.controls.startDate.hasError('required')) {
+          <mat-error>You must enter the sprint duration!</mat-error>
+        }
+      </mat-form-field>
+      <button mat-flat-button
+        [disabled]="sprintCreateFormGroup.invalid"
+        (click)="createSprint()">Create sprint</button>
+    </div>
+  </div>
+  <div class="function-container">
+    @if(lastSprint()?.isActive) {
+      <div class="function-title">
+        The current sprint ends on {{lastSprint()?.end | date}}
+      </div>
+      <div class="function">
+        <button mat-flat-button
+        (click)="closeSprint()"
+        [disabled]="!canCreateSprint()">Close current sprint</button>
+      </div>
+    } @else {
+      <b>Currently the project doesn't have active sprint.</b>
+    }
   </div>
 </div>

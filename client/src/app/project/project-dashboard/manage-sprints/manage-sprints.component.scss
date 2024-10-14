@@ -1,16 +1,49 @@
-.functions-container {
-  &, .sprint-create-form-container, .function-container, .function {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 8px;
-  }
-  width: 400px;
+@import "../project-shared.scss";
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
-  padding: 16px;
+}
+
+.functions-container {
+  margin-top: 32px;
+  &::before {
+    content: "";
+    margin: 8px;
+    border: solid 1px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.functions-container,
+.sprint-create-form-container,
+.function-container,
+.function {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.backlog-column-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  gap: 16px;
+}
+
+.story-list {
+  height: 40rem;
+  width: 300px;
+  overflow: auto;
+}
+
+.sprint-create-form-container, .function-container, .function {
+  flex-direction: column;
 }
 
 .function-container {
+  width: 300px;
+  height: fit-content;
   border-radius: 8px;
   padding: 16px;
   background-color: rgba(0,0,0, 0.05);
