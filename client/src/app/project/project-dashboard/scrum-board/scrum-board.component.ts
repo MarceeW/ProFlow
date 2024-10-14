@@ -1,29 +1,24 @@
-import { jwtInterceptor } from './../../../_interceptors/jwt.interceptor';
 import {
   CdkDrag,
   CdkDragDrop,
   CdkDropList,
+  CdkDropListGroup,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild, ViewContainerRef } from '@angular/core';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { takeUntil } from 'rxjs';
-import { EnumTypes } from '../../../_enums/enum-types.enum';
-import { StoryStatus } from '../../../_enums/story-status.enum';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Project } from '../../../_models/project.model';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
-import { EnumService } from '../../../_services/enum.service';
 import { SprintService } from '../../../_services/sprint.service';
 import { ProjectDashBoardBase } from '../project-dashboard-base.component';
-import { DatePipe } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-scrum-board',
@@ -37,6 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     ReactiveFormsModule,
     CdkDropList,
+    CdkDropListGroup,
     CdkDrag,
     DatePipe
   ],
