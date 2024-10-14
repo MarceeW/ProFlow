@@ -9,8 +9,8 @@
     <div class="priority">{{story().storyPriority}}</div>
     <div class="type">{{story().storyType}}</div>
   </div>
-  <div class="assignee">{{story().assignedTo?.userName ?? 'Unassigned'}}</div>
-  <div class="open-btn" (click)="openStoryDialog()">
+  <div class="assignee">{{story().assignedTo?.fullName ?? 'Unassigned'}}</div>
+  <div class="open-btn" (click)="openStoryDialog()" matTooltip="Open">
       <mat-icon>fullscreen</mat-icon>
   </div>
 </div>
