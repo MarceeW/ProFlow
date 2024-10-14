@@ -7,6 +7,7 @@ import { SidenavItem } from "../../_models/sidenav-item.model";
 import { Sprint } from "../../_models/sprint.model";
 import { AccountService } from "../../_services/account.service";
 import { ProjectService } from "../../_services/project.service";
+import { Story } from "../../_models/story.model";
 
 @Component({
   template: ''
@@ -45,6 +46,18 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
       }
     });
   }
+
+  loadBacklog() {
+    this.loading.set(true);
+    this._projectService.getBacklog(this.projectId)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(stories => {
+        this.onBacklogLoaded(stories);
+        this.loading.set(false);
+      });
+  }
+
+  onBacklogLoaded(stories: Story[]) {}
 
   onProjectLoaded(project: Project) {
     this.project.set(project);
