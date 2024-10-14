@@ -6,6 +6,7 @@ export interface Story {
   id?: string,
   created?: Date,
   closed?: Date,
+  sprintId?: string,
   title: string,
   description: string,
   assignedTo?: User,

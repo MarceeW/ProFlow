@@ -9,6 +9,7 @@ public class StoryDTO
 {
 	public Guid Id { get; set; }
 	public DateTime Created { get; set; }
+	public Guid? SprintId { get; set; }
 	[Required]
 	public required string Title { get; set; }
 	[Required]
