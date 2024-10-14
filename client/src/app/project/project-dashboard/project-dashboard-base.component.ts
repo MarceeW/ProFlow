@@ -84,7 +84,7 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
         enabled: this.isUserProjectOwner()
       },
       managesprints: {
-        label: 'Manage sprints',
+        label: 'Manage sprint',
         routerLink: prefix + 'manage-sprints/' + this.projectId,
         icon: 'run_circle',
         enabled: this.isUserProjectOwner()

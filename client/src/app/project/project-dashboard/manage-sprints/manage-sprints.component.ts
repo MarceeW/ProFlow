@@ -48,7 +48,7 @@ export class ManageSprintsComponent extends ProjectDashBoardBase {
     return this._markedToAdd().length > 0 || this._markedToRemove().length > 0;
   });
 
-  protected override _title = "Manage sprints";
+  protected override _title = "Manage sprint";
 
   private readonly _sprintService = inject(SprintService);
   private readonly _markedToAdd = signal<Story[]>([]);
