@@ -32,7 +32,6 @@ import { ProjectDashBoardBase } from '../project-dashboard-base.component';
     FormsModule,
     ReactiveFormsModule,
     CdkDropList,
-    CdkDropListGroup,
     CdkDrag,
     DatePipe
   ],
