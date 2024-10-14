@@ -4,6 +4,7 @@
   #trigger="cdkOverlayOrigin">
   <mat-icon
     matBadge="{{unseenNotificationCount()}}"
+    aria-hidden="false"
     [matBadgeHidden]="!unseenNotificationCount()">
     notifications
   </mat-icon>
