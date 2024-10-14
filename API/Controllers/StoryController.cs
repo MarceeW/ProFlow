@@ -4,6 +4,7 @@ using API.Extensions;
 using API.Interfaces.Repository;
 using API.Interfaces.Service;
 using API.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,26 +17,29 @@ public class StoryController : BaseApiController
 	private readonly IStoryRepository _storyRepository;
 	private readonly IStoryService _storyService;
 	private readonly UserManager<User> _userManager;
+	private readonly IMapper _mapper;
 
-	public StoryController(
-		IStoryRepository storyRepository,
-		UserManager<User> userManager,
-		IStoryService storyService)
-	{
-		_storyRepository = storyRepository;
-		_userManager = userManager;
-		_storyService = storyService;
-	}
+    public StoryController(
+        IStoryRepository storyRepository,
+        UserManager<User> userManager,
+        IStoryService storyService,
+        IMapper mapper)
+    {
+        _storyRepository = storyRepository;
+        _userManager = userManager;
+        _storyService = storyService;
+        _mapper = mapper;
+    }
 
-	[HttpGet("{id}")]
-	public async Task<ActionResult> GetStory(Guid id) 
+    [HttpGet("{id}")]
+	public async Task<ActionResult<StoryDTO>> GetStory(Guid id) 
 	{
 		try
 		{
 			var story = await _storyRepository.ReadAsync(id);
 			if(story == null)
 				return BadRequest($"Story with id: '{id}' doesn't exists!");
-			return Ok(story);
+			return Ok(_mapper.Map<StoryDTO>(story));
 		}
 		catch (Exception e)
 		{
@@ -50,6 +54,20 @@ public class StoryController : BaseApiController
 		{
 			await _storyService.UpdateAsync(storyDTO);
 			return Ok($"Story moved to status: '{storyDTO.StoryStatus}'");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpGet("assign/{id}")]
+	public async Task<ActionResult> AssignStory(Guid id, [FromQuery] Guid userId) 
+	{
+		try
+		{
+			await _storyService.Assign(id, userId);
+			return Ok("Story is successfully assigned");
 		}
 		catch (Exception e)
 		{

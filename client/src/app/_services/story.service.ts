@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
 import { Story } from '../_models/story.model';
 import { StoryCommit } from '../_models/story-commit.model';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,12 @@ export class StoryService extends BaseService {
 
   updateCommit(storyCommit: StoryCommit) {
     return this.http.patch(this.apiUrl + 'story/update-commit', storyCommit);
+  }
+
+  assign(storyId: string, userId: string) {
+    return this.http.get(this.apiUrl + 'story/assign/' + storyId, {
+      params: new HttpParams().set('userId', userId),
+      responseType: 'text'
+    });
   }
 }

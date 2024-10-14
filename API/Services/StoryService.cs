@@ -4,6 +4,7 @@ using API.Extensions;
 using API.Interfaces.Repository;
 using API.Interfaces.Service;
 using API.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Services;
 
@@ -11,13 +12,22 @@ public class StoryService : IStoryService
 {
 	private readonly IStoryRepository _storyRepository;
 	private readonly IStoryCommitRepository _storyCommitRepository;
+	private readonly INotificationService _notificationService;
+	private readonly ILoggingService _loggingService;
+	private readonly UserManager<User> _userManager;
 
 	public StoryService(
-		IStoryRepository storyRepository, 
-		IStoryCommitRepository storyCommitRepository)
+		IStoryRepository storyRepository,
+		IStoryCommitRepository storyCommitRepository,
+		UserManager<User> userManager,
+		INotificationService notificationService,
+		ILoggingService loggingService)
 	{
 		_storyRepository = storyRepository;
 		_storyCommitRepository = storyCommitRepository;
+		_userManager = userManager;
+		_notificationService = notificationService;
+		_loggingService = loggingService;
 	}
 
 	public async Task AddCommitAsync(Guid storyId, User loggedInUser, StoryCommitDTO commitDTO)
@@ -69,5 +79,32 @@ public class StoryService : IStoryService
 		story.StoryStatus = storyDTO.StoryStatus;
 		
 		_storyRepository.Update(story);
+	}
+
+	public async Task Assign(Guid storyId, Guid userId)
+	{
+		var story = await _storyRepository.ReadAsync(storyId)
+			?? throw new KeyNotFoundException();
+		
+		var user = await _userManager.FindByIdAsync(userId.ToString())
+			?? throw new KeyNotFoundException();
+			
+		story.AssignedTo = user;
+		await _storyRepository.SaveAsync();
+		await _loggingService.CreateLogAsync(new Log 
+		{
+			UserId = userId,
+			LoggerLevel = Castle.Core.Logging.LoggerLevel.Info,
+			Source = nameof(StoryService),
+			Message = $"Assignee set to storyId: {storyId}"
+		});
+		
+		await _notificationService.CreateNotificationAsync(new Notification
+		{
+			Type = "info",
+			Title = "Story assignation",
+			Content = "You have a new story assigned!",
+			TargetUser = user
+		});
 	}
 }
