@@ -13,11 +13,11 @@ export class SprintService extends BaseService {
   }
 
   addStories(sprintId: string, stories: Story[]) {
-    return this.http.patch(this.apiUrl + 'sprint/add-stories/' + sprintId, stories);
+    return this.http.patch(this.apiUrl + 'sprint/add-stories/' + sprintId, stories, {responseType: 'text'});
   }
 
   removeStories(sprintId: string, stories: Story[]) {
-    return this.http.patch(this.apiUrl + 'sprint/remove-stories/' + sprintId, stories);
+    return this.http.patch(this.apiUrl + 'sprint/remove-stories/' + sprintId, stories, {responseType: 'text'});
   }
 
   closeSprint(sprintId: string) {
