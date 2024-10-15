@@ -79,6 +79,7 @@ public class StoryService : IStoryService
 		story.StoryStatus = storyDTO.StoryStatus;
 		
 		_storyRepository.Update(story);
+		await _storyRepository.SaveAsync();
 	}
 
 	public async Task Assign(Guid storyId, Guid userId)
