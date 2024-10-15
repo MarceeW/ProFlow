@@ -4,6 +4,6 @@ public enum StoryStatus
 {
 	Backlog,
 	InPorgress,
-	UnderTesting,
+	CodeReview,
 	Done
 }
