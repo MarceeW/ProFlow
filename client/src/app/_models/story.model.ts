@@ -12,7 +12,7 @@ export interface Story {
   assignedTo?: User,
   storyPriority: string,
   storyType: string,
-  storyPoints: number,
+  storyPoints?: number,
   storyCommits?: StoryCommit[],
   storyStatus: StoryStatus
 }

@@ -23,7 +23,7 @@ public class Story
 	[ForeignKey(nameof(SprintId))]
 	public virtual Sprint? Sprint { get; set; }
 	public Guid? SprintId { get; set; }
-	public required int StoryPoints { get; set; }
+	public int? StoryPoints { get; set; }
 	public required StoryStatus StoryStatus { get; set; } = StoryStatus.Backlog;
 	public virtual ICollection<StoryCommit> StoryCommits { get; set; } = [];
 
