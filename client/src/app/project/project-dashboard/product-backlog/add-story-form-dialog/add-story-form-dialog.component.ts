@@ -41,7 +41,7 @@ export class AddStoryFormDialog extends BaseComponent implements OnInit {
     description: ['', Validators.required],
     storyPriority: ['', Validators.required],
     storyType: ['', Validators.required],
-    storyPoints: ['0', Validators.required],
+    storyPoints: [undefined],
     storyStatus: [StoryStatus.Backlog]
   });
   readonly storyPriorities = signal<string[]>([]);

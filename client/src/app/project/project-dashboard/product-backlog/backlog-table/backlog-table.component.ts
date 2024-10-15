@@ -31,7 +31,7 @@ export class BacklogTableComponent extends BaseComponent {
 
   readonly cols = [
     'title', 'assignedTo', 'storyPriority', 'storyType',
-    'storyPoints', 'created', 'closed', 'actions'
+    'created', 'closed', 'actions'
   ];
 
   private readonly _projectService = inject(ProjectService);
