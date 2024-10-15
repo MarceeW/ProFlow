@@ -19,4 +19,11 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
 				.Union(user.TeamLeaderInProjects);
 		return projects;
 	}
+	
+	public async Task<Sprint> GetNthSprintAsync(Guid projectId, int n)
+	{
+		var project = await ReadAsync(projectId) 
+			?? throw new KeyNotFoundException();
+		return project.Sprints.OrderByDescending(s => s.End).ElementAt(n);
+	}
 }

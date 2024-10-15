@@ -7,10 +7,9 @@ public class SprintDTO
 {
 	public Guid Id { get; set; }
 	[Required]
-	public DateOnly Start { get; set; }
+	public DateTime Start { get; set; }
 	[Required]
-	public DateOnly End { get; set; }
-	public DateTime? EarlyClose { get; set; }
+	public DateTime End { get; set; }
 	public ICollection<StoryDTO> SprintBacklog { get; set; } = [];
 	public bool IsActive { get; set; }
 }

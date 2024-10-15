@@ -61,10 +61,9 @@ public class SprintService : ISprintService
 		var sprint = await _sprintRepository.ReadAsync(sprintId)
 				?? throw new KeyNotFoundException("Invalid sprint id!");
 				
-		sprint.EarlyClose = DateTime.Now;
+		sprint.End = DateTime.Now;
 		
-		foreach(var story in sprint.SprintBacklog) 
-			story.Closed = DateTime.Now;
+		sprint.CloseStories();
 			
 		await _sprintRepository.SaveAsync();
 	}

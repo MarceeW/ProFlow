@@ -91,9 +91,15 @@ public class ProjectService : IProjectService
 	{
 		var project = await _projectRepository.ReadAsync(projectId) 
 			?? throw new KeyNotFoundException();
+			
+		if(project.Sprints.Count > 0) 
+		{
+			var lastSprint = await _projectRepository.GetNthSprintAsync(projectId, 0);
+			lastSprint.CloseStories();
+		}
+			
 		Sprint sprint = new() 
 		{
-			Start = sprintDTO.Start,
 			End = sprintDTO.End,
 			Project = project,
 		};
@@ -109,13 +115,6 @@ public class ProjectService : IProjectService
 			
 		_storyRepository.Delete(story);
 		await _storyRepository.SaveAsync();
-	}
-
-	public async Task<Sprint> GetNthSprint(Guid projectId, int n)
-	{
-		var project = await _projectRepository.ReadAsync(projectId) 
-			?? throw new KeyNotFoundException();
-		return project.Sprints.OrderByDescending(s => s.Start).ElementAt(n);
 	}
 
 	public async Task DeleteProject(Guid projectId)

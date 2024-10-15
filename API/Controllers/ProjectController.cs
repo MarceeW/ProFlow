@@ -142,7 +142,7 @@ public class ProjectController : BaseApiController
 		try
 		{
 			return _mapper
-				.Map<SprintDTO>(await _projectService.GetNthSprint(projectId, n));
+				.Map<SprintDTO>(await _projectRepository.GetNthSprintAsync(projectId, n));
 		}
 		catch (Exception e)
 		{

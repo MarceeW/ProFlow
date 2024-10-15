@@ -10,10 +10,9 @@ public class Sprint
 {
 	[Key]
 	public Guid Id { get; set; }
-	public DateOnly Start { get; set; }
-	public required DateOnly End { get; set; }
+	public DateTime Start { get; set; } = DateTime.Now;
+	public required DateTime End { get; set; }
 	[AllowNull]
-	public DateTime? EarlyClose { get; set; }
 	[ForeignKey(nameof(ProjectId))]
 	public virtual required Project Project { get; set; }
 	public Guid ProjectId { get; set; }
@@ -21,9 +20,13 @@ public class Sprint
 	public bool IsActive { 
 		get 
 		{
-			if(EarlyClose == null)
-				return DateTime.Now < End.ToDateTime(TimeOnly.MaxValue);
-			return DateTime.Now < EarlyClose;
+			return End > DateTime.Now;
 		}
+	}
+	
+	public void CloseStories() 
+	{
+		foreach(var story in SprintBacklog) 
+			story.Closed = DateTime.Now;
 	}
 }

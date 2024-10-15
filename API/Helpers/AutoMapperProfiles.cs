@@ -22,7 +22,7 @@ public class AutoMapperProfiles : Profile
 		
 		CreateMap<Project, ProjectDTO>()
 			.ForMember(dest => dest.Sprints,
-					opt => opt.MapFrom(src => src.Sprints.OrderByDescending(s => s.Start)));
+					opt => opt.MapFrom(src => src.Sprints.OrderByDescending(s => s.End)));
 		CreateMap<Sprint, SprintDateDTO>();
 
 		CreateMap<Team, TeamDTO>();
