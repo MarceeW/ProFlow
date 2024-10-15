@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 
 import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -44,10 +44,12 @@ export class AppComponent {
   readonly sidenavItemService = inject(SidenavItemService);
   readonly accountService = inject(AccountService);
   readonly loadService = inject(ComponentArgsService);
+  readonly matIconRegistry = inject(MatIconRegistry);
 
   ngOnInit(): void {
     this.setupCurrentUser();
     this.accountService.loadProfilePicture();
+    this.matIconRegistry.setDefaultFontSetClass('material-symbols-outlined');
   }
 
   setupCurrentUser() {
