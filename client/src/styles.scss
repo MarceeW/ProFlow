@@ -73,6 +73,10 @@ html, body {
   --mdc-chip-container-shape-radius: 24px;
 }
 
+.mat-divider {
+  opacity: 0.2;
+}
+
 .page-title {
   width: 90%;
   display: flex;
@@ -82,4 +86,12 @@ html, body {
   font-weight: 100;
   border-bottom: solid 1px rgb(0, 0, 0, 0.1);
   margin-bottom: 8px;
+}
+
+.user-picture {
+  border-radius: 50%;
+}
+
+h4 {
+  font-size: 20px !important;
 }
