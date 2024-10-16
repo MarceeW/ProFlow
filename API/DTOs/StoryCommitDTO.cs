@@ -13,5 +13,8 @@ public class StoryCommitDTO
 	[Required]
 	public required string StoryCommitType { get; set; }
 	[Required]
+	[MaxLength(48)]
+	public required string Summary { get; set; }
+	[Required]
 	public required int Hours { get; set; }
 }

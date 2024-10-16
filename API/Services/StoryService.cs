@@ -40,6 +40,7 @@ public class StoryService : IStoryService
 			Commiter = loggedInUser,
 			Story = story,
 			StoryCommitType = Enum.Parse<StoryCommitType>(commitDTO.StoryCommitType.ToTitleCase()),
+			Summary = commitDTO.Summary,
 			Hours = commitDTO.Hours
 		};
 		
