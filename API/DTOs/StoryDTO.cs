@@ -21,5 +21,4 @@ public class StoryDTO
 	public required string StoryType { get; set; }
 	public int? StoryPoints { get; set; }
 	public StoryStatus StoryStatus { get; set; }
-	public ICollection<StoryCommitDTO> StoryCommits { get; set; } = []; // TODO: set this to lazy load
 }
