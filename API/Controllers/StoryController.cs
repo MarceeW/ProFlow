@@ -19,19 +19,19 @@ public class StoryController : BaseApiController
 	private readonly UserManager<User> _userManager;
 	private readonly IMapper _mapper;
 
-    public StoryController(
-        IStoryRepository storyRepository,
-        UserManager<User> userManager,
-        IStoryService storyService,
-        IMapper mapper)
-    {
-        _storyRepository = storyRepository;
-        _userManager = userManager;
-        _storyService = storyService;
-        _mapper = mapper;
-    }
+	public StoryController(
+		IStoryRepository storyRepository,
+		UserManager<User> userManager,
+		IStoryService storyService,
+		IMapper mapper)
+	{
+		_storyRepository = storyRepository;
+		_userManager = userManager;
+		_storyService = storyService;
+		_mapper = mapper;
+	}
 
-    [HttpGet("{id}")]
+	[HttpGet("{id}")]
 	public async Task<ActionResult<StoryDTO>> GetStory(Guid id) 
 	{
 		try
@@ -67,6 +67,20 @@ public class StoryController : BaseApiController
 		try
 		{
 			await _storyService.Assign(id, userId);
+			return Ok("Story is successfully assigned");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpGet("unassign/{id}")]
+	public async Task<ActionResult> UnassignStory(Guid id, [FromQuery] Guid userId) 
+	{
+		try
+		{
+			await _storyService.Unassign(id, userId);
 			return Ok("Story is successfully assigned");
 		}
 		catch (Exception e)

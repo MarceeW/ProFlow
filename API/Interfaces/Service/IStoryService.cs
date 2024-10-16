@@ -11,4 +11,5 @@ public interface IStoryService
 	Task RemoveCommitAsync(Guid commitId);
 	Task UpdateCommitAsync(StoryCommitDTO commitDTO);
 	Task Assign(Guid storyId, Guid userId);
+	Task Unassign(Guid storyId, Guid userId);
 }

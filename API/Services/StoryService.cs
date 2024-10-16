@@ -104,7 +104,34 @@ public class StoryService : IStoryService
 		{
 			Type = "info",
 			Title = "Story assignation",
-			Content = "You have a new story assigned!",
+			Content = $"You have successfully assigned to '{story.Title}' story!",
+			TargetUser = user
+		});
+	}
+	
+	public async Task Unassign(Guid storyId, Guid userId)
+	{
+		var story = await _storyRepository.ReadAsync(storyId)
+			?? throw new KeyNotFoundException();
+		
+		var user = await _userManager.FindByIdAsync(userId.ToString())
+			?? throw new KeyNotFoundException();
+			
+		story.AssignedTo = null;
+		await _storyRepository.SaveAsync();
+		await _loggingService.CreateLogAsync(new Log 
+		{
+			UserId = userId,
+			LoggerLevel = Castle.Core.Logging.LoggerLevel.Info,
+			Source = nameof(StoryService),
+			Message = $"Assignee removed from storyId: {storyId}"
+		});
+		
+		await _notificationService.CreateNotificationAsync(new Notification
+		{
+			Type = "info",
+			Title = "Deleted story assignation",
+			Content = $"You have successfully unassigned from '{story.Title}' story!",
 			TargetUser = user
 		});
 	}
