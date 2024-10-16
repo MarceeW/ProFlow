@@ -5,13 +5,13 @@ using API.Interfaces.Repository;
 using API.Interfaces.Service;
 using API.Models;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize]
 public class StoryController : BaseApiController
 {
 	private readonly IStoryRepository _storyRepository;
@@ -82,6 +82,24 @@ public class StoryController : BaseApiController
 		{
 			await _storyService.Unassign(id, userId);
 			return Ok("Story is successfully assigned");
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	[HttpGet("commits/{id}")]
+	public async Task<ActionResult<IEnumerable<StoryCommitDTO>>> GetCommits(Guid id) 
+	{
+		try
+		{
+			var story = await _storyRepository.ReadAsync(id)
+				?? throw new KeyNotFoundException("Invalid story id");
+			
+			return Ok(story.StoryCommits
+				.AsQueryable()
+				.ProjectTo<StoryCommitDTO>(_mapper.ConfigurationProvider));
 		}
 		catch (Exception e)
 		{
