@@ -17,8 +17,8 @@ import { ReplaySubject, takeUntil } from 'rxjs';
 import { MemberSearchControlComponent } from "../../_controls/member-search-control/member-search-control.component";
 import { Team } from '../../_models/team.model';
 import { User } from '../../_models/user';
+import { AccountService } from '../../_services/account.service';
 import { TeamService } from '../../_services/team.service';
-import { UserService } from '../../_services/user.service';
 
 @Component({
   selector: 'app-team-create',
@@ -53,19 +53,13 @@ export class TeamCreateComponent implements OnInit, OnDestroy {
   private ngDestroy$ = new ReplaySubject();
 
   constructor(
-    private userService: UserService,
+    private accountService: AccountService,
     private teamService: TeamService,
     private toastr: ToastrService,
     private router: Router) {}
 
   ngOnInit(): void {
-    this.userService.getCurrentUser()?.pipe(
-      takeUntil(this.ngDestroy$)
-    ).subscribe({
-      next: user => {
-        this.currentUser.set(user);
-      }
-    });
+    this.currentUser.set(this.accountService.getCurrentAuthUser() as unknown as User);
   }
 
   ngOnDestroy(): void {

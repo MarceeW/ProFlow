@@ -9,7 +9,7 @@ export const loginGuard: CanActivateFn = (route, state) => {
   const accountService = inject(AccountService);
 
   // TODO: check if user's token still valid, if it is not, then log out
-  if (accountService.getCurrentUser()) {
+  if (accountService.getCurrentAuthUser()) {
     toastr.info('You are already logged in!');
     return false;
   }

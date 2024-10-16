@@ -13,14 +13,4 @@ export class UserService extends BaseService {
   getUsers(query?: string | null) {
     return this.http.get<User[]>(this.apiUrl + 'user/' + (query ? query : ''));
   }
-
-  getCurrentUser() {
-    const currentUser = this.accountService.getCurrentUser();
-
-    if(!currentUser)
-      return;
-
-    return this.http.get<User>(this.apiUrl + 'user/' + 'by-username', {
-      params: new HttpParams().set('userName', currentUser.userName)});
-  }
 }

@@ -14,8 +14,8 @@ import { takeUntil } from 'rxjs';
 import { BaseComponent } from '../../_component-base/base.component';
 import { MemberSearchControlComponent } from '../../_controls/member-search-control/member-search-control.component';
 import { Project } from '../../_models/project.model';
+import { AccountService } from '../../_services/account.service';
 import { ProjectService } from '../../_services/project.service';
-import { UserService } from '../../_services/user.service';
 import { User } from './../../_models/user';
 
 @Component({
@@ -49,7 +49,7 @@ export class ProjectCreateComponent extends BaseComponent {
   private projectManager!: User;
 
   constructor(
-    private userService: UserService,
+    private accountService: AccountService,
     private projectService: ProjectService,
     private toastr: ToastrService,
     private router: Router) {
@@ -58,13 +58,7 @@ export class ProjectCreateComponent extends BaseComponent {
 
   override ngOnInit(): void {
     super.ngOnInit();
-    this.userService.getCurrentUser()?.pipe(
-      takeUntil(this._destroy$)
-    ).subscribe({
-        next: user => {
-          this.projectManager = user;
-        }
-    });
+    this.projectManager = this.accountService.getCurrentUser()!;
   }
 
   createProject() {

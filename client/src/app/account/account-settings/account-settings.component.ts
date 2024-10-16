@@ -1,19 +1,18 @@
-import { AccountSettingsModel } from './../../_models/account-settings-model';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
-import { UserService } from '../../_services/user.service';
-import { User } from '../../_models/user';
-import { ReplaySubject, switchMap, take, takeUntil } from 'rxjs';
-import { AsyncPipe, TitleCasePipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatIconModule } from '@angular/material/icon';
-import { ToastrService } from 'ngx-toastr';
-import { AccountService } from '../../_services/account.service';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { FormErrorStateMatcher } from '../../_state-matchers/form-error-state-matcher';
-import { MatButtonModule } from '@angular/material/button';
+import { ToastrService } from 'ngx-toastr';
+import { ReplaySubject, take, takeUntil } from 'rxjs';
+import { User } from '../../_models/user';
+import { AccountService } from '../../_services/account.service';
+import { UserService } from '../../_services/user.service';
+import { AccountSettingsModel } from './../../_models/account-settings-model';
 
 @Component({
   selector: 'app-account-settings',
@@ -49,7 +48,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     public accountService: AccountService,
-    private userService: UserService,
     private toastr: ToastrService) {}
 
     ngOnDestroy(): void {
@@ -83,7 +81,7 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
       const input = event.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
         const file = input.files[0];
-        this.accountService.uploadProfilePicture(file).pipe(take(1)).subscribe();
+        this.accountService.uploadCurrentUserProfilePicture(file).pipe(take(1)).subscribe();
       }
       else {
         this.toastr.error('You can upload only one image!');
@@ -127,7 +125,6 @@ export class AccountSettingsComponent implements OnInit, OnDestroy {
     }
 
     private setCurrentUserModel() {
-      this.userService.getCurrentUser()?.pipe(take(1))
-        .subscribe(user => this.user = user);
+      this.user = this.accountService.getCurrentUser()!;
     }
   }

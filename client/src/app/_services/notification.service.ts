@@ -18,7 +18,7 @@ export class NotificationService extends BaseService {
   }
 
   getNotifications() {
-    const currentUser = this.accountService.getCurrentUser();
+    const currentUser = this.accountService.getCurrentAuthUser();
 
     if (!currentUser)
       return;
@@ -27,7 +27,7 @@ export class NotificationService extends BaseService {
   }
 
   setNotificationsViewed() {
-    const currentUser = this.accountService.getCurrentUser();
+    const currentUser = this.accountService.getCurrentAuthUser();
 
     if (!currentUser)
       return;
@@ -36,7 +36,7 @@ export class NotificationService extends BaseService {
   }
 
   getUnseenNotificationCount() {
-    const currentUser = this.accountService.getCurrentUser();
+    const currentUser = this.accountService.getCurrentAuthUser();
 
     if (!currentUser)
       return;

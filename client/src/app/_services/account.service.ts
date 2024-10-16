@@ -1,14 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject, map } from 'rxjs';
+import { RoleType } from '../_enums/role-type.enum';
+import { AccountSettingsModel } from '../_models/account-settings-model';
 import { AuthUser } from '../_models/auth-user';
 import { LoginModel } from '../_models/login-model';
 import { RegisterModel } from '../_models/register-model';
 import { BaseService } from './base.service';
-import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
-import { Router } from '@angular/router';
 import { NotificationSignalRService } from './signalR/notification-signalr.service';
-import { RoleType } from '../_enums/role-type.enum';
-import { AccountSettingsModel } from '../_models/account-settings-model';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,7 @@ export class AccountService extends BaseService {
           const user = response;
           if (user) {
             this.setCurrentUser(user);
-            this.loadProfilePicture();
+            this.loadCurrentUserProfilePicture();
           }
           return user;
         })
@@ -55,7 +56,7 @@ export class AccountService extends BaseService {
           const user = response;
           if (user) {
             this.setCurrentUser(user);
-            this.loadProfilePicture();
+            this.loadCurrentUserProfilePicture();
           }
           return user;
         })
@@ -73,8 +74,9 @@ export class AccountService extends BaseService {
     const claims = this.getClaimsFromToken(user.token)
 
     user.id = claims.sub;
-
+    user.fullName = claims.name;
     user.roles = [];
+
     const roles = claims.role;
     Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
 
@@ -83,7 +85,7 @@ export class AccountService extends BaseService {
     this.notificationHubService.createHubConnection(user);
   }
 
-  getCurrentUser(): AuthUser | null {
+  getCurrentAuthUser(): AuthUser | null {
     const userString = localStorage.getItem('user');
     if (!userString)
       return null;
@@ -92,12 +94,17 @@ export class AccountService extends BaseService {
     return user;
   }
 
+  getCurrentUser(): User | null {
+    const user = this.getCurrentAuthUser();
+    return user as unknown as User;
+  }
+
   getClaimsFromToken(token: string) {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
   isCurrentUserInRole(...role: (RoleType | string)[]) {
-    const user = this.getCurrentUser();
+    const user = this.getCurrentAuthUser();
 
     if(!user)
       return false;
@@ -105,12 +112,12 @@ export class AccountService extends BaseService {
     return user.roles.filter(_role => role.includes(_role)).length > 0;
   }
 
-  uploadProfilePicture(image: File) {
+  uploadCurrentUserProfilePicture(image: File) {
     const formData = new FormData();
     formData.append('picture', image, image.name);
     return this.http.post(this.apiUrl + 'account/upload-picture', formData)
       .pipe(
-        map(_ => this.loadProfilePicture())
+        map(_ => this.loadCurrentUserProfilePicture())
       );
   }
 
@@ -125,14 +132,14 @@ export class AccountService extends BaseService {
     );
   }
 
-  loadProfilePicture() {
-    this.currentAccountPictureSource.next(this.getCurrentAccountProfilePictureSource());
+  loadCurrentUserProfilePicture() {
+    const currentUser = this.getCurrentAuthUser();
+    if(!currentUser)
+      return;
+    this.currentAccountPictureSource.next(this.getAccountProfilePictureSource(currentUser.id));
   }
 
-  private getCurrentAccountProfilePictureSource(): string {
-    const currentUser = this.getCurrentUser();
-    if(!currentUser)
-      return '';
-    return `${this.apiUrl}user/picture/${currentUser.id}?${new Date().getTime()}`;
+  getAccountProfilePictureSource(accountId: string) {
+    return `${this.apiUrl}user/picture/${accountId}?${new Date().getTime()}`;
   }
 }
