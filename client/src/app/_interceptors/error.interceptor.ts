@@ -4,15 +4,18 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs';
+import { ComponentArgsService } from '../_services/component-args.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router);
-  const toastr = inject(ToastrService);
-  const accountService = inject(AccountService);
-
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error) {
+        const router = inject(Router);
+        const toastr = inject(ToastrService);
+        const accountService = inject(AccountService);
+        const argsService = inject(ComponentArgsService);
+        argsService.loading.set(false);
+
         switch (error.status) {
           case 400:
             if (error.error.errors) {
