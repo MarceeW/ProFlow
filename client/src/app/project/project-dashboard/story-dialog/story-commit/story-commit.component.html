@@ -1,0 +1,76 @@
+@if(commits().length == 0 && !loading()) {
+  <div class="commit">There are no commits yet.</div>
+} @else {
+  @if(loading()) {
+    <mat-progress-bar mode="buffer"></mat-progress-bar>
+  }
+  <div class="commit-table-container">
+    <table class="commit-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Type</th>
+          <th>Summary</th>
+          <th><mat-icon matTooltip="Hours spent">schedule</mat-icon></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      @for (commit of commits(); track $index) {
+        <tr class="commit" [matTooltip]="commit.created | date: 'y. MMM d. h:mm a'">
+          <td>
+            <img [matTooltip]="commit.commiter.fullName" [user-picture]="commit.commiter.id" [size]="24">
+          </td>
+          <td>
+            <span class="type">{{commit.storyCommitType}}</span>
+          </td>
+          <td>{{commit.summary}}</td>
+          <td>{{commit.hours}}</td>
+          @if(canDeleteCommit(commit)) {
+            <td>
+              <button class="delete-btn" (click)="deleteCommit(commit)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          }
+        </tr>
+      }
+      </tbody>
+    </table>
+  </div>
+}
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      Add commit
+      <mat-icon>add</mat-icon>
+    </mat-expansion-panel-header>
+    <form [formGroup]="commitFormGroup" class="commit-form">
+      <mat-form-field>
+        <mat-label>Commit type</mat-label>
+        <mat-select formControlName="storyCommitType">
+          @for (type of commitTypes(); track $index) {
+            <mat-option [value]="type">{{type}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="number-form-field-small">
+        <mat-label>Hours</mat-label>
+        <input type="number" [min]="1" matInput formControlName="hours">
+      </mat-form-field>
+      <button type="submit"
+        (click)="addCommit()"
+        mat-flat-button
+        [disabled]="commitFormGroup.invalid">
+        Add
+        <mat-icon>add</mat-icon>
+      </button>
+
+      <mat-form-field class="summary-field">
+        <mat-label>Summary</mat-label>
+        <input type="text" matInput formControlName="summary">
+      </mat-form-field>
+    </form>
+  </mat-expansion-panel>
+</mat-accordion>

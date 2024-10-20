@@ -1,1 +1,66 @@
-<p>story-dialog works!</p>
+<div (click)="onDialogClicked($event)">
+  <div class="header">
+    <h3 mat-dialog-title>{{story().title}}</h3>
+    <button mat-icon-button class="close-btn" [mat-dialog-close]="changed()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  @if(loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  <mat-dialog-content>
+    <section class="actions">
+      <div class="assignee-container">
+        @if(story().assignedTo) {
+          <span>Assigned to:</span>
+          <div class="assignee">
+            <img [user-picture]="story().assignedTo!.id" [size]="24">
+            <span>{{story().assignedTo?.fullName}}</span>
+            @if(isStoryAssignedToCurrentUser()) {
+              <button class="text-btn unassign-btn" (click)="setAssignation(false)">Unassign</button>
+            }
+          </div>
+        } @else {
+          <button class="text-btn" (click)="setAssignation(true)">Assign story to me</button>
+        }
+      </div>
+      @let storyPointString = story().storyPoints == undefined ? 'No story points'
+        : 'Story points: ' + story().storyPoints;
+      @if(planning()) {
+        @if(!storyPointInputOpened()) {
+        <button class="text-btn"
+          matTooltip="Click to set story points"
+          (click)="openStoryPointsInput($event)">
+          <div class="story-points" [class.unset]="story().storyPoints == undefined">
+            {{storyPointString}}
+          </div>
+        </button>
+        } @else {
+          <div class="story-points-input-container">
+            <mat-form-field>
+              <mat-label>Points</mat-label>
+              <input (click)="$event.stopPropagation()"
+                type="number"
+                [formControl]="storyPointsControl"
+                [value]="story().storyPoints"
+                matInput [min]="0">
+            </mat-form-field>
+          </div>
+        }
+      } @else {
+        <div class="story-points"
+          [class.unset]="story().storyPoints == undefined">
+          {{storyPointString}}
+        </div>
+      }
+    </section>
+    <article>
+      <h4>Description</h4>
+      <p class="description">{{story().description}}</p>
+    </article>
+    <section class="commits">
+      <h4>Commits</h4>
+      <app-story-commit [story]="story()"></app-story-commit>
+    </section>
+  </mat-dialog-content>
+</div>
