@@ -18,15 +18,23 @@ export class StoryService extends BaseService {
   }
 
   updateStory(story: Story) {
-    return this.http.patch(this.apiUrl + 'story/update', story);
+    return this.http.patch(this.apiUrl + 'story/update', story, {responseType: 'text'});
+  }
+
+  getCommits(storyId: string) {
+    return this.http.get<StoryCommit[]>(this.apiUrl + 'story/commits/' + storyId);
   }
 
   addCommit(storyId: string, storyCommit: StoryCommit) {
-    return this.http.patch(this.apiUrl + 'story/add-commit/' + storyId, storyCommit);
+    return this.http.patch(this.apiUrl + 'story/add-commit/' + storyId, storyCommit, {
+      responseType: 'text'
+    });
   }
 
   removeCommit(commitId: string) {
-    return this.http.delete(this.apiUrl + 'story/remove-commit/' + commitId);
+    return this.http.delete(this.apiUrl + 'story/remove-commit/' + commitId, {
+      responseType: 'text'
+    });
   }
 
   updateCommit(storyCommit: StoryCommit) {
@@ -35,6 +43,13 @@ export class StoryService extends BaseService {
 
   assign(storyId: string, userId: string) {
     return this.http.get(this.apiUrl + 'story/assign/' + storyId, {
+      params: new HttpParams().set('userId', userId),
+      responseType: 'text'
+    });
+  }
+
+  unassign(storyId: string, userId: string) {
+    return this.http.get(this.apiUrl + 'story/unassign/' + storyId, {
       params: new HttpParams().set('userId', userId),
       responseType: 'text'
     });

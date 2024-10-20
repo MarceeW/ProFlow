@@ -13,6 +13,5 @@ export interface Story {
   storyPriority: string,
   storyType: string,
   storyPoints?: number,
-  storyCommits?: StoryCommit[],
   storyStatus: StoryStatus
 }
