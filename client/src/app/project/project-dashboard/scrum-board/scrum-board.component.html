@@ -43,7 +43,7 @@
         [cdkDropListData]="stories()[$index]"
         [cdkDropListConnectedTo]="getConnectedToIds($index)"
         class="story-list"
-        (cdkDropListDropped)="drop($event)">
+        (cdkDropListDropped)="drop($event, $index)">
         @for (story of stories()[$index]; track $index) {
           <app-story-tile
           (storyChanged)="loadNthSprint(0)"

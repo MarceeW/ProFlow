@@ -73,6 +73,12 @@ public class StoryService : IStoryService
 		var story = await _storyRepository.ReadAsync(storyDTO.Id)
 			?? throw new KeyNotFoundException();
 		
+		if(story.StoryStatus != storyDTO.StoryStatus)
+		{
+			story.Closed = storyDTO.StoryStatus == StoryStatus.Done ? 
+				DateTime.Now : null;
+		}
+		
 		story.Title = storyDTO.Title;
 		story.Description = storyDTO.Description;
 		story.StoryPriority = Enum.Parse<StoryPriority>(storyDTO.StoryPriority.ToTitleCase());

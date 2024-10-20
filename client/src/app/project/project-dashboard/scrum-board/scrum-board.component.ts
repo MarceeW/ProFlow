@@ -1,3 +1,4 @@
+import { StoryStatus } from './../../../_enums/story-status.enum';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -20,6 +21,8 @@ import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
 import { ProjectDashBoardBase } from '../project-dashboard-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
+import { StoryService } from '../../../_services/story.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-scrum-board',
@@ -60,7 +63,7 @@ export class ScrumBoardComponent extends ProjectDashBoardBase {
     return this._sprintIdx() + 1 == this.project()?.sprints?.length
       || !this.isProjectHasSprints();
   });
-  private readonly _sprintService = inject(SprintService);
+  private readonly _storyService = inject(StoryService);
   private readonly _sprintIdx = signal(0);
 
   override onProjectLoaded(project: Project): void {
@@ -73,10 +76,13 @@ export class ScrumBoardComponent extends ProjectDashBoardBase {
       .map(id => this.stateDragIdPrefix + id);
   }
 
-  drop(event: CdkDragDrop<Story[]>) {
+  drop(event: CdkDragDrop<Story[]>, colIdx: number) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
+      const story = event.previousContainer.data[event.previousIndex];
+      this.updateStoryStatus(story, colIdx);
+
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -84,6 +90,17 @@ export class ScrumBoardComponent extends ProjectDashBoardBase {
         event.currentIndex,
       );
     }
+  }
+
+  updateStoryStatus(story: Story, status: StoryStatus) {
+    story.storyStatus = status;
+    this.loading.set(true);
+    this._storyService.updateStory(story)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(_ => {
+        this._toastr.info("Story status updated");
+        this.loading.set(false);
+      });
   }
 
   navigateToSprint(direction: number) {
