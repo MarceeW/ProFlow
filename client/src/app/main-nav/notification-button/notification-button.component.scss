@@ -53,6 +53,7 @@
   grid-area: icon;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .notification-header {
@@ -72,10 +73,6 @@
 
 .notification-content {
   grid-area: content;
-}
-
-.mat-badge {
-  --mat-badge-background-color: #a05aba !important;
 }
 
 .spinner-container {

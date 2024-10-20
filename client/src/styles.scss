@@ -99,3 +99,14 @@ html, body {
 h4 {
   font-size: 20px !important;
 }
+
+.mat-badge-content {
+  width: unset !important;
+  display: flex;
+  justify-content: center;
+  max-width: fit-content !important;
+}
+
+.mat-badge {
+  --mat-badge-background-color: #fd0558 !important;
+}
