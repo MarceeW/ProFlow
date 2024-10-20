@@ -9,8 +9,9 @@
       [cdkDropListConnectedTo]="sprintBacklogList"
       class="story-list"
       (cdkDropListDropped)="drop($event, 'product')">
-      @for (story of productBacklog; track story) {
+      @for (story of productBacklog(); track $index) {
         <app-story-tile
+          (storyChanged)="reload()"
           [story]="story"
           [disabled]="!lastSprint()?.isActive"
           cdkDrag
@@ -28,8 +29,9 @@
       [cdkDropListConnectedTo]="productBacklogList"
       class="story-list"
       (cdkDropListDropped)="drop($event, 'sprint')">
-      @for (story of sprintBacklog; track story) {
+      @for (story of sprintBacklog(); track $index) {
         <app-story-tile
+          (storyChanged)="reload()"
           [story]="story"
           [disabled]="!lastSprint()?.isActive"
           cdkDrag
@@ -47,7 +49,7 @@
     <div class="function sprint-create-form-container">
       <mat-form-field>
         <mat-label>Sprint duration</mat-label>
-        <mat-date-range-input [min]="minStartDate" [disabled]="canCreateSprint()" [formGroup]="sprintCreateFormGroup" [rangePicker]="picker">
+        <mat-date-range-input [min]="minStartDate" [disabled]="!canCreateSprint()" [formGroup]="sprintCreateFormGroup" [rangePicker]="picker">
           <input matStartDate formControlName="startDate" placeholder="Start date">
           <input matEndDate formControlName="endDate" placeholder="End date">
         </mat-date-range-input>
@@ -76,7 +78,7 @@
       <div class="function">
         <button mat-flat-button
         (click)="closeSprint()"
-        [disabled]="!canCreateSprint()">Close current sprint</button>
+        [disabled]="canCreateSprint()">Close current sprint</button>
       </div>
     } @else {
       <b>Currently the project doesn't have active sprint.</b>

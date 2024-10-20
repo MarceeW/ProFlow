@@ -1,18 +1,18 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { takeUntil } from 'rxjs';
 import { Project } from '../../../_models/project.model';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
 import { ProjectDashBoardBase } from '../project-dashboard-base.component';
-import { MatIconModule } from '@angular/material/icon';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
 
 @Component({
@@ -38,8 +38,8 @@ import { StoryTileComponent } from '../story-tile/story-tile.component';
 export class ManageSprintsComponent extends ProjectDashBoardBase {
   override itemKey: string = 'managesprints';
 
-  productBacklog: Story[] = [];
-  sprintBacklog: Story[] = [];
+  readonly productBacklog = signal<Story[]>([]);
+  readonly sprintBacklog = signal<Story[]>([]);
 
   private readonly _formBuilder = inject(FormBuilder);
   readonly sprintCreateFormGroup = this._formBuilder.group({
@@ -65,7 +65,13 @@ export class ManageSprintsComponent extends ProjectDashBoardBase {
   }
 
   override onBacklogLoaded(stories: Story[]): void {
-    this.productBacklog = stories;
+    this.productBacklog.set(stories);
+  }
+
+  reload() {
+    this.loadBacklog();
+    this.loadNthSprint(0);
+    this.resetMarkedStories();
   }
 
   saveBacklogChanges() {
@@ -73,30 +79,30 @@ export class ManageSprintsComponent extends ProjectDashBoardBase {
       this._sprintService.addStories(this.lastSprint()?.id!, this._markedToAdd())
         .pipe(takeUntil(this._destroy$))
         .subscribe(response => {
-          this.loadDatas();
+          this.reload();
           this._toastr.success(response);
         });
     } else {
       this._sprintService.removeStories(this.lastSprint()?.id!, this._markedToRemove())
         .pipe(takeUntil(this._destroy$))
         .subscribe(response => {
-          this.loadDatas();
+          this.reload();
           this._toastr.success(response);
         });;
     }
   }
 
-  drop(event: CdkDragDrop<Story[]>, source: 'product' | 'sprint') {
+  drop(event: CdkDragDrop<WritableSignal<Story[]>>, source: 'product' | 'sprint') {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(event.container.data(), event.previousIndex, event.currentIndex);
       return;
     }
 
     if(source == 'sprint') {
-      const story = this.productBacklog[event.previousIndex];
+      const story = this.productBacklog()[event.previousIndex];
       this._markedToAdd.set([...this._markedToAdd(), story]);
     } else {
-      const story = this.sprintBacklog[event.previousIndex];
+      const story = this.sprintBacklog()[event.previousIndex];
       if(story.sprintId) {
         this._markedToRemove.set([...this._markedToRemove(), story]);
       } else {
@@ -109,8 +115,8 @@ export class ManageSprintsComponent extends ProjectDashBoardBase {
     }
 
     transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
+      event.previousContainer.data(),
+      event.container.data(),
       event.previousIndex,
       event.currentIndex,
     );
@@ -118,10 +124,8 @@ export class ManageSprintsComponent extends ProjectDashBoardBase {
 
   createSprint() {
     this._projectService.addSprint(this.projectId, {
-      start: new Date(this.sprintCreateFormGroup.controls.startDate.value!)
-        .toJSON().split('T')[0],
-      end: new Date(this.sprintCreateFormGroup.controls.endDate.value!)
-        .toJSON().split('T')[0]
+      start: new Date(this.sprintCreateFormGroup.controls.startDate.value!).toJSON(),
+      end: new Date(this.sprintCreateFormGroup.controls.endDate.value!).toJSON()
     }).pipe(takeUntil(this._destroy$))
       .subscribe(response => {
         this.sprintCreateFormGroup.controls.startDate.setValue('');
@@ -144,24 +148,17 @@ export class ManageSprintsComponent extends ProjectDashBoardBase {
 
   canCreateSprint(): boolean {
     if(!this.lastSprint())
-      return false;
-    return !this.lastSprint()?.earlyClose
-      || new Date(this.lastSprint()!.end) < new Date();
+      return true;
+    return new Date(this.lastSprint()!.end) < new Date();
   }
 
   protected override onSprintLoaded(sprint: Sprint): void {
     this.lastSprint.set(sprint);
-    this.sprintBacklog = sprint.sprintBacklog ?? [];
+    this.sprintBacklog.set(sprint.sprintBacklog ?? []);
   }
 
   private resetMarkedStories() {
     this._markedToAdd.set([]);
     this._markedToRemove.set([]);
-  }
-
-  private loadDatas() {
-    this.loadBacklog();
-    this.loadNthSprint(0);
-    this.resetMarkedStories();
   }
 }
