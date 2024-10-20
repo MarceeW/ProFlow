@@ -19,6 +19,7 @@ import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
 import { ProjectDashBoardBase } from '../project-dashboard-base.component';
+import { StoryTileComponent } from '../story-tile/story-tile.component';
 
 @Component({
   selector: 'app-scrum-board',
@@ -33,7 +34,8 @@ import { ProjectDashBoardBase } from '../project-dashboard-base.component';
     ReactiveFormsModule,
     CdkDropList,
     CdkDrag,
-    DatePipe
+    DatePipe,
+    StoryTileComponent
   ],
   templateUrl: './scrum-board.component.html',
   styleUrl: './scrum-board.component.scss',
@@ -44,8 +46,8 @@ export class ScrumBoardComponent extends ProjectDashBoardBase {
 
   readonly sprint = signal<Sprint | null>(null);
   readonly currentSprintIdx = signal(0);
-  readonly stories = signal<Story[][]>(new Array(4));
-  readonly states = ['Backlog', 'In progress', 'Under testing', 'Done'];
+  readonly states = ['Backlog', 'In progress', 'Code review', 'Done'];
+  readonly stories = signal<Story[][]>(new Array(this.states.length));
   readonly stateDragIdPrefix = 'scrum-state-';
   readonly connectedStates = [
     [1], [0, 2], [1, 3], [1, 2]
@@ -55,15 +57,11 @@ export class ScrumBoardComponent extends ProjectDashBoardBase {
     return this._sprintIdx() == 0;
   });
   readonly backBtnDisabled = computed(() => {
-    return this._sprintIdx() + 1 == this.project()?.sprints?.length || !this.isProjectHasSprints();
+    return this._sprintIdx() + 1 == this.project()?.sprints?.length
+      || !this.isProjectHasSprints();
   });
   private readonly _sprintService = inject(SprintService);
   private readonly _sprintIdx = signal(0);
-
-  override ngOnInit(): void {
-      super.ngOnInit();
-      this.project
-  }
 
   override onProjectLoaded(project: Project): void {
     super.onProjectLoaded(project);
@@ -112,7 +110,7 @@ export class ScrumBoardComponent extends ProjectDashBoardBase {
       return;
 
     const stories = sprint.sprintBacklog;
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < this.states.length; i++) {
       this.stories.update(_stories => {
         _stories[i] = stories.filter(s => s.storyStatus == i);
         return _stories;

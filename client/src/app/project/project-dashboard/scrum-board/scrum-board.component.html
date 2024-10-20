@@ -16,9 +16,8 @@
           (selectionChange)="selectSprint($event)">
           @for(sprint of project()?.sprints; track $index) {
             @let startDate = sprint.start | date;
-            @let endDate = (sprint.earlyClose ?? sprint.end) | date;
             <mat-option [value]="sprint.id">
-              <span>{{startDate}} - {{endDate}} &nbsp;</span>
+              <span>{{startDate}} - {{sprint.end | date}} &nbsp;</span>
               @if(sprint.isActive) {
                 <span>(Active)</span>
               }
@@ -45,10 +44,13 @@
         [cdkDropListConnectedTo]="getConnectedToIds($index)"
         class="story-list"
         (cdkDropListDropped)="drop($event)">
-        @for (story of stories()[$index]; track story) {
-          <div class="story-box"
-          [class.disabled]="!sprint()?.isActive"
-          cdkDrag [cdkDragDisabled]="!sprint()?.isActive">{{story.title}}</div>
+        @for (story of stories()[$index]; track $index) {
+          <app-story-tile
+          (storyChanged)="loadNthSprint(0)"
+          [story]="story"
+          [disabled]="!sprint()?.isActive"
+          cdkDrag
+          [cdkDragDisabled]="!sprint()?.isActive"></app-story-tile>
         }
       </div>
     </div>
