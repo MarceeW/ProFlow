@@ -128,7 +128,7 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
   }
 
   private isUserProjectOwner() {
-    const authUser = this._authService.getCurrentUser();
+    const authUser = this._authService.getCurrentAuthUser();
     if(!authUser || !this.project())
       return false;
 
