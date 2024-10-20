@@ -48,12 +48,12 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.setupCurrentUser();
-    this.accountService.loadProfilePicture();
+    this.accountService.loadCurrentUserProfilePicture();
     this.matIconRegistry.setDefaultFontSetClass('material-symbols-outlined');
   }
 
   setupCurrentUser() {
-    const user: AuthUser | null = this.accountService.getCurrentUser();
+    const user: AuthUser | null = this.accountService.getCurrentAuthUser();
     if(!user)
       return;
 
