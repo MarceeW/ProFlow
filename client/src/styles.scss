@@ -35,8 +35,8 @@ html, body {
 
 .mdc-text-field--outlined {
   --mdc-outlined-text-field-container-shape: 24px !important;
-  --mat-form-field-container-vertical-padding: 12px;
-  --mat-form-field-container-height: 40px !important;
+  --mat-form-field-container-vertical-padding: 8px;
+  --mat-form-field-container-height: 32px !important;
   --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, 0.2) !important;
   --mdc-outlined-text-field-outline-width: 2px !important;
   --mdc-outlined-text-field-focus-outline-width: 3px !important;
@@ -90,6 +90,10 @@ html, body {
 
 .user-picture {
   border-radius: 50%;
+}
+
+.number-form-field-small {
+  max-width: 90px !important;
 }
 
 h4 {
