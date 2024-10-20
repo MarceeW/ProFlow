@@ -26,7 +26,7 @@ public class Sprint
 	
 	public void CloseStories() 
 	{
-		foreach(var story in SprintBacklog) 
+		foreach(var story in SprintBacklog.Where(s => s.Closed != null)) 
 			story.Closed = DateTime.Now;
 	}
 }
