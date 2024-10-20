@@ -65,6 +65,7 @@ public class StoryService : IStoryService
 			?? throw new KeyNotFoundException();
 			
 		_storyCommitRepository.Delete(commit);
+		await _storyCommitRepository.SaveAsync();
 	}
 
 	public async Task UpdateAsync(StoryDTO storyDTO)
