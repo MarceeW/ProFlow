@@ -23,10 +23,16 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
+    @let sidenavOpened = sidenavItemService.items().length > 0;
+    @if(loadService.loading()) {
+      <div class="spinner-container" [class.sidenav-open]="sidenavOpened">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
     <mat-toolbar class="toolbar">
       <div class="navbar">
         <div class="d-flex align-items-center">
-          @if(sidenavItemService.items().length > 0) {
+          @if(sidenavOpened) {
             <button
               type="button"
               aria-label="Toggle sidenav"
@@ -42,11 +48,6 @@
         }
     </div>
     </mat-toolbar>
-    @if(loadService.loading()) {
-      <div class="spinner-container">
-        <mat-spinner></mat-spinner>
-      </div>
-    }
     <div class="page-content" [class.has-title]="loadService.title()">
       @if(loadService.title()) {
         <div class="page-title-container">

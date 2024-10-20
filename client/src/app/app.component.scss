@@ -7,6 +7,25 @@ $theme: mat.define-theme((
   )
 ));
 
+$sidenav-width: 220px;
+
+.sidenav {
+  width: $sidenav-width;
+  border-radius: 0 !important;
+  box-shadow: -8px 0px 12px 0px rgb(0, 0, 0);
+  padding: 8px;
+}
+
+.spinner-container {
+  position: absolute;
+  scale: 0.5;
+  margin-left: 50vw;
+  margin-top: 50vh;
+  &.sidenav-open {
+    margin-left: calc(50vw - $sidenav-width) !important;
+  }
+}
+
 .toolbar {
   position: sticky;
   top: 0;
@@ -14,13 +33,6 @@ $theme: mat.define-theme((
 
 .sidenav-container {
   height: 100%;
-}
-
-.sidenav {
-  width: 220px;
-  border-radius: 0 !important;
-  box-shadow: -8px 0px 12px 0px rgb(0, 0, 0);
-  padding: 8px;
 }
 
 .sidenav .mat-toolbar {
@@ -75,13 +87,6 @@ $theme: mat.define-theme((
   &.has-title {
     grid-template-rows: auto 1fr !important;
   }
-}
-
-.spinner-container {
-  position: absolute;
-  scale: 0.5;
-  margin-left: 50vw;
-  margin-top: 50vh;
 }
 
 .page-title-container {
