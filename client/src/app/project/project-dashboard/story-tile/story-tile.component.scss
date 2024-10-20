@@ -1,45 +1,49 @@
 .story-box {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
+  grid-template-rows: 2rem 1.5rem 1fr;
   align-items: center;
-  padding: 8px;
+  padding: 0 8px;
   background: white;
   border-radius: 8px;
   font-size: 14px;
   min-height: 6rem;
   max-height: 6rem;
 
+  &.disabled {
+    opacity: 0.5;
+  }
+
   .title {
     font-weight: 500;
   }
 
   .points {
+    width: 100%;
     display: flex;
     justify-content: end;
     font-weight: 500;
-    & * {
-      font-size: 10px;
-      background-color: #d9eeff;
-      border-radius: 12px;
-      padding: 0 6px;
+
+    &.unset {
+      color: red;
+    }
+
+    .star-icon {
+      scale: 0.7;
     }
   }
 
   .open-btn {
-    display: flex;
-    padding: 4px;
-    border-radius: 50%;
+    position: absolute;
+    right: 8px;
+    bottom: 0;
     scale: 0.8;
-    justify-content: end;
     transition: scale 0.1s ease-in-out;
+
     &:hover {
       scale: 1;
       cursor: pointer;
-    }
-
-    .mat-icon {
-      width: 20px;
     }
   }
 
@@ -56,12 +60,21 @@
 
     .priority {
       display: inline-block;
-      background-color: #8214ff;
+      background-color: #4692ed;
     }
 
     .type {
       display: inline-block;
-      background-color: #2be9f0;
+      background-color: #005fae;
+    }
+  }
+
+  .assignee {
+    font-weight: 500;
+    color: var(--bs-blue);
+
+    &.unassigned {
+      color: rgb(255, 94, 0);
     }
   }
 }

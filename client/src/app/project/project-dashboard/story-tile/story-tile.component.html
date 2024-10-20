@@ -1,16 +1,24 @@
 <div class="story-box" [class.disabled]="disabled()">
   <div class="title">{{story().title}}</div>
-  <div class="points">
-    <div>
-      {{story().storyPoints}}
-    </div>
+  <div class="points" [class.unset]="story().storyPoints == undefined">
+    <span>
+      {{story().storyPoints ?? 'No story points'}}
+    </span>
+    @if(story().storyPoints != undefined) {
+      <mat-icon class="star-icon">star</mat-icon>
+    }
   </div>
   <div class="metadata-container">
     <div class="priority">{{story().storyPriority}}</div>
     <div class="type">{{story().storyType}}</div>
   </div>
-  <div class="assignee">{{story().assignedTo?.fullName ?? 'Unassigned'}}</div>
+  <div class="assignee" [class.unassigned]="!story().assignedTo">
+    @if(story().assignedTo) {
+      <img [user-picture]="story().assignedTo!.id" [size]="24">
+    }
+    {{story().assignedTo?.fullName ?? 'Unassigned'}}
+  </div>
   <div class="open-btn" (click)="openStoryDialog()" matTooltip="Open">
-      <mat-icon>fullscreen</mat-icon>
+      <mat-icon>float_landscape_2</mat-icon>
   </div>
 </div>
