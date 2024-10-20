@@ -5,5 +5,6 @@ export interface StoryCommit {
   created?: Date,
   commiter: User,
   storyCommitType: string,
+  summary: string,
   hours: number
 }
