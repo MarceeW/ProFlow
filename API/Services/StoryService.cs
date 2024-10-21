@@ -1,5 +1,6 @@
 using API.DTOs;
 using API.Enums;
+using API.Exceptions;
 using API.Extensions;
 using API.Interfaces.Repository;
 using API.Interfaces.Service;
@@ -11,6 +12,7 @@ namespace API.Services;
 public class StoryService : IStoryService
 {
 	private readonly IStoryRepository _storyRepository;
+	private readonly IProjectService _projectService;
 	private readonly IStoryCommitRepository _storyCommitRepository;
 	private readonly INotificationService _notificationService;
 	private readonly ILoggingService _loggingService;
@@ -21,13 +23,15 @@ public class StoryService : IStoryService
 		IStoryCommitRepository storyCommitRepository,
 		UserManager<User> userManager,
 		INotificationService notificationService,
-		ILoggingService loggingService)
+		ILoggingService loggingService,
+		IProjectService projectService)
 	{
 		_storyRepository = storyRepository;
 		_storyCommitRepository = storyCommitRepository;
 		_userManager = userManager;
 		_notificationService = notificationService;
 		_loggingService = loggingService;
+		_projectService = projectService;
 	}
 
 	public async Task AddCommitAsync(Guid storyId, User loggedInUser, StoryCommitDTO commitDTO)
@@ -35,6 +39,9 @@ public class StoryService : IStoryService
 		var story = await _storyRepository.ReadAsync(storyId)
 			?? throw new KeyNotFoundException();
 			
+		if(!_projectService.UserHasAccessToProject(story.Project, loggedInUser))
+			throw new NotAllowedException();
+		
 		StoryCommit commit = new() 
 		{
 			Commiter = loggedInUser,
@@ -48,30 +55,39 @@ public class StoryService : IStoryService
 		await _storyRepository.SaveAsync();
 	}
 
-	public async Task UpdateCommitAsync(StoryCommitDTO commitDTO)
+	public async Task UpdateCommitAsync(StoryCommitDTO commitDTO, User loggedInUser)
 	{
 		var commit = await _storyCommitRepository.ReadAsync(commitDTO.Id)
 			?? throw new KeyNotFoundException();
 			
+		if(!_projectService.UserHasAccessToProject(commit.Story.Project, loggedInUser))
+			throw new NotAllowedException();
+		
 		commit.StoryCommitType = Enum.Parse<StoryCommitType>(commitDTO.StoryCommitType.ToTitleCase());
 		commit.Hours = commitDTO.Hours;
 		
 		_storyCommitRepository.Update(commit);
 	}
 
-	public async Task RemoveCommitAsync(Guid commitId)
+	public async Task RemoveCommitAsync(Guid commitId, User loggedInUser)
 	{
 		var commit = await _storyCommitRepository.ReadAsync(commitId)
 			?? throw new KeyNotFoundException();
+			
+		if(!_projectService.UserHasAccessToProject(commit.Story.Project, loggedInUser))
+			throw new NotAllowedException();
 			
 		_storyCommitRepository.Delete(commit);
 		await _storyCommitRepository.SaveAsync();
 	}
 
-	public async Task UpdateAsync(StoryDTO storyDTO)
+	public async Task UpdateAsync(StoryDTO storyDTO, User loggedInUser)
 	{
 		var story = await _storyRepository.ReadAsync(storyDTO.Id)
 			?? throw new KeyNotFoundException();
+		
+		if(!_projectService.UserHasAccessToProject(story.Project, loggedInUser))
+			throw new NotAllowedException();
 		
 		if(story.StoryStatus != storyDTO.StoryStatus)
 		{
@@ -90,10 +106,14 @@ public class StoryService : IStoryService
 		await _storyRepository.SaveAsync();
 	}
 
-	public async Task Assign(Guid storyId, Guid userId)
+	public async Task Assign(Guid storyId, Guid userId, User loggedInUser)
 	{
 		var story = await _storyRepository.ReadAsync(storyId)
 			?? throw new KeyNotFoundException();
+		
+		if(!_projectService.UserHasAccessToProject(story.Project, loggedInUser)
+				|| userId != loggedInUser.Id)
+			throw new NotAllowedException();
 		
 		var user = await _userManager.FindByIdAsync(userId.ToString())
 			?? throw new KeyNotFoundException();
@@ -117,10 +137,14 @@ public class StoryService : IStoryService
 		});
 	}
 	
-	public async Task Unassign(Guid storyId, Guid userId)
+	public async Task Unassign(Guid storyId, Guid userId, User loggedInUser)
 	{
 		var story = await _storyRepository.ReadAsync(storyId)
 			?? throw new KeyNotFoundException();
+		
+		if(!_projectService.UserHasAccessToProject(story.Project, loggedInUser)
+				|| userId != loggedInUser.Id)
+			throw new NotAllowedException();
 		
 		var user = await _userManager.FindByIdAsync(userId.ToString())
 			?? throw new KeyNotFoundException();

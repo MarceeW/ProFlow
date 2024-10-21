@@ -15,33 +15,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class ProjectController : BaseApiController
+[Authorize]
+public class ProjectController(
+    IProjectService projectService,
+    IProjectRepositoy projectRepositoy,
+    IMapper mapper,
+    UserManager<User> userManager,
+    ISprintRepository sprintRepository,
+    ISprintService sprintService) : BaseApiController
 {
-	private readonly IProjectService _projectService;
-	private readonly ISprintService _sprintService;
-	private readonly IProjectRepositoy _projectRepository;
-	private readonly ISprintRepository _sprintRepository;
-	private readonly IMapper _mapper;
-	private readonly UserManager<User> _userManager;
+	private readonly IProjectService _projectService = projectService;
+	private readonly ISprintService _sprintService = sprintService;
+	private readonly IProjectRepositoy _projectRepository = projectRepositoy;
+	private readonly ISprintRepository _sprintRepository = sprintRepository;
+	private readonly IMapper _mapper = mapper;
+	private readonly UserManager<User> _userManager = userManager;
 
-	public ProjectController(
-		IProjectService projectService,
-		IProjectRepositoy projectRepositoy,
-		IMapper mapper,
-		UserManager<User> userManager,
-		ISprintRepository sprintRepository,
-		ISprintService sprintService)
-	{
-		_projectService = projectService;
-		_projectRepository = projectRepositoy;
-		_mapper = mapper;
-		_userManager = userManager;
-		_sprintRepository = sprintRepository;
-		_sprintService = sprintService;
-	}
-
-	[HttpPost("create")]
-	[Authorize(Roles = RoleConstant.ProjectManager)]
+    [HttpPost("create")]
+	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult> CreateProject(ProjectDTO projectDTO)
 	{
 		try
@@ -56,7 +47,7 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpGet]
-	[Authorize]
+	[Authorize(Roles = RoleConstant.Administrator)]
 	public async Task<IEnumerable<ProjectDTO>> GetProjects() 
 	{
 		return await _projectRepository
@@ -66,16 +57,20 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpDelete("{id}")]
-	[Authorize(Roles = RoleConstant.ProjectManager)]
-	public async Task<ActionResult> DeleteProject(Guid id) 
+	[Authorize(Policy = "ProjectManagement")]
+	public async Task<ActionResult> DeleteProjectAsync(Guid id) 
 	{
 		try
 		{
-			await _projectService.DeleteProject(id);
+			var user = await _userManager.GetLoggedInUserAsync(User);
+			await _projectService.DeleteProjectAsync(id, user!);
 			return Ok(id);
 		} catch (KeyNotFoundException e) 
 		{
 			return BadRequest(e.Message);
+		} catch(NotAllowedException) 
+		{
+			return Forbid();
 		}
 	}
 	
@@ -84,6 +79,10 @@ public class ProjectController : BaseApiController
 	{
 		try
 		{
+			var user = await _userManager.GetLoggedInUserAsync(User);
+			if(!await _projectService.UserHasAccessToProjectAsync(id, user!))
+				return Forbid();
+			
 			return _mapper.Map<ProjectDTO>(await _projectRepository.ReadAsync(id));
 		} catch (KeyNotFoundException e) 
 		{
@@ -92,6 +91,7 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpGet("teams/{id}")]
+	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult<IEnumerable<TeamDTO>>> GetProjectTeams(Guid id) 
 	{
 		try
@@ -109,24 +109,24 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpGet("my-projects")]
-	[Authorize]
 	public async Task<IEnumerable<ProjectDTO>> GetMyProjects() 
 	{
 		var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
-		return _projectRepository.GetMyProjects(loggedInUser)
+		return _projectRepository.GetUserProjects(loggedInUser)
 			.AsQueryable()
 			.ProjectTo<ProjectDTO>(_mapper.ConfigurationProvider);
 	}
 	
 	[HttpPost("add-sprint/{projectId}")]
-	// policy based authorization
+	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult> AddSprint(
 		Guid projectId, 
 		SprintDTO sprintDTO) 
 	{
 		try
 		{
-			await _projectService.AddSprintAsync(projectId, sprintDTO);
+			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+			await _projectService.AddSprintAsync(projectId, sprintDTO, loggedInUser);
 			return Ok("Created sprint successfully");
 		}
 		catch (Exception e)
@@ -136,11 +136,14 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpGet("nth-sprint/{projectId}")]
-	// policy based authorization
 	public async Task<ActionResult<SprintDTO>> GetNthSprint(Guid projectId, [FromQuery] int n) 
 	{
 		try
 		{
+			var user = await _userManager.GetLoggedInUserAsync(User);
+			if(!await _projectService.UserHasAccessToProjectAsync(projectId, user!))
+				return Forbid();
+				
 			return _mapper
 				.Map<SprintDTO>(await _projectRepository.GetNthSprintAsync(projectId, n));
 		}
@@ -151,7 +154,6 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpGet("sprints/{projectId}")]
-	// policy based authorization
 	public async Task<ActionResult<IEnumerable<SprintDTO>>> GetSprints(Guid projectId) 
 	{
 		try
@@ -168,12 +170,17 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpGet("backlog/{projectId}")]
-	// policy based authorization
+	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult<IEnumerable<StoryDTO>>> GetBacklog(Guid projectId) 
 	{
 		try
 		{
 			var project = await _projectRepository.ReadAsync(projectId);
+			
+			var user = await _userManager.GetLoggedInUserAsync(User);
+			if(!_projectService.UserHasAccessToProject(project, user!))
+				return Forbid();
+			
 			if(project == null)
 				throw new KeyNotFoundException("Project does not exists");
 			return Ok(project.ProductBacklog
@@ -188,14 +195,14 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpPost("add-story/{projectId}")]
-	// TODO: policy based authorization
-	public async Task<ActionResult> AddStoryToBacklog(
+	public async Task<ActionResult> AddStoryToBacklogAsync(
 		Guid projectId, 
 		StoryDTO story) 
 	{
 		try
 		{
-			await _projectService.AddStoryToBacklog(projectId, story);
+			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+			await _projectService.AddStoryToBacklogAsync(projectId, story, loggedInUser);
 			return Ok("Story added to product backlog successfully");
 		}
 		catch (Exception e)
@@ -205,13 +212,13 @@ public class ProjectController : BaseApiController
 	}
 	
 	[HttpDelete("remove-story/{storyId}")]
-	// TODO: policy based authorization
-	public async Task<ActionResult> RemoveStoryFromBacklog( 
+	public async Task<ActionResult> RemoveStoryFromBacklogAsync( 
 		Guid storyId) 
 	{
 		try
 		{
-			await _projectService.RemoveStoryFromBacklog(storyId);
+			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+			await _projectService.RemoveStoryFromBacklogAsync(storyId, loggedInUser);
 			return Ok("Story removed from product backlog successfully");
 		}
 		catch (Exception e)

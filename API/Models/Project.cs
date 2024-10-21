@@ -16,4 +16,15 @@ public class Project
 	public virtual ICollection<Team> Teams { get; set; } = [];
 	public virtual ICollection<Story> ProductBacklog { get; set; } = [];
 	public virtual ICollection<Sprint> Sprints { get; set; } = [];
+	public override bool Equals(object? obj)
+	{
+		if(obj is Project p)
+			return p.Id == Id;
+		return false;
+	}
+
+	public override int GetHashCode()
+	{
+		return Id.GetHashCode();
+	}
 }

@@ -1,4 +1,5 @@
-﻿using API.DTO;
+﻿using API.Constants;
+using API.DTO;
 using API.DTOs;
 using API.Enums;
 using API.Exceptions;
@@ -68,11 +69,14 @@ public class ProjectService : IProjectService
 		return users;
 	}
 
-	public async Task AddStoryToBacklog(Guid projectId, StoryDTO storyDTO)
+	public async Task AddStoryToBacklogAsync(Guid projectId, StoryDTO storyDTO, User user)
 	{
 		var project = await _projectRepository.ReadAsync(projectId) 
 			?? throw new KeyNotFoundException();
 			
+		if(project.ProjectManager != user)
+			throw new NotAllowedException();	
+		
 		Story story = new() 
 		{
 			Title = storyDTO.Title,
@@ -87,10 +91,13 @@ public class ProjectService : IProjectService
 		await _projectRepository.SaveAsync();
 	}
 	
-	public async Task AddSprintAsync(Guid projectId, SprintDTO sprintDTO)
+	public async Task AddSprintAsync(Guid projectId, SprintDTO sprintDTO, User user)
 	{
 		var project = await _projectRepository.ReadAsync(projectId) 
 			?? throw new KeyNotFoundException();
+			
+		if(project.ProjectManager != user)
+			throw new NotAllowedException();
 			
 		if(project.Sprints.Count > 0) 
 		{
@@ -108,18 +115,26 @@ public class ProjectService : IProjectService
 		await _sprintRepository.SaveAsync();
 	}
 
-	public async Task RemoveStoryFromBacklog(Guid storyId)
+	public async Task RemoveStoryFromBacklogAsync(Guid storyId, User user)
 	{
 		var story = await _storyRepository.ReadAsync(storyId)
 			?? throw new KeyNotFoundException();
+			
+		if(story.Project.ProjectManager != user)
+			throw new NotAllowedException();
 			
 		_storyRepository.Delete(story);
 		await _storyRepository.SaveAsync();
 	}
 
-	public async Task DeleteProject(Guid projectId)
+	public async Task DeleteProjectAsync(Guid projectId, User user)
 	{
-		Project project = await _projectRepository.ReadAsync(projectId);
+		Project project = await _projectRepository.ReadAsync(projectId)
+			?? throw new KeyNotFoundException();
+			
+		if(project.ProjectManager != user)
+			throw new NotAllowedException();
+			
 		_projectRepository.Delete(project);
 		
 		var notificationTargetIds = project.Teams
@@ -140,5 +155,20 @@ public class ProjectService : IProjectService
 			await _notificationService.CreateNotificationAsync(notification);
 		}
 		await _projectRepository.SaveAsync();
+	}
+
+	public async Task<bool> UserHasAccessToProjectAsync(Guid projectId, User user)
+	{
+		Project project = await _projectRepository.ReadAsync(projectId)
+			?? throw new KeyNotFoundException();
+			
+		return UserHasAccessToProject(project, user);
+	}
+	
+	public bool UserHasAccessToProject(Project project, User user)
+	{
+		var projects = _projectRepository.GetUserProjects(user);
+		return projects.Any(p => p == project) || user.UserRoles!
+			.Any(r => r.Role.Name!.ToLower() == RoleConstant.Administrator.ToLower());;
 	}
 }

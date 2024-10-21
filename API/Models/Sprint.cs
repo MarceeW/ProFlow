@@ -29,4 +29,22 @@ public class Sprint
 		foreach(var story in SprintBacklog.Where(s => s.Closed != null)) 
 			story.Closed = DateTime.Now;
 	}
+	
+	[NotMapped]
+	public IEnumerable<User> Members => 
+		Project.Teams
+			.SelectMany(t => t.Members)
+			.Append(Project.ProjectManager);
+
+	public override bool Equals(object? obj)
+	{
+		if(obj is Sprint s)
+			return s.Id == Id;
+		return false;
+	}
+
+	public override int GetHashCode()
+	{
+		return Id.GetHashCode();
+	}
 }

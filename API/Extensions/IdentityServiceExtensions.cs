@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using API.Constants;
 using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -52,8 +53,17 @@ public static class IdentityServiceExtensions
 						}	
 					};
 				});
+				
 		services.AddAuthorization();
-
+		services.AddAuthorizationBuilder()
+			.AddPolicy("ProjectManagement", policy => policy
+				.RequireRole(RoleConstant.Administrator, RoleConstant.ProjectManager))
+			.AddPolicy("SprintManagement", policy => policy
+				.RequireRole(
+					RoleConstant.Administrator, 
+					RoleConstant.ProjectManager, 
+					RoleConstant.TeamLeader));
+				
 		return services;
 	}
 }

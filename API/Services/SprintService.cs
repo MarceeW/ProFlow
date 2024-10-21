@@ -1,4 +1,4 @@
-using System;
+using API.Constants;
 using API.DTOs;
 using API.Interfaces.Repository;
 using API.Interfaces.Service;
@@ -66,5 +66,20 @@ public class SprintService : ISprintService
 		sprint.CloseStories();
 			
 		await _sprintRepository.SaveAsync();
+	}
+
+	public async Task<bool> UserHasAccessToSprintAsync(Guid sprintId, User user)
+	{
+		var sprint = await _sprintRepository.ReadAsync(sprintId)
+				?? throw new KeyNotFoundException("Invalid sprint id!");
+				
+		return UserHasAccessToSprint(sprint, user);
+	}
+
+	public bool UserHasAccessToSprint(Sprint sprint, User user)
+	{
+		var members = sprint.Members;
+		return members.Any(m => m == user) || user.UserRoles!
+			.Any(r => r.Role.Name!.ToLower() == RoleConstant.Administrator.ToLower());
 	}
 }
