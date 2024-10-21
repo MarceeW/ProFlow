@@ -52,7 +52,7 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
     this._projectService.getBacklog(this.projectId)
       .pipe(takeUntil(this._destroy$))
       .subscribe(stories => {
-        this.onBacklogLoaded(stories);
+        this.onBacklogLoaded(stories.filter(story => !story.sprintId));
         this.loading.set(false);
       });
   }
