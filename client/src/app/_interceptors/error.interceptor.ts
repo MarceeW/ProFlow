@@ -37,7 +37,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             toastr.info('Your token expired, now you are logged out', error.status.toString());
             break;
           case 403:
-            toastr.warning('You are not allowed to view that page');
+            toastr.warning('You are not allowed to do that');
             break;
           case 404:
             router.navigateByUrl('');
