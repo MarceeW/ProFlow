@@ -17,6 +17,7 @@ import { Project } from '../../_models/project.model';
 import { AccountService } from '../../_services/account.service';
 import { ProjectService } from '../../_services/project.service';
 import { User } from './../../_models/user';
+import { RoleType } from '../../_enums/role-type.enum';
 
 @Component({
   selector: 'app-project-create',
@@ -44,6 +45,8 @@ export class ProjectCreateComponent extends BaseComponent {
   });
   @ViewChild('teamLeaderInput') teamLeaderInput!: ElementRef<HTMLInputElement>;
   @ViewChild('teamLeaderChipGrid') teamLeaderChipGrid!: MatChipGrid;
+
+  readonly RoleType = RoleType;
 
   protected override _title = 'New project';
   private projectManager!: User;

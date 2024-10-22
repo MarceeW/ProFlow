@@ -1,16 +1,18 @@
-import { HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { User } from '../_models/user';
-import { AccountService } from './account.service';
 import { BaseService } from './base.service';
+import { RoleType } from '../_enums/role-type.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService extends BaseService {
-  private accountService: AccountService = inject(AccountService);
-
-  getUsers(query?: string | null) {
-    return this.http.get<User[]>(this.apiUrl + 'user/' + (query ? query : ''));
+  getUsers(roles: RoleType[]) {
+    return this.http.get<User[]>(this.apiUrl + 'user',
+    {
+      params: {
+        roles: roles.join(',')
+      }
+    });
   }
 }
