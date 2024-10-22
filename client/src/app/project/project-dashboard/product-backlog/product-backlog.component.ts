@@ -1,7 +1,6 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { takeUntil } from 'rxjs';
 import { Story } from '../../../_models/story.model';
@@ -25,7 +24,7 @@ export class ProductBacklogComponent extends ProjectDashBoardBase {
 
   protected override _title = 'Product backlog';
   private readonly _dialog = inject(MatDialog);
-  private readonly backlogTable = viewChild(BacklogTableComponent);
+  private readonly _backlogTable = viewChild(BacklogTableComponent);
 
   openCreateStoryDialog() {
     const dialogRef = this._dialog.open(AddStoryFormDialog, {
@@ -39,7 +38,7 @@ export class ProductBacklogComponent extends ProjectDashBoardBase {
         .pipe(takeUntil(this._destroy$))
         .subscribe(response => {
           this._toastr.success(response);
-          this.backlogTable()?.loadBacklog();
+          this._backlogTable()?.loadBacklog();
         });
     });
   }
