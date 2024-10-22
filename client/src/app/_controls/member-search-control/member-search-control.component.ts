@@ -39,7 +39,7 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
   override id: string = `app-member-search-control-${MemberSearchControlComponent.nextId++}`;
   override controlType: string = 'app-project-search-control';
 
-  readonly allowedRoles = input<RoleType[]>([]);
+  readonly allowedRoles = input<RoleType[] | undefined>(undefined);
   readonly notAllowedMembers = input<User[]>([]);
 
   readonly _addedUsers = signal<User[]>([]);

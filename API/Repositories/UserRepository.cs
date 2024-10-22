@@ -31,8 +31,7 @@ public class UserRepository : IUserRepository
 		
 		return await _userManager
 			.Users
-			.Where(u => rolesArray != null 
-				&& rolesArray.Intersect(u.UserRoles!.Select(ur => ur.Role.Name)).Count() > 0)
+			.Where(u => roles == null || rolesArray!.Intersect(u.UserRoles!.Select(ur => ur.Role.Name)).Count() > 0)
 			.ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
 			.ToListAsync();
 	}

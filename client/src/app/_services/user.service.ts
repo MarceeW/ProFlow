@@ -7,11 +7,11 @@ import { RoleType } from '../_enums/role-type.enum';
   providedIn: 'root'
 })
 export class UserService extends BaseService {
-  getUsers(roles: RoleType[]) {
+  getUsers(roles?: RoleType[]) {
     return this.http.get<User[]>(this.apiUrl + 'user',
     {
       params: {
-        roles: roles.join(',')
+        roles: roles?.join(',') ?? ''
       }
     });
   }
