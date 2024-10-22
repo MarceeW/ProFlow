@@ -1,7 +1,7 @@
 import { Component, effect, inject, OnDestroy, OnInit, signal, untracked } from "@angular/core";
+import { ToastrService } from "ngx-toastr";
 import { Subject } from "rxjs";
 import { ComponentArgsService } from "../_services/component-args.service";
-import { ToastrModule, ToastrService } from "ngx-toastr";
 import { BASE_COMPONENT_DEFAULT_CONFIG } from "../injection-tokens.config";
 
 @Component({
