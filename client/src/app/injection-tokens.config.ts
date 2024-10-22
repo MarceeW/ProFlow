@@ -17,6 +17,18 @@ export const BASE_COMPONENT_DEFAULT_CONFIG =
     }
   });
 
+export const BASE_COMPONENT_CONTROL_CONFIG =
+  new InjectionToken<BaseComponentConfig>('BaseComponentControlConfig', {
+    providedIn: 'root',
+    factory: () => {
+      const config: BaseComponentConfig = {
+        setupLoading: false,
+        setupTitle: false
+      };
+      return config;
+    }
+  });
+
 export const BASE_COMPONENT_DIALOG_CONFIG =
   new InjectionToken<BaseComponentConfig>('BaseComponentDialogConfig', {
     providedIn: 'root',
