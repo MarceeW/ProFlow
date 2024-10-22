@@ -32,7 +32,12 @@
         panelWidth="350px"
         #auto="matAutocomplete" (optionSelected)="selected($event)">
         @for (user of _filteredUsers(); track $index) {
-            <mat-option [value]="user">{{user.fullName}}</mat-option>
+            <mat-option [value]="user">
+              <div class="item-content">
+                <img [user-picture]="user.id">
+                <span>{{user.fullName}}</span>
+              </div>
+            </mat-option>
         }
     </mat-autocomplete>
 </div>

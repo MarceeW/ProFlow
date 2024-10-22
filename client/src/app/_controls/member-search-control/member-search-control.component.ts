@@ -11,6 +11,7 @@ import { RoleType } from '../../_enums/role-type.enum';
 import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { ControlBase } from '../control-base.component';
+import { UserPictureDirective } from '../../_directives/user-picture.directive';
 
 @Component({
   selector: 'app-member-search-control',
@@ -22,7 +23,8 @@ import { ControlBase } from '../control-base.component';
     MatAutocompleteModule,
     MatAutocompleteOrigin,
     MatProgressBarModule,
-    AsyncPipe
+    AsyncPipe,
+    UserPictureDirective
   ],
   providers: [
     {
