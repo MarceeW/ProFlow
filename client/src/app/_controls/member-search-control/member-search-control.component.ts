@@ -5,11 +5,12 @@ import { MatAutocompleteModule, MatAutocompleteOrigin, MatAutocompleteSelectedEv
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { takeUntil } from 'rxjs';
+import { RoleType } from '../../_enums/role-type.enum';
 import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { ControlBase } from '../control-base.component';
-import { RoleType } from '../../_enums/role-type.enum';
 
 @Component({
   selector: 'app-member-search-control',
@@ -20,6 +21,7 @@ import { RoleType } from '../../_enums/role-type.enum';
     MatIconModule,
     MatAutocompleteModule,
     MatAutocompleteOrigin,
+    MatProgressBarModule,
     AsyncPipe
   ],
   providers: [
@@ -57,11 +59,13 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
 
   override ngOnInit() {
     super.ngOnInit();
+    this.loading.set(true);
     this._userService.getUsers(this.allowedRoles())
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: users => {
           this._users.set(users);
+          this.loading.set(false);
         }
     });
 

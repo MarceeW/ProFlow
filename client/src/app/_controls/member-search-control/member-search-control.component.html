@@ -1,3 +1,8 @@
+@if(loading()) {
+  <div class="progress-bar-container">
+    <mat-progress-bar mode="buffer"></mat-progress-bar>
+  </div>
+}
 <div class="member-search-control-container"
     [attr.aria-labelledby]="_formField?.getLabelId()"
     (focusin)="onFocusIn()"
@@ -16,7 +21,7 @@
         name="member"
         placeholder="Add new member"
         #memberInput
-        [disabled]="disabled"
+        [disabled]="disabled || loading()"
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"
         [formControl]="_userInputControl"
