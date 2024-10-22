@@ -22,10 +22,10 @@ public class UserController : BaseApiController
 		_userManager = userManager;
 	}
 	
-	[HttpGet("{filter?}")]
-	public async Task<IEnumerable<UserDTO>> GetUsers(string? filter) 
+	[HttpGet]
+	public async Task<IEnumerable<UserDTO>> GetUsers([FromQuery] string? roles) 
 	{
-		return await _userRepository.GetUsersAsync(filter);
+		return await _userRepository.GetUsersAsync(roles);
 	}
 	
 	[HttpGet("by-username")]

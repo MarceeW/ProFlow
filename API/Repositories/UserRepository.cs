@@ -20,18 +20,19 @@ public class UserRepository : IUserRepository
 		_mapper = mapper;
 	}
 
-    public async Task<UserDTO> GetUserByUserNameAsync(string userName)
-    {
-        return _mapper.Map<UserDTO>(await _userManager.FindByNameAsync(userName));
-    }
-
-    public async Task<IEnumerable<UserDTO>> GetUsersAsync(string? filter)
+	public async Task<UserDTO> GetUserByUserNameAsync(string userName)
 	{
+		return _mapper.Map<UserDTO>(await _userManager.FindByNameAsync(userName));
+	}
+
+	public async Task<IEnumerable<UserDTO>> GetUsersAsync(string? roles)
+	{
+		var rolesArray = roles?.ToLower().Split(',');
+		
 		return await _userManager
 			.Users
-			.Where(u => filter == null || filter != null && 
-				(u.FirstName + u.LastName).ToLower()
-					.Contains(filter.ToLower()))
+			.Where(u => rolesArray != null 
+				&& rolesArray.Intersect(u.UserRoles!.Select(ur => ur.Role.Name)).Count() > 0)
 			.ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
 			.ToListAsync();
 	}

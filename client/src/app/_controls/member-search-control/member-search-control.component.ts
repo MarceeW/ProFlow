@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
-import { ControlBase } from '../control-base.component';
-import { User } from '../../_models/user';
-import { FormControl, ReactiveFormsModule, ValueChangeEvent } from '@angular/forms';
-import { MatAutocompleteModule, MatAutocompleteOrigin, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { filter, map, Observable, takeUntil } from 'rxjs';
-import { UserService } from '../../_services/user.service';
 import { AsyncPipe } from '@angular/common';
+import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteOrigin, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MAT_FORM_FIELD, MatFormFieldControl } from '@angular/material/form-field';
-import { AccountService } from '../../_services/account.service';
+import { takeUntil } from 'rxjs';
+import { User } from '../../_models/user';
+import { UserService } from '../../_services/user.service';
+import { ControlBase } from '../control-base.component';
+import { RoleType } from '../../_enums/role-type.enum';
 
 @Component({
   selector: 'app-member-search-control',
@@ -37,6 +37,7 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
   override id: string = `app-member-search-control-${MemberSearchControlComponent.nextId++}`;
   override controlType: string = 'app-project-search-control';
 
+  readonly allowedRoles = input<RoleType[]>([]);
   readonly notAllowedMembers = input<User[]>([]);
 
   readonly _addedUsers = signal<User[]>([]);
@@ -56,7 +57,7 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
 
   override ngOnInit() {
     super.ngOnInit();
-    this._userService.getUsers()
+    this._userService.getUsers(this.allowedRoles())
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: users => {
