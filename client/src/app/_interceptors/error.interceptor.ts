@@ -7,13 +7,13 @@ import { catchError } from 'rxjs';
 import { ComponentArgsService } from '../_services/component-args.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
+  const toastr = inject(ToastrService);
+  const accountService = inject(AccountService);
+  const argsService = inject(ComponentArgsService);
   return next(req).pipe(
-    catchError((error: HttpErrorResponse) => {
+    catchError(error => {
       if (error) {
-        const router = inject(Router);
-        const toastr = inject(ToastrService);
-        const accountService = inject(AccountService);
-        const argsService = inject(ComponentArgsService);
         argsService.loading.set(false);
 
         switch (error.status) {
@@ -33,19 +33,18 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               break;
             }
           case 401:
-            toastr.error('Unauthorized', error.status.toString());
             accountService.logout();
+            toastr.info('Your token expired, now you are logged out', error.status.toString());
+            break;
+          case 403:
+            toastr.warning('You are not allowed to view that page');
             break;
           case 404:
-            router.navigateByUrl('/not-found');
-            break;
-          case 500:
-            const navigationExtras: NavigationExtras = { state: { error: error.error } };
-            router.navigateByUrl('/server-error', navigationExtras);
+            router.navigateByUrl('');
+            toastr.error('404 - Not found');
             break;
           default:
-            toastr.error('Something unexpected went wrong!');
-            console.log(error);
+            toastr.error('500 - Server error');
             break;
         }
       }

@@ -23,7 +23,8 @@ import { TeamEditComponent } from './teams/team-edit/team-edit.component';
 import { TeamListComponent } from './teams/team-list/team-list.component';
 
 export const routes: Routes = [
-  { path: '',
+  {
+    path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
     children: [

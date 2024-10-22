@@ -14,7 +14,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (user)
         return true;
       else {
-        toastr.error('You are not logged in!');
+        toastr.info('You are not logged in!');
         router.navigateByUrl('/login');
         return false;
       }
