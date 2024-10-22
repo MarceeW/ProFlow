@@ -1,5 +1,5 @@
 <div class="story-box" [class.disabled]="disabled()">
-  <div class="title">{{story().title}}</div>
+  <div class="title" [title]="story().title">{{story().title}}</div>
   <div class="points" [class.unset]="story().storyPoints == undefined">
     <span>
       {{story().storyPoints ?? 'No story points'}}
