@@ -22,7 +22,8 @@ export const appConfig: ApplicationConfig = {
         ])),
     provideToastr({
       positionClass: 'toast-bottom-right',
-      preventDuplicates: true
+      preventDuplicates: true,
+      progressBar: true
     }),
     provideAnimationsAsync(),
     provideNativeDateAdapter(),

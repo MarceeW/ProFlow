@@ -110,3 +110,17 @@ h4 {
 .mat-badge {
   --mat-badge-background-color: #fd0558 !important;
 }
+
+.toast-container {
+  --toast-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ngx-toastr {
+  width: var(--toast-width) !important;
+  border-radius: 48px !important;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+              rgba(0, 0, 0, 0.22) 0px 10px 10px !important;
+}
