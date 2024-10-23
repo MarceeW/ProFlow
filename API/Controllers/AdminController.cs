@@ -3,6 +3,7 @@ using API.Controllers;
 using API.DTO;
 using API.Extensions;
 using API.Interfaces.Repository;
+using API.Interfaces.Service;
 using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -18,20 +19,26 @@ public class AdminController : BaseApiController
 	private readonly UserManager<User> _userManager;
 	private readonly IMapper _mapper;
 	private readonly IAccountRepository _accountRepository;
+	private readonly IProjectRepositoy _projectRepositoy;
+	private readonly ITeamService _teamService;
 	private readonly IInvitationRepository _invitationRepository;
 
 	public AdminController(
 		UserManager<User> userManager,
 		IMapper mapper,
 		IAccountRepository accountRepository,
-		IInvitationRepository invitationRepository) 
+		IInvitationRepository invitationRepository,
+		IProjectRepositoy projectRepositoy,
+		ITeamService teamService)
 	{
 		_userManager = userManager;
 		_mapper = mapper;
 		_accountRepository = accountRepository;
 		_invitationRepository = invitationRepository;
+		_projectRepositoy = projectRepositoy;
+		_teamService = teamService;
 	}
-	
+
 	[HttpGet("accounts/{query?}")]
 	public async Task<IEnumerable<AccountDTO>> GetAccountsByQuery(string? query)
 	{
@@ -108,5 +115,44 @@ public class AdminController : BaseApiController
 			return BadRequest(result.Errors);
 			
 		return _mapper.Map<AccountDTO>(user);
+	}
+	
+	[HttpPatch("delete-account/{id}")]
+	public async Task<ActionResult> DeleteAccount(Guid id, UserDTO? deputy) 
+	{
+		try
+		{
+			User user = await _userManager.FindByIdAsync(id.ToString())
+				?? throw new KeyNotFoundException();
+				
+			var projects = user.OwnedProjects;
+			if(user.OwnedProjects.Count > 0) 
+			{
+				if(deputy == null)
+					return BadRequest("You must give a deputy project manager");
+					
+				foreach(Project project in user.OwnedProjects) 
+				{
+					project.ProjectManagerId = deputy.Id;
+					_projectRepositoy.Update(project);
+				}
+				await _projectRepositoy.SaveAsync();
+			}
+
+			var loggedInUser = await _userManager.GetLoggedInUserAsync(User);
+			var teamIds = user.Teams.Select(team => team.Id).ToList();
+			foreach(var teamId in teamIds)
+			{
+				var userDTO = _mapper.Map<UserDTO>(user);
+				await _teamService.RemoveFromTeamAsync(loggedInUser!, teamId, [userDTO]);
+			}
+
+			await _userManager.DeleteAsync(user);
+			return Ok();
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
 	}
 }

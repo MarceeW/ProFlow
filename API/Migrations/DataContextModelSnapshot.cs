@@ -164,6 +164,21 @@ namespace API.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
+            modelBuilder.Entity("API.Models.Skill", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
+                });
+
             modelBuilder.Entity("API.Models.Sprint", b =>
                 {
                     b.Property<Guid>("Id")
@@ -433,6 +448,24 @@ namespace API.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("API.Models.UserSkill", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SkillId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SkillLevel")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("UserSkills");
+                });
+
             modelBuilder.Entity("API.Models.UserTeam", b =>
                 {
                     b.Property<Guid>("MemberId")
@@ -582,7 +615,8 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.User", "AssignedTo")
                         .WithMany("AssignedStories")
-                        .HasForeignKey("AssignedToId");
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("API.Models.Project", "Project")
                         .WithMany("ProductBacklog")
@@ -625,7 +659,7 @@ namespace API.Migrations
                     b.HasOne("API.Models.User", "TeamLeader")
                         .WithMany("LedTeams")
                         .HasForeignKey("TeamLeaderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("TeamLeader");
@@ -689,19 +723,36 @@ namespace API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("API.Models.UserSkill", b =>
+                {
+                    b.HasOne("API.Models.Skill", "Skill")
+                        .WithMany("UserSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.User", "User")
+                        .WithMany("UserSkills")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Skill");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("API.Models.UserTeam", b =>
                 {
                     b.HasOne("API.Models.User", null)
                         .WithMany()
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("API.Models.Team", null)
                         .WithMany()
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -752,6 +803,11 @@ namespace API.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("API.Models.Skill", b =>
+                {
+                    b.Navigation("UserSkills");
+                });
+
             modelBuilder.Entity("API.Models.Sprint", b =>
                 {
                     b.Navigation("SprintBacklog");
@@ -777,6 +833,8 @@ namespace API.Migrations
                     b.Navigation("StoryCommits");
 
                     b.Navigation("UserRoles");
+
+                    b.Navigation("UserSkills");
                 });
 #pragma warning restore 612, 618
         }

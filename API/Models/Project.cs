@@ -11,7 +11,7 @@ public class Project
 	public required string Name { get; set;}
 	[ForeignKey(nameof(ProjectManagerId))]
 	public virtual required User ProjectManager { get; set; }
-	public virtual Guid ProjectManagerId { get; set; }
+	public Guid ProjectManagerId { get; set; }
 	public virtual required ICollection<User> TeamLeaders { get; set; } = [];
 	public virtual ICollection<Team> Teams { get; set; } = [];
 	public virtual ICollection<Story> ProductBacklog { get; set; } = [];

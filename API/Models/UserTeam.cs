@@ -1,4 +1,6 @@
-﻿namespace API.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace API.Models;
 
 public class UserTeam
 {

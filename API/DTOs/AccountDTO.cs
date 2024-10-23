@@ -3,6 +3,7 @@ namespace API.DTO;
 
 public class AccountDTO
 {
+	public required Guid Id { get; set; }
 	public required ICollection<string> Roles { get; set; }
 	public InvitationDTO? Invitation { get; set; }
 	public required string UserName { get; set; }
