@@ -298,6 +298,7 @@ e2e/*.map
 .DS_Store/
 
 API/Resources/Images/*
+API/Migrations/*
 !API/Resources/Images/user-icon.png
 
 .VSCodeCounter/*
