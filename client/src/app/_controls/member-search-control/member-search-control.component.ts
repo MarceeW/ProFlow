@@ -41,6 +41,7 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
   override id: string = `app-member-search-control-${MemberSearchControlComponent.nextId++}`;
   override controlType: string = 'app-project-search-control';
 
+  readonly maxSelectCount = input<number | undefined>(undefined);
   readonly allowedRoles = input<RoleType[] | undefined>(undefined);
   readonly notAllowedMembers = input<User[]>([]);
 
@@ -55,6 +56,11 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
         !this._addedUsers().includes(user) &&
         !this.notAllowedMembers().filter(n => n.userName == user.userName).length);
   });
+
+  override get errorState(): boolean {
+    return super.errorState
+      || (!!this.maxSelectCount() && this._addedUsers().length > this.maxSelectCount()!);
+  }
 
   private readonly _currentUsersName = signal<string>('');
   private readonly _userService = inject(UserService);
