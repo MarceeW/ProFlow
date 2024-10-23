@@ -1,0 +1,46 @@
+<div class="header">
+  <button mat-icon-button
+    (click)="closeEvent.emit(false)"
+    class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+  <div class="account-picture-container">
+    <img [user-picture]="account()?.id ?? ''" [size]="128">
+  </div>
+  <h3 class="account-name">{{account()?.firstName}} {{account()?.lastName}}</h3>
+</div>
+<section>
+  <h4>Roles</h4>
+  <div class="role-selection-container">
+    @for(role of availableRoles(); track $index) {
+      <mat-checkbox
+        [value]="role.name"
+        color="primary"
+        [disabled]="disabledRoleEditing(role)"
+        [checked]="userHasRole(role.name)"
+        (change)="toggleRole($event)">
+        {{getFormattedRoleName(role.name)}}
+      </mat-checkbox>
+    }
+  </div>
+</section>
+<div class="d-flex justify-content-center">
+  <button mat-flat-button (click)="onSave()" class="save-btn">Save</button>
+</div>
+<section class="delete-account-section">
+  <div class="delete-control-container">
+    <button mat-flat-button (click)="onDelete()" class="delete-btn" #deleteBtn
+    [disabled]="disabledDeletAccountBtn()">Delete account</button>
+    @if(showDeputyField()) {
+      <mat-form-field>
+        <mat-label>Deputy project manager</mat-label>
+        <app-member-search-control
+          [required]="true"
+          [allowedRoles]="[RoleType.ProjectManager]"
+          [maxSelectCount]="1"
+          [notAllowedMembers]="[accountAsUser()]"/>
+        <mat-error>You can add only one deputy manager</mat-error>
+      </mat-form-field>
+    }
+  </div>
+</section>

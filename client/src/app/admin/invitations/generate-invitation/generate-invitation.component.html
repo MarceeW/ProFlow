@@ -1,0 +1,16 @@
+<div class="col-2 p-3">
+  <form [formGroup]="inviteForm" (ngSubmit)="generateInvitation()" class="form-group">
+    <mat-form-field>
+      <mat-label>Invitation expiration date</mat-label>
+      <input matInput [matDatepicker]="datepicker" [min]="minInviteDate" formControlName="date">
+      <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+      <mat-datepicker #datepicker>
+        <mat-datepicker-actions>
+          <button mat-button matDatepickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDatepickerApply>Set</button>
+        </mat-datepicker-actions>
+      </mat-datepicker>
+    </mat-form-field>
+    <button mat-flat-button color="primary" type="submit">Generate invitation</button>
+  </form>
+</div>

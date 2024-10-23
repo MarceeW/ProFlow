@@ -1,40 +1,56 @@
-import { Component, OnInit } from '@angular/core';
-import { ListComponent } from './list/list.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Role } from '../../_models/role';
-import { ManageComponent } from './manage/manage.component';
+import { Component, effect, model, signal, untracked, viewChild } from '@angular/core';
+import { BaseComponent } from '../../_component-base/base.component';
 import { Account } from '../../_models/account';
-import { AdminService } from '../../_services/admin.service';
+import { AccountListComponent } from './account-list/account-list.component';
+import { AccountManageComponent } from './account-manage/account-manage.component';
 
 @Component({
   selector: 'app-accounts',
   standalone: true,
   imports: [
-    ListComponent,
-    ManageComponent,
+    AccountListComponent,
+    AccountManageComponent,
     CommonModule
   ],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss',
+  animations: [
+    trigger('openClose', [
+      state('open', style({
+        display: 'flex',
+        right: '0',
+      })),
+      state('closed', style({
+        right: '-50vmin',
+      })),
+      transition('open => closed', [
+        animate('.2s')
+      ]),
+      transition('closed => open', [
+        animate('.1s')
+      ]),
+    ]),
+  ],
 })
-export class AccountsComponent implements OnInit {
-  profileUnderManage: boolean = false;
-  availableRoles!: Role[];
-  editedUser: Account | null = null;
+export class AccountsComponent extends BaseComponent {
+  readonly editedAccount = model<Account>();
+  readonly managePanelOpened = signal<boolean>(false);
+  readonly accountList = viewChild<AccountListComponent>(AccountListComponent);
 
-  constructor(private adminService: AdminService) { }
-
-  ngOnInit(): void {
-    this.adminService.getRoles().pipe().subscribe({
-      next: roles => this.availableRoles = roles
-    });
+  constructor() {
+    super();
   }
 
-  toggleManage(value: boolean) {
-    this.profileUnderManage = value;
+  onPanelClose(changeHappened: boolean) {
+    this.managePanelOpened.set(false);
+    if(changeHappened)
+      this.accountList()?.refresh();
   }
 
-  setEditedUser(user: Account | null) {
-    this.editedUser = user;
+  onManageEvent(account: Account) {
+    this.managePanelOpened.set(true);
+    this.editedAccount.set(account);
   }
 }

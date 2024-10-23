@@ -1,0 +1,65 @@
+:host {
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  background-color: var(--mat-sidenav-content-background-color);
+  height: calc(100vh - var(--mat-toolbar-standard-height));
+  top: var(--mat-toolbar-standard-height);
+  z-index: 1000;
+  box-shadow:  -8px 0px 32px -12px rgba(0,0,0,0.3);
+  width: 50vmin;
+  padding: 24px;
+  overflow: auto;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  .close-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .account-name {
+    font-weight: 100 !important;
+  }
+
+  .account-picture-container {
+    img {
+      border: 2px solid rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+.role-selection-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.delete-btn, .save-btn {
+  width: 250px;
+  margin: 8px;
+}
+
+.delete-account-section {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.delete-control-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .delete-btn {
+    --mdc-filled-button-container-color: rgb(255, 72, 0);
+  }
+}

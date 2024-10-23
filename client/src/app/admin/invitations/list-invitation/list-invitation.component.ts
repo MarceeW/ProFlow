@@ -1,4 +1,4 @@
-import { InvitationLinkPipe } from './../../../_pipes/invitation-link.pipe';
+import { InvitationLinkPipe } from '../../../_pipes/invitation-link.pipe';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 
@@ -13,7 +13,7 @@ import { DateExpiredPipe } from '../../../_pipes/date-expired.pipe';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-list',
+  selector: 'app-account-list-invitation',
   standalone: true,
   imports: [
     MatTableModule,
@@ -25,10 +25,10 @@ import { ToastrService } from 'ngx-toastr';
     MatButtonModule,
     CommonModule,
   ],
-  templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  templateUrl: './list-invitation.component.html',
+  styleUrl: './list-invitation.component.scss'
 })
-export class ListComponent implements OnInit {
+export class ListInvitationComponent implements OnInit {
   displayedColumns: string[] = ["key", "expires", "isActivated", "actions"];
   invitations: Invitation[] = [];
 

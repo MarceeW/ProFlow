@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 
-import { GenerateComponent } from './generate/generate.component';
+import { GenerateInvitationComponent } from './generate-invitation/generate-invitation.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { ListComponent } from './list/list.component';
+import { ListInvitationComponent } from './list-invitation/list-invitation.component';
 
 @Component({
   selector: 'app-invitations',
   standalone: true,
   imports: [
-    GenerateComponent,
-    ListComponent,
+    GenerateInvitationComponent,
+    ListInvitationComponent,
     MatDividerModule
   ],
   templateUrl: './invitations.component.html',

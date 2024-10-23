@@ -45,4 +45,12 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
     if(this.defaultConfig.setupTitle)
       this._componentArgsService.title.set(undefined);
   }
+
+  protected stopLoading() {
+    this.loading.set(false);
+  }
+
+  protected startLoading() {
+    this.loading.set(true);
+  }
 }

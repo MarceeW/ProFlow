@@ -1,18 +1,14 @@
-<div class="overflow-hidden p-3">
-  <form (submit)="search()" class="d-flex">
-    <mat-form-field>
-      <mat-label>Username, name or role</mat-label>
-      <input matInput type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="filterString">
-    </mat-form-field>
-    <div class="d-flex ps-3">
-      <button mat-flat-button color="primary">
-        Search
-        <mat-icon>search</mat-icon>
-      </button>
-    </div>
-  </form>
-</div>
-<table mat-table [dataSource]="accounts">
+<form (submit)="search()" class="filter-form">
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput type="text" [formControl]="filterControl" placeholder="Username, name or role">
+  </mat-form-field>
+  <button  mat-flat-button type="submit" color="primary">
+    Search
+    <mat-icon>search</mat-icon>
+  </button>
+</form>
+<table mat-table [dataSource]="accounts()">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
     <td mat-cell *matCellDef="let element">
@@ -33,9 +29,11 @@
     <th mat-header-cell *matHeaderCellDef>Roles</th>
     <td mat-cell *matCellDef="let element">
       <div class="d-flex justify-content-start gap-1 flex-wrap pt-3 pb-3">
-        <span class="role" *ngFor="let role of element.roles">
-          {{role}}
-        </span>
+        @for (role of element.roles; track $index) {
+          <span class="role">
+            {{getFormattedRoleName(role)}}
+          </span>
+        }
       </div>
     </td>
   </ng-container>

@@ -14,7 +14,7 @@ import { InvitationLinkPipe } from '../../../_pipes/invitation-link.pipe';
 
 
 @Component({
-  selector: 'app-generate',
+  selector: 'app-generate-invitation',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -25,13 +25,12 @@ import { InvitationLinkPipe } from '../../../_pipes/invitation-link.pipe';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ClipboardModule,
     InvitationLinkPipe
   ],
-  templateUrl: './generate.component.html',
-  styleUrl: './generate.component.scss'
+  templateUrl: './generate-invitation.component.html',
+  styleUrl: './generate-invitation.component.scss'
 })
-export class GenerateComponent implements OnInit {
+export class GenerateInvitationComponent implements OnInit {
 
   inviteKey: null | string = null
   inviteForm = new FormGroup(

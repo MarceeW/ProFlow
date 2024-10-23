@@ -1,13 +1,5 @@
-<div>
-  <ng-container *ngIf="!editedUser">
-    <app-list class="w-100" (manageEvent)="setEditedUser($event)"></app-list>
-  </ng-container>
-  <ng-container *ngIf="editedUser">
-    <app-manage
-      class="w-100"
-      [availableRoles]="availableRoles"
-      (closeEvent)="setEditedUser(null)"
-      [user]="editedUser">
-    </app-manage>
-  </ng-container>
-</div>
+<app-account-list-invitation class="w-100" (manageEvent)="onManageEvent($event)" />
+<app-account-manage [@openClose]="managePanelOpened() ? 'open' : 'closed'"
+  (closeEvent)="onPanelClose($event)"
+  [(account)]="editedAccount">
+</app-account-manage>

@@ -1,6 +1,7 @@
 import { Invitation } from "./invitation";
 
 export interface Account {
+  id: string,
   roles: string[],
   invitation: Invitation | null,
   userName: string,
