@@ -7,7 +7,45 @@ namespace API.Data;
 
 public static class Seeder
 {
-	public static async Task SeedUsers(UserManager<User> userManager, RoleManager<Role> roleManager) 
+	public static async Task SeedSkillsAsync(DataContext dataContext) 
+	{
+		if(dataContext.Skills.Any())
+			return;
+			
+		var skills = new Skill[] 
+		{
+			new() { Name = "C++" },
+			new() { Name = "Java" },
+			new() { Name = "C#" },
+			new() { Name = "Kotlin" },
+			new() { Name = "Angular" },
+			new() { Name = "Backend" },
+			new() { Name = "Frontent" },
+			new() { Name = "CUDA" },
+			new() { Name = "OpenGL" },
+			new() { Name = "Vue.js" },
+			new() { Name = "React" },
+			new() { Name = "Cloud engineering" },
+			new() { Name = "Devops" },
+			new() { Name = "Testing" },
+			new() { Name = "NoSQL" },
+			new() { Name = "Relational databases" },
+			new() { Name = "MySQL" },
+			new() { Name = "SQL Server" },
+			new() { Name = "TypeScript" },
+			new() { Name = "JavaScript" },
+			new() { Name = "Python" },
+			new() { Name = "C" },
+			new() { Name = "PHP" },
+			new() { Name = "Node.js" },
+			new() { Name = ".NET" },
+			new() { Name = "R" },
+			new() { Name = "Swift" },
+		};
+		await dataContext.Skills.AddRangeAsync(skills);
+		await dataContext.SaveChangesAsync();
+	}
+	public static async Task SeedUsersAsync(UserManager<User> userManager, RoleManager<Role> roleManager) 
 	{
 		if(await userManager.Users.AnyAsync())
 			return;
