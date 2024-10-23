@@ -48,7 +48,7 @@ namespace API.Controllers
 		public async Task<IEnumerable<TeamDTO>> GetMyTeams() 
 		{
 			var user = (await _userManager.GetLoggedInUserAsync(User))!;
-			var teams = user.LedTeams
+			var teams = user.Teams
 				.AsQueryable()
 				.ProjectTo<TeamDTO>(_mapper.ConfigurationProvider);
 			return teams;
@@ -67,7 +67,7 @@ namespace API.Controllers
 		}
 		
 		[HttpPost("create")]
-		[Authorize(Roles = RoleConstant.TeamLeader)]
+		[Authorize(Policy = "TeamManagement")]
 		public async Task<ActionResult> CreateTeam(TeamDTO teamDTO)
 		{
 			try
@@ -83,7 +83,7 @@ namespace API.Controllers
 		}
 		
 		[HttpDelete("delete/{id}")]
-		[Authorize(Roles = RoleConstant.TeamLeader)]
+		[Authorize(Policy = "TeamManagement")]
 		public async Task<ActionResult> DeleteTeam(Guid id) 
 		{
 			try
@@ -98,7 +98,7 @@ namespace API.Controllers
 		}
 		
 		[HttpPatch("add-to-team/{teamId}")]
-		[Authorize(Roles = RoleConstant.TeamLeader)]
+		[Authorize(Policy = "TeamManagement")]
 		public async Task<ActionResult> AddToTeam(Guid teamId, IEnumerable<UserDTO> users) 
 		{
 			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
@@ -113,7 +113,7 @@ namespace API.Controllers
 		}
 		
 		[HttpPatch("remove-from-team/{teamId}")]
-		[Authorize(Roles = RoleConstant.TeamLeader)]
+		[Authorize(Policy = "TeamManagement")]
 		public async Task<ActionResult> RemoveFromTeam(Guid teamId, IEnumerable<UserDTO> users) 
 		{
 			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
@@ -128,7 +128,7 @@ namespace API.Controllers
 		}
 		
 		[HttpPatch("rename")]
-		[Authorize(Roles = RoleConstant.TeamLeader)]
+		[Authorize(Policy = "TeamManagement")]
 		public async Task<ActionResult> Rename(TeamDTO teamDTO) 
 		{
 			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
@@ -143,7 +143,7 @@ namespace API.Controllers
 		}
 		
 		[HttpPatch("add-to-project/{teamId}")]
-		[Authorize(Roles = RoleConstant.TeamLeader)]
+		[Authorize(Policy = "TeamManagement")]
 		public async Task<ActionResult> AddToProject(
 			Guid teamId, IEnumerable<ProjectDTO> projects) 
 		{
@@ -159,7 +159,7 @@ namespace API.Controllers
 		}
 		
 		[HttpPatch("remove-from-project/{teamId}")]
-		[Authorize(Roles = RoleConstant.TeamLeader)]
+		[Authorize(Policy = "TeamManagement")]
 		public async Task<ActionResult> RemoveFromProject(
 			Guid teamId, IEnumerable<ProjectDTO> projects) 
 		{

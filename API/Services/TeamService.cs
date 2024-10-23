@@ -8,36 +8,49 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
 
-public class TeamService : ITeamService
+public class TeamService(
+	ITeamRepository teamRepository,
+	UserManager<User> userManager,
+	INotificationService notificationService,
+	IProjectRepositoy projectRepositoy,
+	ILoggingService loggingService) : ITeamService
 { 
-	private readonly ITeamRepository _teamRepository;
-	private readonly IProjectRepositoy _projectRepository;
-	private readonly UserManager<User> _userManager;
-	private readonly INotificationService _notificationService;
-
-	public TeamService(
-		ITeamRepository teamRepository,
-		UserManager<User> userManager,
-		INotificationService notificationService,
-		IProjectRepositoy projectRepositoy)
-	{
-		_teamRepository = teamRepository;
-		_userManager = userManager;
-		_notificationService = notificationService;
-		_projectRepository = projectRepositoy;
-	}
+	private readonly ITeamRepository _teamRepository = teamRepository;
+	private readonly IProjectRepositoy _projectRepository = projectRepositoy;
+	private readonly UserManager<User> _userManager = userManager;
+	private readonly INotificationService _notificationService = notificationService;
+	private readonly ILoggingService _loggingService = loggingService;
 
 	public async Task CreateTeamAsync(TeamDTO teamDTO, User user) 
 	{
 		if(await TeamNameExistsAsync(teamDTO.Name))
 			throw new NameAlreadyExistsException(teamDTO.Name);
 		
+		var tasks = teamDTO.Members?
+			.Select(async m => (await _userManager.FindByNameAsync(m.UserName))!);
+		var members = ((await Task.WhenAll(tasks?.ToList() ?? [])) ?? []).Append(user);
+		
 		Team team = new()
 		{
 			TeamLeader = user,
 			Name = teamDTO.Name,
-			Members = [user]
+			Members = members.ToList()
 		};
+
+		var notifications = team.Members.Select(m => 
+		{
+			var notification = new Notification
+			{
+				Type = "info",
+				Title = "Team creation",
+				Content = $"You are now part of '{team.Name} team'!",
+				TargetUser = m
+			};
+			
+			return notification;
+		});
+		
+		await _notificationService.CreateNotificationsAsync(notifications);
 		
 		await _teamRepository.CreateAsync(team);
 		await _teamRepository.SaveAsync();
@@ -50,6 +63,21 @@ public class TeamService : ITeamService
 			throw new NotAllowedException();
 		
 		_teamRepository.Delete(team);
+
+		var notifications = team.Members.Select(m => 
+		{
+			var notification = new Notification
+			{
+				Type = "report",
+				Title = "Team disbandment",
+				Content = $"{team.Name} team had been deleted!",
+				TargetUser = m
+			};
+			
+			return notification;
+		});
+		
+		await _notificationService.CreateNotificationsAsync(notifications);
 		await _teamRepository.SaveAsync();
 	}
 	
@@ -87,6 +115,9 @@ public class TeamService : ITeamService
 		
 		if(team.TeamLeader != loggedInUser)
 			throw new NotAllowedException();
+			
+		if(users.Any(u => u.Id == team.TeamLeaderId))
+			throw new NotAllowedException("You can't delete yourself from the team!");
 		
 		foreach(var userDTO in users) 
 		{
@@ -131,9 +162,9 @@ public class TeamService : ITeamService
 		await _projectRepository.SaveAsync();
 	}
 
-    public async Task RemoveFromProjectAsync(User loggedInUser, Guid teamId, IEnumerable<ProjectDTO> projects)
-    {
-        var team = await _teamRepository.ReadAsync(teamId) 
+	public async Task RemoveFromProjectAsync(User loggedInUser, Guid teamId, IEnumerable<ProjectDTO> projects)
+	{
+		var team = await _teamRepository.ReadAsync(teamId) 
 			?? throw new KeyNotFoundException();
 		
 		if(team.TeamLeader != loggedInUser)
@@ -146,5 +177,5 @@ public class TeamService : ITeamService
 		}
 		
 		await _teamRepository.SaveAsync();
-    }
+	}
 }

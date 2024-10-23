@@ -26,7 +26,7 @@ export class TeamService extends BaseService {
   }
 
   deleteTeam(id: string) {
-    return this.http.delete<Team[]>(this.apiUrl + 'teams/delete' + id);
+    return this.http.delete(this.apiUrl + 'teams/delete/' + id, {responseType: 'text'});
   }
 
   addMembers(id: string, members: User[]) {
