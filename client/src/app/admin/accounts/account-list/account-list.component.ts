@@ -39,22 +39,18 @@ export class AccountListComponent extends BaseComponent {
   }
 
   search() {
-    this.startLoading();
     this._adminService.getFilteredAccounts(this.filterControl.value ?? '')
       .pipe(takeUntil(this._destroy$))
       .subscribe(accounts => {
         this.accounts.set(accounts);
-        this.stopLoading();
       });
   }
 
   listAccounts() {
-    this.startLoading();
     this._adminService.getAccounts()
       .pipe(takeUntil(this._destroy$))
       .subscribe(accounts => {
         this.accounts.set(accounts);
-        this.stopLoading();
       });
   }
 

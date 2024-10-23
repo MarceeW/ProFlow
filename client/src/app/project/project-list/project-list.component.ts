@@ -40,12 +40,10 @@ export class ProjectListComponent extends BaseComponent implements OnInit {
   }
 
   loadProjects() {
-    this.loading.set(true);
     this._projectService.getMyProjects()
       .pipe(takeUntil(this._destroy$))
       .subscribe(projects => {
         this.projects.set(projects);
-        this.loading.set(false);
       });
   }
 

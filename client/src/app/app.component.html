@@ -24,7 +24,7 @@
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     @let sidenavOpened = sidenavItemService.items().length > 0;
-    @if(loadService.loading()) {
+    @if(loadService.loading() && !loadService.loadingSpinnerDisabled()) {
       <div class="spinner-container" [class.sidenav-open]="sidenavOpened">
         <mat-spinner></mat-spinner>
       </div>

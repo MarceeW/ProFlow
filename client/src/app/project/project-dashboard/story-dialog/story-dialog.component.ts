@@ -83,7 +83,6 @@ export class StoryDialogComponent extends BaseComponent {
     if(!userId)
       return;
 
-    this.loading.set(true);
     const obs = assign ?
       this._storyService.assign(this.story().id!, userId) :
       this._storyService.unassign(this.story().id!, userId)
@@ -91,7 +90,6 @@ export class StoryDialogComponent extends BaseComponent {
     obs.pipe(takeUntil(this._destroy$))
     .subscribe(response => {
       this._toastr.success(response);
-      this.loading.set(false);
       this.changed.set(true);
       this.reloadStory();
     });
@@ -103,12 +101,10 @@ export class StoryDialogComponent extends BaseComponent {
   }
 
   reloadStory() {
-    this.loading.set(true);
     this._storyService.getStory(this.story().id!)
       .pipe(takeUntil(this._destroy$))
       .subscribe(story => {
         this.story.set(story);
-        this.loading.set(false);
       });
   }
 
@@ -140,12 +136,10 @@ export class StoryDialogComponent extends BaseComponent {
   }
 
   private updateStory() {
-    this.loading.set(true);
     this._storyService.updateStory(this.story())
       .pipe(takeUntil(this._destroy$))
       .subscribe(_ => {
         this._toastr.success("Story updated successfully");
-        this.loading.set(false);
         this.changed.set(true);
         this.reloadStory();
       });

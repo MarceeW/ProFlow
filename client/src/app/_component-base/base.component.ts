@@ -8,27 +8,22 @@ import { BASE_COMPONENT_DEFAULT_CONFIG } from "../injection-tokens.config";
   template: ''
 })
 export abstract class BaseComponent implements OnInit, OnDestroy {
-  readonly loading = signal<boolean>(false);
   readonly title = signal<string | undefined>(undefined);
+  readonly argsService = inject(ComponentArgsService);
 
   protected _title?: string;
   protected readonly _destroy$ = new Subject<void>();
   protected readonly _toastr = inject(ToastrService);
-  private readonly _componentArgsService = inject(ComponentArgsService);
   private readonly defaultConfig = inject(BASE_COMPONENT_DEFAULT_CONFIG);
 
   constructor() {
-    if(this.defaultConfig.setupLoading) {
-      effect(() => {
-        this.loading();
-        untracked(() => this._componentArgsService.loading.set(this.loading()));
-      });
-    }
+    this.argsService.loadingSpinnerDisabled
+      .set(this.defaultConfig.setupLoading);
 
     if(this.defaultConfig.setupTitle) {
       effect(() => {
         this.title();
-        untracked(() => this._componentArgsService.title.set(this.title()));
+        untracked(() => this.argsService.title.set(this.title()));
       });
     }
   }
@@ -43,14 +38,7 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
 
     if(this.defaultConfig.setupTitle)
-      this._componentArgsService.title.set(undefined);
-  }
-
-  protected stopLoading() {
-    this.loading.set(false);
-  }
-
-  protected startLoading() {
-    this.loading.set(true);
+      this.argsService.title.set(undefined);
+    this.argsService.loadingSpinnerDisabled.set(false);
   }
 }

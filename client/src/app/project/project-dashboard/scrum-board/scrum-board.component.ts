@@ -94,12 +94,10 @@ export class ScrumBoardComponent extends ProjectDashBoardBase {
 
   updateStoryStatus(story: Story, status: StoryStatus) {
     story.storyStatus = status;
-    this.loading.set(true);
     this._storyService.updateStory(story)
       .pipe(takeUntil(this._destroy$))
       .subscribe(_ => {
         this._toastr.info("Story status updated");
-        this.loading.set(false);
       });
   }
 

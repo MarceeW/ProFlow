@@ -91,12 +91,10 @@ export class NotificationButtonComponent extends BaseComponent implements OnInit
   }
 
   loadNotifications() {
-    this.loading.set(true);
     this._notificationService.getNotifications()
       ?.pipe(takeUntil(this._destroy$))
       .subscribe(notifications => {
         this.notifications.set(notifications);
-        this.loading.set(false);
       });
   }
 

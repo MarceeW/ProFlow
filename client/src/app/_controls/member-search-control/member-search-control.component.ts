@@ -7,11 +7,11 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { takeUntil } from 'rxjs';
+import { UserPictureDirective } from '../../_directives/user-picture.directive';
 import { RoleType } from '../../_enums/role-type.enum';
 import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 import { ControlBase } from '../control-base.component';
-import { UserPictureDirective } from '../../_directives/user-picture.directive';
 
 @Component({
   selector: 'app-member-search-control',
@@ -30,7 +30,7 @@ import { UserPictureDirective } from '../../_directives/user-picture.directive';
     {
       provide: MatFormFieldControl,
       useExisting: MemberSearchControlComponent
-    }
+    },
   ],
   templateUrl: './member-search-control.component.html',
   styleUrl: './member-search-control.component.scss'
@@ -67,13 +67,11 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
 
   override ngOnInit() {
     super.ngOnInit();
-    this.loading.set(true);
     this._userService.getUsers(this.allowedRoles())
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: users => {
           this._users.set(users);
-          this.loading.set(false);
         }
     });
 

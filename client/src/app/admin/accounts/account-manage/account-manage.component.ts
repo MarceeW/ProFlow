@@ -64,7 +64,6 @@ export class AccountManageComponent extends BaseComponent {
   onDelete() {
     if(!this.account())
       return;
-    this.startLoading();
 
     const deputyManager = this.deputyControl() && this.deputyControl()!.value.length > 0
       ? this.deputyControl()?.value[0] : undefined;
@@ -75,7 +74,6 @@ export class AccountManageComponent extends BaseComponent {
         next: () => {
           this.showDeputyField.set(false);
           this._toastr.success('Account deleted successfully');
-          this.stopLoading();
           this.closeEvent.emit(true);
         },
         error: (error: HttpErrorResponse) => {
@@ -126,12 +124,10 @@ export class AccountManageComponent extends BaseComponent {
   }
 
   loadRoles() {
-    this.startLoading();
     this._adminService.getRoles()
     .pipe(takeUntil(this._destroy$))
       .subscribe(roles => {
         this.availableRoles.set(roles);
-        this.stopLoading();
       });
   }
 
@@ -145,7 +141,6 @@ export class AccountManageComponent extends BaseComponent {
       return;
     }
 
-    this.startLoading();
     this._adminService.updateAccount({
       userName: this.account()!.userName,
       newRoles: Array.from(this.addedRoles),
@@ -160,7 +155,6 @@ export class AccountManageComponent extends BaseComponent {
           this._toastr.success("Saved successfully!");
           this.saveEvent.emit();
           this.closeEvent.emit(true);
-          this.stopLoading();
         }
       });
   }

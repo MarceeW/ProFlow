@@ -1,4 +1,4 @@
-@if(loading()) {
+@if(argsService.loading()) {
   <div class="progress-bar-container">
     <mat-progress-bar mode="buffer"></mat-progress-bar>
   </div>
@@ -20,7 +20,7 @@
     <input
         name="member"
         #memberInput
-        [disabled]="disabled || loading()"
+        [disabled]="disabled || argsService.loading()"
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"
         [formControl]="_userInputControl"

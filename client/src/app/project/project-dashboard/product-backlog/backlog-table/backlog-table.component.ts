@@ -55,7 +55,6 @@ export class BacklogTableComponent extends BaseComponent {
   }
 
   loadBacklog() {
-    this.loading.set(true);
     this._projectService.getBacklog(this.projectId())
       .pipe(takeUntil(this._destroy$))
       .subscribe(stories => {
@@ -63,7 +62,6 @@ export class BacklogTableComponent extends BaseComponent {
           source.data = stories;
           return source;
         });
-        this.loading.set(false);
       });
   }
 }

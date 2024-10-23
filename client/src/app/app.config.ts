@@ -10,6 +10,7 @@ import { provideToastr } from 'ngx-toastr';
 import { errorInterceptor } from './_interceptors/error.interceptor';
 import { jwtInterceptor } from './_interceptors/jwt.interceptor';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { loadInterceptor } from './_interceptors/load.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,7 +19,8 @@ export const appConfig: ApplicationConfig = {
       withInterceptors(
         [
           jwtInterceptor,
-          errorInterceptor
+          errorInterceptor,
+          loadInterceptor
         ])),
     provideToastr({
       positionClass: 'toast-bottom-right',

@@ -1,4 +1,4 @@
-@if(backlogItems().data.length == 0 && loading() == false) {
+@if(backlogItems().data.length == 0 && argsService.loading() == false) {
   <div class="empty-message">This project has no stories yet!</div>
 } @else {
   <table mat-table [dataSource]="backlogItems()">

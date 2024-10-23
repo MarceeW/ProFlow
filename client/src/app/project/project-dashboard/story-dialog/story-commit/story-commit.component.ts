@@ -97,12 +97,10 @@ export class StoryCommitComponent extends BaseComponent {
   }
 
   private loadCommits() {
-    this.loading.set(true);
     this._storyService.getCommits(this.story().id!)
     .pipe(takeUntil(this._destroy$))
     .subscribe(commits => {
       this.commits.set(commits);
-      this.loading.set(false);
     });
   }
 }

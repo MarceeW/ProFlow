@@ -1,7 +1,7 @@
-@if(commits().length == 0 && !loading()) {
+@if(commits().length == 0 && !argsService.loading()) {
   <div class="commit">There are no commits yet.</div>
 } @else {
-  @if(loading()) {
+  @if(argsService.loading()) {
     <mat-progress-bar mode="buffer"></mat-progress-bar>
   }
   <div class="commit-table-container">

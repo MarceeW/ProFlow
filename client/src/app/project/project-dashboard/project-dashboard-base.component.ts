@@ -31,29 +31,24 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
   }
 
   loadProject() {
-    this.loading.set(true);
     this._projectService.getProject(this.projectId)
     .pipe(takeUntil(this._destroy$))
     .subscribe({
       next: project => {
         this.onProjectLoaded(project);
         this.setSidenavItems();
-        this.loading.set(false);
       },
       error: _ => {
-        this.loading.set(false);
         this._router.navigateByUrl('');
       }
     });
   }
 
   loadBacklog() {
-    this.loading.set(true);
     this._projectService.getBacklog(this.projectId)
       .pipe(takeUntil(this._destroy$))
       .subscribe(stories => {
         this.onBacklogLoaded(stories.filter(story => !story.sprintId));
-        this.loading.set(false);
       });
   }
 
@@ -118,12 +113,10 @@ export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestr
     if(!this.isProjectHasSprints())
       return;
 
-    this.loading.set(true);
     this._projectService.getNthSprint(this.projectId, n)
       .pipe(takeUntil(this._destroy$))
       .subscribe(sprint => {
         this.onSprintLoaded(sprint);
-        this.loading.set(false);
       });
   }
 
