@@ -15,7 +15,8 @@ public class AutoMapperProfiles : Profile
 		
 		CreateMap<User, AccountDTO>()
 			.ForMember(dest => dest.Roles,
-			opt => opt.MapFrom(src => src.UserRoles!.Select(ur => ur.Role.Name)));	
+			opt => opt.MapFrom(src => src.UserRoles!.Select(ur => ur.Role.Name)));
+				
 		CreateMap<User, UserDTO>();
 		
 		CreateMap<Notification, NotificationDTO>();
@@ -26,6 +27,8 @@ public class AutoMapperProfiles : Profile
 		CreateMap<Sprint, SprintDateDTO>();
 
 		CreateMap<Team, TeamDTO>();
+		
+		CreateMap<Skill, SkillDTO>();
 		
 		CreateMap<Story, StoryDTO>()
 			.ForMember(dest => dest.StoryPriority,

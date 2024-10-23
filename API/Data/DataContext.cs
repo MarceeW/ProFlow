@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class DataContext : IdentityDbContext<User, Role, Guid,
+public class DataContext(DbContextOptions options) : IdentityDbContext<User, Role, Guid,
 	IdentityUserClaim<Guid>, UserRole, IdentityUserLogin<Guid>,
-	IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
+	IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options)
 {
 	public DbSet<Invitation> Invitations { get; set; }
 	public DbSet<Project> Projects { get; set; }
@@ -17,13 +17,13 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 	public DbSet<Story> Stories { get; set; }
 	public DbSet<StoryCommit> StoryCommits { get; set; }
 	public DbSet<Log> Logs { get; set; }
-	public DataContext(DbContextOptions options) : base(options)
-	{
-	}
+	public DbSet<Skill> Skills { get; set; }
+	public DbSet<UserSkill> UserSkills { get; set; }
+
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);
-		
+
 		#region Project
 		
 		builder.Entity<Project>()
@@ -65,14 +65,33 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 		
 		#endregion UserRole
 			
+		#region UserSkill
+
+		builder.Entity<UserSkill>()
+			.HasKey(us => new { us.UserId, us.SkillId });
+
+		builder.Entity<UserSkill>()
+			.HasOne(us => us.User)
+			.WithMany(u => u.UserSkills)
+			.HasForeignKey(us => us.UserId);
+
+		builder.Entity<UserSkill>()
+			.HasOne(us => us.Skill)
+			.WithMany(s => s.UserSkills)
+			.HasForeignKey(us => us.SkillId);
+
+		#endregion UserSkill
+			
 		#region User
 			
 		builder.Entity<User>()
 			.HasMany(u => u.Teams)
 			.WithMany(t => t.Members)
 			.UsingEntity<UserTeam>(
-				l => l.HasOne<Team>().WithMany().HasForeignKey(ut => ut.TeamId).OnDelete(DeleteBehavior.Cascade),
-				r => r.HasOne<User>().WithMany().HasForeignKey(ut => ut.MemberId).OnDelete(DeleteBehavior.Cascade)
+				l => l.HasOne<Team>().WithMany().HasForeignKey(ut => ut.TeamId)
+					.IsRequired(false).OnDelete(DeleteBehavior.Cascade),
+				r => r.HasOne<User>().WithMany().HasForeignKey(ut => ut.MemberId)
+					.IsRequired(false).OnDelete(DeleteBehavior.Restrict)
 			);
 			
 		builder.Entity<User>()
@@ -93,14 +112,15 @@ public class DataContext : IdentityDbContext<User, Role, Guid,
 			.HasMany(u => u.AssignedStories)
 			.WithOne(t => t.AssignedTo)
 			.HasForeignKey(t => t.AssignedToId)
-			.IsRequired(false);
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.SetNull);
 			
 		builder.Entity<User>()
 			.HasMany(u => u.LedTeams)
 			.WithOne(t => t.TeamLeader)
 			.HasForeignKey(u => u.TeamLeaderId)
 			.IsRequired()
-			.OnDelete(DeleteBehavior.Restrict);
+			.OnDelete(DeleteBehavior.Cascade);
 			
 		builder.Entity<User>()
 			.HasMany(u => u.CreatedInvitations)

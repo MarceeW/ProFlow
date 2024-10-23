@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 namespace API.Models;
@@ -23,6 +22,7 @@ public class User : IdentityUser<Guid>
 	public DateTime Created { get; set; } = DateTime.Now;
 	public DateTime LastSeen { get; set; } = DateTime.Now;
 	public string? ProfilePicturePath { get; set; }
+	public virtual ICollection<UserSkill> UserSkills { get; set; } = [];
 	[NotMapped]
 	public string FullName { get => $"{FirstName} {LastName}"; }
 
