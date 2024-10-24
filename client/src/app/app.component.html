@@ -24,39 +24,44 @@
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     @let sidenavOpened = sidenavItemService.items().length > 0;
-    @if(loadService.loading() && !loadService.loadingSpinnerDisabled()) {
+    @if(argsService.loading() && !argsService.loadingSpinnerDisabled()) {
       <div class="spinner-container" [class.sidenav-open]="sidenavOpened">
         <mat-spinner></mat-spinner>
       </div>
     }
-    <mat-toolbar class="toolbar">
-      <div class="navbar">
-        <div class="d-flex align-items-center">
-          @if(sidenavOpened) {
-            <button
-              type="button"
-              aria-label="Toggle sidenav"
-              mat-icon-button
-              (click)="drawer.toggle()">
-              <mat-icon aria-label="Side nav toggle icon" style="color:  white;">menu</mat-icon>
-            </button>
+    @if(argsService.showNavBar()) {
+      <mat-toolbar class="toolbar">
+        <div class="navbar">
+          <div class="d-flex align-items-center">
+            @if(sidenavOpened) {
+              <button
+                type="button"
+                aria-label="Toggle sidenav"
+                mat-icon-button
+                (click)="drawer.toggle()">
+                <mat-icon aria-label="Side nav toggle icon" style="color:  white;">menu</mat-icon>
+              </button>
+            }
+            <a class="proflow-logo" routerLink="/">
+              <span>Pro</span>
+              <span>Flow</span>
+            </a>
+          </div>
+          @if(accountService.currentUser$ | async) {
+              <app-nav-menu></app-nav-menu>
           }
-          <a class="navbar-brand" routerLink="/">{{title}}</a>
-        </div>
-        @if(accountService.currentUser$ | async) {
-            <app-nav-menu></app-nav-menu>
-        }
-    </div>
-    </mat-toolbar>
-    <div class="page-content" [class.has-title]="loadService.title()">
-      @if(loadService.title()) {
+      </div>
+      </mat-toolbar>
+    }
+    <div class="page-content" [class.has-title]="argsService.title()">
+      @if(argsService.title()) {
         <div class="page-title-container">
           <div class="page-title">
-            {{loadService.title()}}
+            {{argsService.title()}}
           </div>
         </div>
       }
-      <div class="container">
+      <div [class.container]="argsService.clipIntoContainer()">
         <router-outlet></router-outlet>
       </div>
     </div>

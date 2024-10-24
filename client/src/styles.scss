@@ -131,3 +131,22 @@ h4 {
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
               rgba(0, 0, 0, 0.22) 0px 10px 10px !important;
 }
+
+.proflow-logo {
+  --font-size: 128px;
+  display: inline-flex;
+  user-select: none;
+  padding: calc(var(--font-size) / 2);
+  border-radius: calc(var(--font-size) / 2);
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+              rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+              rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+  font-size: calc(var(--font-size)) !important;
+  *:nth-child(1) {
+    color: #006cc4 !important;
+  }
+  *:nth-child(2) {
+    color: black !important;
+  }
+}

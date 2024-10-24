@@ -61,7 +61,7 @@ $sidenav-width: 220px;
   user-select: none;
 }
 
-.navbar-brand {
+.navbar-brand:not(.proflow-logo) {
   color: white !important;
 }
 
@@ -92,4 +92,13 @@ $sidenav-width: 220px;
 .page-title-container {
   display: flex;
   justify-content: center;
+}
+
+.proflow-logo {
+  --font-size: 24px;
+  margin-left: 12px;
+  margin-right: 12px;
+  border-radius: 18px;
+  padding: 4px 8px;
+  box-shadow: none;
 }

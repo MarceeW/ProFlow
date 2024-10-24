@@ -12,8 +12,12 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
   readonly argsService = inject(ComponentArgsService);
 
   protected _title?: string;
+  protected _clipIntoContainer = true;
+  protected _showNavBar = true;
+
   protected readonly _destroy$ = new Subject<void>();
   protected readonly _toastr = inject(ToastrService);
+
   private readonly defaultConfig = inject(BASE_COMPONENT_DEFAULT_CONFIG);
 
   constructor() {
@@ -31,6 +35,8 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if(this._title)
       this.title.set(this._title);
+    this.argsService.clipIntoContainer.set(this._clipIntoContainer);
+    this.argsService.showNavBar.set(this._showNavBar);
   }
 
   ngOnDestroy(): void {
@@ -39,6 +45,7 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
 
     if(this.defaultConfig.setupTitle)
       this.argsService.title.set(undefined);
-    this.argsService.loadingSpinnerDisabled.set(false);
+    this.argsService.clipIntoContainer.set(true);
+    this.argsService.showNavBar.set(true);
   }
 }

@@ -38,12 +38,11 @@ import { NotificationButtonComponent } from './main-nav/notification-button/noti
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'ProFlow';
   roleType = RoleType;
 
   readonly sidenavItemService = inject(SidenavItemService);
   readonly accountService = inject(AccountService);
-  readonly loadService = inject(ComponentArgsService);
+  readonly argsService = inject(ComponentArgsService);
   readonly matIconRegistry = inject(MatIconRegistry);
 
   ngOnInit(): void {

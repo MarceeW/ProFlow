@@ -1,31 +1,22 @@
-<div class="container">
-  <div class="row">
-    <div class="col-2 pt-3 ps-3">
-      <h1>Login</h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-2 p-3">
-      <form [formGroup]="loginForm" (ngSubmit)="login()" autocomplete="off">
-        <mat-form-field>
-          <mat-label>Username</mat-label>
-          <input matInput name="username" formControlName="userName"
-            [errorStateMatcher]="matcher" type="text" placeholder="Username">
-          @if (loginForm.get('userName')?.hasError('required')) {
-            <mat-error>Username is <strong>required</strong></mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Password</mat-label>
-          <input matInput name="password" formControlName="password"
-            [errorStateMatcher]="matcher" type="password" placeholder="Password">
-          @if (loginForm.get('password')?.hasError('required')) {
-            <mat-error>Password is <strong>required</strong></mat-error>
-          }
-        </mat-form-field>
-        <button class="btn btn-success" type="submit">Login</button>
-      </form>
-    </div>
-  </div>
+<div class="login-content">
+  <span class="proflow-logo">
+    <span>Pro</span>
+    <span>Flow</span>
+  </span>
+    <form [formGroup]="loginForm" (submit)="login()" class="login-form">
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput name="username" formControlName="userName"
+          [errorStateMatcher]="matcher" type="text" placeholder="Username">
+        <mat-error>Username is <strong>required</strong></mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput name="password" formControlName="password"
+          [errorStateMatcher]="matcher" type="password" placeholder="Password">
+        <mat-error>Password is <strong>required</strong></mat-error>
+      </mat-form-field>
+      <button mat-flat-button type="submit">Login</button>
+    </form>
 </div>
 

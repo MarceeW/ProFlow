@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LoginModel } from '../../_models/login-model';
 import { AsyncPipe } from '@angular/common';
-import { AccountService } from '../../_services/account.service';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs';
+import { BaseComponent } from '../../_component-base/base.component';
+import { LoginModel } from '../../_models/login-model';
+import { AccountService } from '../../_services/account.service';
 import { FormErrorStateMatcher } from '../../_state-matchers/form-error-state-matcher';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
@@ -17,29 +19,32 @@ import { FormErrorStateMatcher } from '../../_state-matchers/form-error-state-ma
     AsyncPipe,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     ReactiveFormsModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent extends BaseComponent {
   loginForm: FormGroup = new FormGroup({
     userName: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required])
   });
   matcher = new FormErrorStateMatcher();
 
-  constructor(private accountService: AccountService, private toastr: ToastrService,
-    private router: Router) {}
+  protected override _clipIntoContainer = false;
+  protected override _showNavBar = false;
+
+  private readonly _accountService = inject(AccountService);
+  private readonly _router = inject(Router);
 
   login() {
     const loginModel = this.loginForm.value as LoginModel;
-    this.accountService.login(loginModel).subscribe({
-      next: _ => {
-        this.router.navigateByUrl('');
-        this.toastr.success(`Welcome back, ${loginModel.userName}!`);
-      },
-      error: error => console.error(error)
-    });
+    this._accountService.login(loginModel)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(_ => {
+        this._router.navigateByUrl('');
+        this._toastr.success(`Welcome back!`);
+      });
   }
 }
