@@ -11,8 +11,9 @@ $sidenav-width: 220px;
 
 .sidenav {
   width: $sidenav-width;
+  top: var(--mat-toolbar-standard-height) !important;
   border-radius: 0 !important;
-  box-shadow: -8px 0px 12px 0px rgb(0, 0, 0);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   padding: 8px;
 }
 
@@ -101,4 +102,11 @@ $sidenav-width: 220px;
   border-radius: 18px;
   padding: 4px 8px;
   box-shadow: none;
+}
+
+.container {
+  min-height: calc(100vh - var(--mat-toolbar-standard-height));
+  max-height: fit-content;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: auto;
 }

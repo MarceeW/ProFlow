@@ -1,12 +1,7 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container class="sidenav-container" [hasBackdrop]="false">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-      mode="side"
+      mode="over"
       [opened]="sidenavItemService.items().length > 0">
-    <mat-toolbar>
-      <div class="d-flex justify-content-center w-100">
-        Navigation
-      </div>
-    </mat-toolbar>
     <mat-nav-list>
       @for (item of sidenavItemService.items(); track $index) {
         @if(item.enabled ?? true) {
@@ -54,14 +49,14 @@
       </mat-toolbar>
     }
     <div class="page-content" [class.has-title]="argsService.title()">
-      @if(argsService.title()) {
-        <div class="page-title-container">
-          <div class="page-title">
-            {{argsService.title()}}
-          </div>
-        </div>
-      }
       <div [class.container]="argsService.clipIntoContainer()">
+        @if(argsService.title()) {
+          <div class="page-title-container">
+            <div class="page-title">
+              {{argsService.title()}}
+            </div>
+          </div>
+        }
         <router-outlet></router-outlet>
       </div>
     </div>
