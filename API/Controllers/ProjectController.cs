@@ -17,21 +17,17 @@ namespace API.Controllers;
 
 [Authorize]
 public class ProjectController(
-    IProjectService projectService,
-    IProjectRepositoy projectRepositoy,
-    IMapper mapper,
-    UserManager<User> userManager,
-    ISprintRepository sprintRepository,
-    ISprintService sprintService) : BaseApiController
+	IProjectService projectService,
+	IProjectRepositoy projectRepositoy,
+	IMapper mapper,
+	UserManager<User> userManager) : BaseApiController
 {
 	private readonly IProjectService _projectService = projectService;
-	private readonly ISprintService _sprintService = sprintService;
 	private readonly IProjectRepositoy _projectRepository = projectRepositoy;
-	private readonly ISprintRepository _sprintRepository = sprintRepository;
 	private readonly IMapper _mapper = mapper;
 	private readonly UserManager<User> _userManager = userManager;
 
-    [HttpPost("create")]
+	[HttpPost("create")]
 	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult> CreateProject(ProjectDTO projectDTO)
 	{
@@ -82,6 +78,9 @@ public class ProjectController(
 			var user = await _userManager.GetLoggedInUserAsync(User);
 			if(!await _projectService.UserHasAccessToProjectAsync(id, user!))
 				return Forbid();
+			
+			user!.LastViewedProjectId = id;
+			await _userManager.UpdateAsync(user);
 			
 			return _mapper.Map<ProjectDTO>(await _projectRepository.ReadAsync(id));
 		} catch (KeyNotFoundException e) 

@@ -385,6 +385,9 @@ namespace API.Migrations
                     b.Property<DateTime>("LastSeen")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("LastViewedProjectId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
