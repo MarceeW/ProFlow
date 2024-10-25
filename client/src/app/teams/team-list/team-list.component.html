@@ -1,7 +1,7 @@
 @if(accountService.isCurrentUserInRole(
-RoleType.TeamLeader,
-RoleType.Administrator,
-RoleType.ProjectManager)) {
+  RoleType.TeamLeader,
+  RoleType.Administrator,
+  RoleType.ProjectManager)) {
   <div class="create-btn"
     matTooltip="Create a new team"
     (click)="openCreateTeamDialog()">

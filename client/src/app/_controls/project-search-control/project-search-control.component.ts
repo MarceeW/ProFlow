@@ -55,7 +55,7 @@ export class ProjectSearchControlComponent extends ControlBase<Project[]> {
 
   override ngOnInit() {
     super.ngOnInit();
-    this._ProjectService.getMyProjects()
+    this._ProjectService.getTeamleaderInProjects()
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: Projects => {

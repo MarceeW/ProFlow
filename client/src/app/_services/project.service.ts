@@ -27,6 +27,10 @@ export class ProjectService extends BaseService {
     return this.http.get<Project[]>(this.apiUrl + 'project/my-projects');
   }
 
+  getTeamleaderInProjects() {
+    return this.http.get<Project[]>(this.apiUrl + 'project/teamleader-in');
+  }
+
   getProject(projectId: string) {
     return this.http.get<Project>(this.apiUrl + 'project/' + projectId);
   }

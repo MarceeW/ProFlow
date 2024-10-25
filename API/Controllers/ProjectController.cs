@@ -116,6 +116,15 @@ public class ProjectController(
 			.ProjectTo<ProjectDTO>(_mapper.ConfigurationProvider);
 	}
 	
+	[HttpGet("teamleader-in")]
+	public async Task<IEnumerable<ProjectDTO>> GetTeamleaderInProjects() 
+	{
+		var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+		return loggedInUser.TeamLeaderInProjects
+			.AsQueryable()
+			.ProjectTo<ProjectDTO>(_mapper.ConfigurationProvider);
+	}
+	
 	[HttpPost("add-sprint/{projectId}")]
 	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult> AddSprint(
