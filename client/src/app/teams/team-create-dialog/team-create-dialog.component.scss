@@ -1,0 +1,81 @@
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin-bottom: 0;
+    padding-bottom: 8px;
+  }
+  .close-btn {
+    position: absolute;
+    right: 25px;
+  }
+}
+
+.mat-mdc-dialog-content {
+  padding: 8px 24px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.text-btn {
+  color: var(--mdc-text-button-label-text-color, var(--mat-app-primary));
+  background: none;
+  border: none;
+  padding: 0;
+  scale: 1;
+  transition: scale 0.1s ease-in-out;
+  font-weight: 500;
+  &:hover {
+    cursor: pointer;
+    scale: 1.05;
+  }
+
+  &.unassign-btn {
+    color: red !important;
+    grid-column: 2;
+  }
+}
+
+.assignee-container {
+  display: flex;
+  padding-bottom: 12px;
+  gap: 8px;
+  font-weight: 500;
+  .assignee {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-items: start;
+    align-items: center;
+    column-gap: 8px;
+    color: var(--bs-blue);
+  }
+}
+
+.story-points {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.unset {
+    color: red;
+  }
+}
+
+.story-points-input-container {
+  .mat-mdc-form-field {
+    width: 100px !important;
+  }
+}
+
+.description {
+  max-height: 24rem;
+  overflow: auto;
+  padding: 8px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}

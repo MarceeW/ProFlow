@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -6,17 +6,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+import { BaseComponent } from '../../_component-base/base.component';
 import { MemberSearchControlComponent } from '../../_controls/member-search-control/member-search-control.component';
 import { ProjectSearchControlComponent } from '../../_controls/project-search-control/project-search-control.component';
 import { Project } from '../../_models/project.model';
 import { Team } from '../../_models/team.model';
-import { User } from '../../_models/user';
-import { TeamService } from './../../_services/team.service';
+import { User } from '../../_models/user.model';
+import { TeamService } from '../../_services/team.service';
+import { UserPictureDirective } from '../../_directives/user-picture.directive';
 
 @Component({
-  selector: 'app-team-edit',
+  selector: 'app-team-details',
   standalone: true,
   imports: [
     MatDividerModule,
@@ -27,12 +28,13 @@ import { TeamService } from './../../_services/team.service';
     FormsModule,
     ReactiveFormsModule,
     MemberSearchControlComponent,
-    ProjectSearchControlComponent
+    ProjectSearchControlComponent,
+    UserPictureDirective
   ],
-  templateUrl: './team-edit.component.html',
-  styleUrl: './team-edit.component.scss'
+  templateUrl: './team-details.component.html',
+  styleUrl: './team-details.component.scss'
 })
-export class TeamEditComponent implements OnInit, OnDestroy {
+export class TeamDetailsComponent extends BaseComponent {
 
   readonly memberControl = new FormControl<User[]>([]);
   readonly projectControl = new FormControl<Project[]>([]);
@@ -41,18 +43,14 @@ export class TeamEditComponent implements OnInit, OnDestroy {
   readonly membersToRemove = signal<User[]>([]);
   readonly projectsToRemove = signal<Project[]>([]);
 
+  protected override _title = 'Team details';
+
   private readonly _teamService = inject(TeamService);
-  private readonly _toastr = inject(ToastrService);
   private readonly _route = inject(ActivatedRoute);
-  private readonly _destroy$ = new Subject<void>();
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
+    super.ngOnInit();
     this.readTeam();
-  }
-
-  ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
   }
 
   canSaveHappen() {

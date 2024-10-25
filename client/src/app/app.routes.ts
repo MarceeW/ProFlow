@@ -3,8 +3,6 @@ import { RoleType } from './_enums/role-type.enum';
 import { authGuard } from './_guards/auth.guard';
 import { loginGuard } from './_guards/login.guard';
 import { roleGuard } from './_guards/role.guard';
-import { AccountPageComponent } from './account/account-page/account-page.component';
-import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
 import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
 import { AdminMainComponent } from './admin/admin-main/admin-main.component';
@@ -18,9 +16,9 @@ import { ProjectSettingsComponent } from './project/project-dashboard/project-se
 import { ProjectTimelineComponent } from './project/project-dashboard/project-timeline/project-timeline.component';
 import { ScrumBoardComponent } from './project/project-dashboard/scrum-board/scrum-board.component';
 import { ProjectListComponent } from './project/project-list/project-list.component';
-import { TeamCreateComponent } from './teams/team-create/team-create.component';
-import { TeamEditComponent } from './teams/team-edit/team-edit.component';
+import { TeamDetailsComponent } from './teams/team-details/team-details.component';
 import { TeamListComponent } from './teams/team-list/team-list.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 export const routes: Routes = [
   {
@@ -39,17 +37,8 @@ export const routes: Routes = [
         component: AdminMainComponent,
       },
       {
-        path: 'account',
-        children: [
-          {
-            path: '',
-            component: AccountPageComponent
-          },
-          {
-            path: 'settings',
-            component: AccountSettingsComponent
-          }
-        ]
+        path: 'user-profile/:id',
+        component: UserProfileComponent
       },
       {
         path: 'projects',
@@ -102,7 +91,7 @@ export const routes: Routes = [
       {
         path: 'teams',
         canActivate: [roleGuard],
-        data: { role: RoleType.TeamLeader },
+        data: { role: RoleType.User },
         children: [
           {
             path: '',
@@ -110,12 +99,8 @@ export const routes: Routes = [
           },
           {
             path: 'team/:id',
-            component: TeamEditComponent
+            component: TeamDetailsComponent
           },
-          {
-            path: 'create',
-            component: TeamCreateComponent
-          }
         ]
       },
     ]
