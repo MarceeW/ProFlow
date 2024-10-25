@@ -26,7 +26,20 @@ public class AutoMapperProfiles : Profile
 					opt => opt.MapFrom(src => src.Sprints.OrderByDescending(s => s.End)));
 		CreateMap<Sprint, SprintDateDTO>();
 
-		CreateMap<Team, TeamDTO>();
+		CreateMap<Team, TeamDTO>()
+			.ForMember(dest => dest.TopUserSkills, 
+				opt => opt.MapFrom(src => src.Members
+					.SelectMany(m => m.UserSkills)
+					.GroupBy(us => us.Skill.Name)
+					.Select(group => new UserSkillDTO
+					{
+						Skill = new SkillDTO 
+						{
+							Id = group.Select(us => us.SkillId).First(),
+							Name = group.Key
+						},
+						SkillLevel = group.Sum(us => us.SkillLevel)
+					}).OrderByDescending(us => us.SkillLevel).Take(4)));
 		
 		CreateMap<Skill, SkillDTO>();
 		CreateMap<UserSkill, UserSkillDTO>();

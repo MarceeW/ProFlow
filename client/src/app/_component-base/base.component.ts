@@ -22,7 +22,7 @@ export abstract class BaseComponent implements OnInit, OnDestroy {
 
   constructor() {
     this.argsService.loadingSpinnerDisabled
-      .set(this.defaultConfig.setupLoading);
+      .set(!this.defaultConfig.setupLoading);
 
     if(this.defaultConfig.setupTitle) {
       effect(() => {

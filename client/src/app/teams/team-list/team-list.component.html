@@ -1,24 +1,55 @@
-<div class="container">
-  <h1 class="mat-headline-2 pt-3 mb-3">Your teams</h1>
-  <mat-divider></mat-divider>
-  <div class="item-tile-container pt-3">
-    @for (team of teams(); track $index) {
-      <div class="item-tile">
-        <span class="item-title mb-1">
-          {{team.name}}
-        </span>
-        <mat-divider></mat-divider>
-        <div class="item-info">
-          <div style="grid-area: p-manager;">Team size:
-            <b>{{team.members?.length ?? 0}}</b>
-          </div>
-          <div class="item-actions">
-            <button mat-mini-fab color="primary" [routerLink]="'team/' + team.id">
-              <mat-icon>visibility</mat-icon>
-            </button>
-          </div>
+@if(accountService.isCurrentUserInRole(
+RoleType.TeamLeader,
+RoleType.Administrator,
+RoleType.ProjectManager)) {
+  <div class="create-btn"
+    matTooltip="Create a new team"
+    (click)="openCreateTeamDialog()">
+    <mat-icon class="icon">add</mat-icon>
+  </div>
+}
+<div class="team-tile-container">
+  @for (team of teams(); track $index) {
+    <div class="team-tile" style="--i: {{$index}}">
+      <button mat-icon-button class="more-btn" [matMenuTriggerFor]="menuRef">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menuRef="matMenu">
+        <button mat-menu-item [routerLink]="'team/' + team.id">
+          <mat-icon>visibility</mat-icon>
+          View
+        </button>
+        <button mat-menu-item (click)="deleteTeam(team)">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </mat-menu>
+      <div class="team-info team-name">{{team.name}}</div>
+      <div class="team-info teamleader-info">
+        <img [user-picture]="team.teamLeader.id" [size]="64">
+        <span class="teamleader-name">{{team.teamLeader.fullName}}</span>
+      </div>
+      <div class="team-info team-stats">
+        <div class="stat">
+          <span>Members</span>
+          <span>{{team.members.length}}</span>
+        </div>
+        <div class="stat">
+          <span>Projects</span>
+          <span>{{team.projects.length}}</span>
         </div>
       </div>
-    }
-  </div>
+      <div class="team-info team-skills">
+        @for (skill of team.topUserSkills; track $index) {
+          <div class="skill">
+            <span class="skill-label">{{skill.skill.name}}</span>
+            <div class="skill-bar"
+              [style]="'width: ' + _getSkillBarWidth(team.topUserSkills, skill) + '%;'">
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
 </div>
+<!--<a [routerLink]="'team/' + team.id">{{team.name}}</a>-->

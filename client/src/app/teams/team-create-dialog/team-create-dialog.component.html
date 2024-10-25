@@ -1,0 +1,31 @@
+<h3 mat-dialog-title>Create a new team</h3>
+@if(argsService.loading()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+<mat-dialog-content>
+  <form [formGroup]="teamCreateForm" class="d-flex flex-column p-2">
+    <mat-form-field>
+      <mat-label>Team name</mat-label>
+      <input matInput type="text" formControlName="name"
+              placeholder="Example team"/>
+      @if (teamCreateForm.get('name')!.hasError('required')) {
+        <mat-error>Team name is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Team members</mat-label>
+      <app-member-search-control [notAllowedMembers]="[currentUser()]" formControlName="members" />
+      @if (teamCreateForm.get('members')!.hasError('required')) {
+        <mat-error>At least one member is <strong>required</strong></mat-error>
+      }
+    </mat-form-field>
+    <mat-dialog-actions>
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button
+        mat-flat-button
+        type="submit"
+        [mat-dialog-close]="getFormValue()"
+        [disabled]="teamCreateForm.invalid">Create team</button>
+    </mat-dialog-actions>
+  </form>
+</mat-dialog-content>
