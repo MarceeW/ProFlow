@@ -1,0 +1,139 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 15rem;
+  gap: 16px;
+
+  .user-name {
+    font-size: 32px;
+    font-weight: 100 !important;
+  }
+}
+
+.profile-picture-container {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+
+  .profile-picture-action-cover {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+    opacity: 0;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+
+    &:hover {
+      opacity: 25%;
+      .mat-icon {
+        transform: scale(2);
+      }
+    }
+  }
+
+  .profile-picture {
+    position: block;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: start;
+  padding: 16px;
+  gap: 2rem;
+  letter-spacing: 2px;
+  user-select: none;
+}
+
+.account-settings {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+
+  .setting-forms-container {
+    padding: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  form {
+    width: fit-content;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+h4 {
+  text-align: center;
+  text-transform: uppercase;
+  opacity: .5;
+}
+
+.stat-section {
+
+  .stats {
+    letter-spacing: 2px;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    justify-items: center;
+    gap: 8px;
+
+    span {
+      font-weight: 500;
+      border-radius: 24px;
+      color: white;
+      background: linear-gradient(90deg, rgb(0, 186, 199) 0%, rgb(0, 207, 180) 100%);
+      padding: 2px 10px;
+      width: 100%;
+    }
+  }
+}
+
+
+.skill-form-field {
+  width: 100%;
+}
+
+.skill-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding: 16px;
+
+  .skill {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+
+    .skill-name {
+      user-select: none;
+      display: inline-flex;
+      width: fit-content;
+      color: white;
+      border-radius: 24px;
+      background: linear-gradient(90deg, rgba(0,108,196,1) 0%, rgba(0,212,255,1) 100%);
+      padding: 2px 10px;
+    }
+  }
+}
+

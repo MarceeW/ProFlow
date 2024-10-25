@@ -1,6 +1,6 @@
 import { StoryStatus } from "../_enums/story-status.enum";
 import { StoryCommit } from "./story-commit.model";
-import { User } from "./user";
+import { User } from "./user.model";
 
 export interface Story {
   id?: string,

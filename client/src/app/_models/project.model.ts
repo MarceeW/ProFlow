@@ -1,5 +1,5 @@
 import { Sprint } from "./sprint.model";
-import { User } from "./user";
+import { User } from "./user.model";
 
 export interface Project {
   id?: string,

@@ -65,6 +65,14 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<User, Rol
 		
 		#endregion UserRole
 			
+		#region Skill
+		
+		builder.Entity<Skill>()
+			.HasIndex(s => s.Name)
+			.IsUnique();
+		
+		#endregion Skill
+			
 		#region UserSkill
 
 		builder.Entity<UserSkill>()

@@ -19,29 +19,13 @@
         </a>
       }
     </mat-menu>
-    @if (accountService.isCurrentUserInRole(RoleType.TeamLeader, RoleType.Administrator)) {
-      <button class="nav-button" [matMenuTriggerFor]="teamsMenu" mat-button>
-        Teams
+    <button class="nav-button" routerLink="teams" mat-button>
+      Teams
+    </button>
+    @if(accountService.isCurrentUserInRole(RoleType.Administrator)) {
+      <button class="nav-button" mat-button routerLink="/admin">
+        Admin settings
       </button>
-      <mat-menu #teamsMenu>
-        <a class="menu-link" routerLink="teams">
-          <button mat-menu-item>
-            <mat-icon>visibility</mat-icon>
-            <span class="menu-item-label">View teams</span>
-          </button>
-        </a>
-          <a class="menu-link" routerLink="teams/create">
-            <button mat-menu-item>
-              <mat-icon>add_circle</mat-icon>
-              <span class="menu-item-label">New team</span>
-            </button>
-          </a>
-      </mat-menu>
-      @if(accountService.isCurrentUserInRole(RoleType.Administrator)) {
-        <button class="nav-button" mat-button routerLink="/admin">
-          Admin settings
-        </button>
-      }
     }
   </div>
   <div class="user-actions">

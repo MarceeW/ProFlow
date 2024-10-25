@@ -1,0 +1,97 @@
+<div class="header">
+  <div class="profile-picture-container">
+    @if(isOwnProfile()) {
+      <div class="profile-picture-action-cover" (click)="triggerImageInput()">
+        <mat-icon class="profile-picture-action-icon">upload</mat-icon>
+        <input type="file" style="display: none;" #imageInput
+          (change)="onImageSelected($event)"
+          accept=".png,.jpeg,.jpg,.webp">
+      </div>
+    }
+    <img class="profile-picture" [user-picture]="userId()">
+  </div>
+  <span class="user-name">{{user()?.fullName}}</span>
+</div>
+<div class="profile-content">
+  <section class="profile-infos">
+    <section class="skill-section">
+      <h4>{{isOwnProfile() ? 'Your' : user()?.fullName + "'s"}} experience and skills</h4>
+      <div class="skill-container">
+        @if(userSkillControl.value?.length == 0) {
+          <div>{{isOwnProfile() ? "You don't have any skills yet." : "This user has no skills yet."}}</div>
+        }
+        @for(skill of userSkillControl.value; track $index) {
+          <div class="skill">
+            <span class="skill-name gradient-pill">{{skill.name}}</span>
+            <mat-slider class="skill-slider" min="0" max="5" step="1" showTickMarks [disabled]="!isOwnProfile()">
+              <input matSliderThumb #sliderInput [value]="getSkillLevel(skill)"
+                (change)="onSliderChange(skill, sliderInput.value)">
+            </mat-slider>
+          </div>
+        }
+      </div>
+    </section>
+    <section class="stat-section">
+      <h4>Statistics</h4>
+      <div class="stats">
+        <span class="gradient-pill">Owned projects: {{userStats()?.ownedProjects ?? 0}}</span>
+        <span class="gradient-pill">Led teams: {{userStats()?.ledTeams ?? 0}}</span>
+        <span class="gradient-pill">Teams: {{userStats()?.teams ?? 0}}</span>
+        <span class="gradient-pill">Projects: {{userStats()?.projects ?? 0}}</span>
+        <span class="gradient-pill">Stories done: {{userStats()?.storiesDone ?? 0}}</span>
+      </div>
+    </section>
+  </section>
+  @if(isOwnProfile()) {
+    <section class="account-settings">
+      <div class="user-skill-selector-container">
+        <h4>Set skills</h4>
+        <mat-form-field class="skill-form-field">
+          <mat-label>Skills</mat-label>
+          <mat-select [formControl]="userSkillControl" multiple [compareWith]="skillCompare">
+            @for (skill of skills(); track $index) {
+              <mat-option [value]="skill">{{skill.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <mat-accordion>
+        <mat-expansion-panel [hideToggle]="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Settings</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="setting-forms-container">
+              <form [formGroup]="userNameForm"
+                (submit)="onUserNameSave()">
+
+                <mat-form-field>
+                  <mat-label>New username</mat-label>
+                  <input type="text" matInput formControlName="userName"
+                    [value]="user()?.userName">
+                </mat-form-field>
+
+                <button type="submit" [disabled]="!userNameSaveEnabled()"
+                  mat-flat-button>
+                  Change username
+                </button>
+              </form>
+
+              <form [formGroup]="passwordForm"
+                (submit)="onPasswordSave()">
+
+                <mat-form-field>
+                  <mat-label>New password</mat-label>
+                  <input type="password" matInput formControlName="password">
+                </mat-form-field>
+
+                <button type="submit" [disabled]="!passwordSaveEnabled()"
+                  mat-flat-button>
+                  Change password
+                </button>
+              </form>
+            </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </section>
+  }
+</div>

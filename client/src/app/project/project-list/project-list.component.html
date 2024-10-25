@@ -9,7 +9,7 @@
 
   <ng-container matColumnDef="projectManager">
     <th mat-header-cell *matHeaderCellDef> Project manager name </th>
-    <td mat-cell *matCellDef="let project"> {{project.projectManager?.fullName}}</td>
+    <td mat-cell *matCellDef="let project"> {{project.projectManager.fullName}}</td>
   </ng-container>
 
   <ng-container matColumnDef="action">

@@ -39,6 +39,7 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<ISprintService, SprintService>();
 		services.AddScoped<ILoggingService, LoggingService>();
 		services.AddScoped<ISkillService, SkillService>();
+		services.AddScoped<IUserService, UserService>();
 		
 		#endregion Services
 		
@@ -55,6 +56,7 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<ISprintRepository, SprintRepository>();
 		services.AddScoped<ILogRepository, LogRepository>();
 		services.AddScoped<ISkillRepository, SkillRepository>();
+		services.AddScoped<IUserSkillRepository, UserSkillRepository>();
 		
 		#endregion Repositories
 		

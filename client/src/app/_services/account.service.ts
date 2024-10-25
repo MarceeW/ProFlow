@@ -9,7 +9,7 @@ import { LoginModel } from '../_models/login-model';
 import { RegisterModel } from '../_models/register-model';
 import { BaseService } from './base.service';
 import { NotificationSignalRService } from './signalR/notification-signalr.service';
-import { User } from '../_models/user';
+import { User } from '../_models/user.model';
 
 @Injectable({
   providedIn: 'root'

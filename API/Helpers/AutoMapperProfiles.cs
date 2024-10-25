@@ -29,6 +29,7 @@ public class AutoMapperProfiles : Profile
 		CreateMap<Team, TeamDTO>();
 		
 		CreateMap<Skill, SkillDTO>();
+		CreateMap<UserSkill, UserSkillDTO>();
 		
 		CreateMap<Story, StoryDTO>()
 			.ForMember(dest => dest.StoryPriority,

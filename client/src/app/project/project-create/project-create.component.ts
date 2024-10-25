@@ -16,7 +16,7 @@ import { MemberSearchControlComponent } from '../../_controls/member-search-cont
 import { Project } from '../../_models/project.model';
 import { AccountService } from '../../_services/account.service';
 import { ProjectService } from '../../_services/project.service';
-import { User } from './../../_models/user';
+import { User } from '../../_models/user.model';
 import { RoleType } from '../../_enums/role-type.enum';
 
 @Component({

@@ -1,4 +1,6 @@
 ﻿using API.DTO;
+using API.DTOs;
+using API.Enums;
 using API.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -34,5 +36,21 @@ public class UserRepository : IUserRepository
 			.Where(u => roles == null || rolesArray!.Intersect(u.UserRoles!.Select(ur => ur.Role.Name)).Count() > 0)
 			.ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
 			.ToListAsync();
+	}
+
+	public async Task<UserStatDTO> GetUserStatsAsync(Guid id)
+	{
+		var user = await _userManager.FindByIdAsync(id.ToString())
+			?? throw new KeyNotFoundException("User is not found");
+		
+		return new() 
+		{
+			OwnedProjects = user.OwnedProjects.Count,
+			LedTeams = user.LedTeams.Count,
+			Teams = user.Teams.Count,
+			Projects = user.Teams.Sum(t => t.Projects.Count),
+			StoriesDone = user.AssignedStories
+				.Count(t => t.StoryStatus == StoryStatus.Done)
+		};
 	}
 }

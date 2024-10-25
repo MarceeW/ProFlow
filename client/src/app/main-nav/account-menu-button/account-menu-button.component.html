@@ -4,12 +4,10 @@
         style="background-image: url('{{accountService.currentAccountPicture$ | async}}');">
 </button>
 <mat-menu #userMenu="matMenu">
-  <a class="menu-link" routerLink="account/settings">
-    <button mat-menu-item>
-      <mat-icon>manage_accounts</mat-icon>
-      <span class="menu-item-label">Account settings</span>
-    </button>
-  </a>
+  <button mat-menu-item [routerLink]="'user-profile/' + userId">
+    <mat-icon>manage_accounts</mat-icon>
+    <span class="menu-item-label">My profile</span>
+  </button>
   <button mat-menu-item (click)="accountService.logout()">
     <mat-icon>logout</mat-icon>
     <span class="menu-item-label">Logout</span>

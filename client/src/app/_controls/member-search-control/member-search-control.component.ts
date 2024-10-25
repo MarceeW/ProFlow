@@ -9,7 +9,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { takeUntil } from 'rxjs';
 import { UserPictureDirective } from '../../_directives/user-picture.directive';
 import { RoleType } from '../../_enums/role-type.enum';
-import { User } from '../../_models/user';
+import { User } from '../../_models/user.model';
 import { UserService } from '../../_services/user.service';
 import { ControlBase } from '../control-base.component';
 

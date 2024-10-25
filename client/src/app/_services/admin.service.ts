@@ -3,7 +3,7 @@ import { Account } from '../_models/account';
 import { UserManageModel } from '../_models/user-manage-model';
 import { Role } from '../_models/role';
 import { BaseService } from './base.service';
-import { User } from '../_models/user';
+import { User } from '../_models/user.model';
 
 @Injectable({
   providedIn: 'root'

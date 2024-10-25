@@ -1,24 +1,21 @@
-import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, model, output, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { takeUntil } from 'rxjs';
 import { BaseComponent } from '../../../_component-base/base.component';
+import { MemberSearchControlComponent } from '../../../_controls/member-search-control/member-search-control.component';
+import { UserPictureDirective } from '../../../_directives/user-picture.directive';
+import { RoleType } from '../../../_enums/role-type.enum';
 import { Account } from '../../../_models/account';
 import { Role } from '../../../_models/role';
-import { UserManageModel } from '../../../_models/user-manage-model';
-import { AdminService } from '../../../_services/admin.service';
+import { User } from '../../../_models/user.model';
 import { AccountService } from '../../../_services/account.service';
-import { RoleType } from '../../../_enums/role-type.enum';
-import { UserPictureDirective } from '../../../_directives/user-picture.directive';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MemberSearchControlComponent } from '../../../_controls/member-search-control/member-search-control.component';
-import { User } from '../../../_models/user';
+import { AdminService } from '../../../_services/admin.service';
 
 @Component({
   selector: 'app-account-manage',

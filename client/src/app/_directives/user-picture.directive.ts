@@ -6,7 +6,7 @@ import { AccountService } from '../_services/account.service';
   standalone: true
 })
 export class UserPictureDirective {
-  readonly userId = input.required<string>({alias: 'user-picture'});
+  readonly userId = input.required<string | undefined>({alias: 'user-picture'});
   readonly size = input<number>(32);
 
   private readonly _host = inject(ElementRef);
@@ -17,7 +17,8 @@ export class UserPictureDirective {
     effect(() => {
       this.userId();
       untracked(() => {
-        this.setPicture();
+        if(this.userId())
+          this.setPicture();
       })
     })
   }
@@ -32,6 +33,6 @@ export class UserPictureDirective {
 
   getPictureSrc() {
     return this._accountService
-      .getAccountProfilePictureSource(this.userId());
+      .getAccountProfilePictureSource(this.userId() ?? '');
   }
 }
