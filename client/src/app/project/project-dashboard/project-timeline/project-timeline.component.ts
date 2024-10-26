@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ProjectDashBoardBase } from '../project-dashboard-base.component';
+import { ProjectBaseComponent } from '../project-base.component';
 
 @Component({
   selector: 'app-project-timeline',
@@ -8,6 +8,6 @@ import { ProjectDashBoardBase } from '../project-dashboard-base.component';
   templateUrl: './project-timeline.component.html',
   styleUrl: './project-timeline.component.scss'
 })
-export class ProjectTimelineComponent extends ProjectDashBoardBase{
+export class ProjectTimelineComponent extends ProjectBaseComponent{
   override itemKey: string = 'timeline';
 }

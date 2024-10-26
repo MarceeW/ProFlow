@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ProjectDashBoardBase } from '../project-dashboard-base.component';
+import { ProjectBaseComponent } from '../project-base.component';
 
 @Component({
   selector: 'app-project-reports',
@@ -8,6 +8,6 @@ import { ProjectDashBoardBase } from '../project-dashboard-base.component';
   templateUrl: './project-reports.component.html',
   styleUrl: './project-reports.component.scss'
 })
-export class ProjectReportsComponent extends ProjectDashBoardBase {
+export class ProjectReportsComponent extends ProjectBaseComponent {
   override itemKey: string = 'reports';
 }

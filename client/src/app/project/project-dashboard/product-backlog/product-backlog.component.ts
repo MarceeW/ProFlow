@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { takeUntil } from 'rxjs';
 import { Story } from '../../../_models/story.model';
-import { ProjectDashBoardBase } from '../project-dashboard-base.component';
+import { ProjectBaseComponent } from '../project-base.component';
 import { AddStoryFormDialog } from './add-story-form-dialog/add-story-form-dialog.component';
 import { BacklogTableComponent } from './backlog-table/backlog-table.component';
 
@@ -19,7 +19,7 @@ import { BacklogTableComponent } from './backlog-table/backlog-table.component';
   templateUrl: './product-backlog.component.html',
   styleUrl: './product-backlog.component.scss'
 })
-export class ProductBacklogComponent extends ProjectDashBoardBase {
+export class ProductBacklogComponent extends ProjectBaseComponent {
   override itemKey: string = 'productbacklog';
 
   protected override _title = 'Product backlog';

@@ -12,7 +12,7 @@ import { Story } from "../../_models/story.model";
 @Component({
   template: ''
 })
-export abstract class ProjectDashBoardBase extends HasSideNav implements OnDestroy {
+export abstract class ProjectBaseComponent extends HasSideNav implements OnDestroy {
 
   projectId!: string;
   readonly project = signal<Project | null>(null);

@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
-import { ProjectDashBoardBase } from './project-dashboard-base.component';
+import { ProjectBaseComponent } from './project-base.component';
 
 @Component({
   selector: 'app-project-dashboard',
@@ -11,7 +11,7 @@ import { ProjectDashBoardBase } from './project-dashboard-base.component';
   templateUrl: './project-dashboard.component.html',
   styleUrl: './project-dashboard.component.scss'
 })
-export class ProjectDashboardComponent extends ProjectDashBoardBase implements OnDestroy {
+export class ProjectDashboardComponent extends ProjectBaseComponent implements OnDestroy {
   override itemKey: string = 'dashboard';
   protected override _title = 'Dashboard';
 }

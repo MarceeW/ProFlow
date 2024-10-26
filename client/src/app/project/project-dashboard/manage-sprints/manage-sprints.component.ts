@@ -12,7 +12,7 @@ import { Project } from '../../../_models/project.model';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
-import { ProjectDashBoardBase } from '../project-dashboard-base.component';
+import { ProjectBaseComponent } from '../project-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
 
 @Component({
@@ -35,7 +35,7 @@ import { StoryTileComponent } from '../story-tile/story-tile.component';
   templateUrl: './manage-sprints.component.html',
   styleUrl: './manage-sprints.component.scss'
 })
-export class ManageSprintsComponent extends ProjectDashBoardBase {
+export class ManageSprintsComponent extends ProjectBaseComponent {
   override itemKey: string = 'managesprints';
 
   readonly productBacklog = signal<Story[]>([]);

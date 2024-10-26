@@ -19,7 +19,7 @@ import { Project } from '../../../_models/project.model';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
-import { ProjectDashBoardBase } from '../project-dashboard-base.component';
+import { ProjectBaseComponent } from '../project-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
 import { StoryService } from '../../../_services/story.service';
 import { takeUntil } from 'rxjs';
@@ -44,7 +44,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './scrum-board.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrumBoardComponent extends ProjectDashBoardBase {
+export class ScrumBoardComponent extends ProjectBaseComponent {
   override itemKey: string = 'scrumboard';
 
   readonly sprint = signal<Sprint | null>(null);
