@@ -5,6 +5,7 @@ import { Team } from '../_models/team.model';
 import { Sprint } from '../_models/sprint.model';
 import { Story } from '../_models/story.model';
 import { HttpParams } from '@angular/common/http';
+import { BacklogStat } from '../_models/reports/backlog-stat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +36,11 @@ export class ProjectService extends BaseService {
     return this.http.get<Project>(this.apiUrl + 'project/' + projectId);
   }
 
-  getNthSprint(projectId: string, n: number) {
-    return this.http.get<Sprint>(this.apiUrl + 'project/nth-sprint/' + projectId, {
-      params: new HttpParams().set('n', n)
+  getNthSprint(projectId: string, teamId: string, n: number) {
+    return this.http.get<Sprint | undefined>(this.apiUrl + 'project/nth-sprint/' + projectId, {
+      params: new HttpParams()
+        .set('n', n)
+        .set('teamId', teamId)
     });
   }
 
@@ -47,6 +50,10 @@ export class ProjectService extends BaseService {
 
   getBacklog(projectId: string) {
     return this.http.get<Story[]>(this.apiUrl + 'project/backlog/' + projectId);
+  }
+
+  getBacklogStats(projectId: string) {
+    return this.http.get<BacklogStat[]>(this.apiUrl + 'project/stats/backlog/' + projectId);
   }
 
   addSprint(projectId: string, sprint: Sprint) {

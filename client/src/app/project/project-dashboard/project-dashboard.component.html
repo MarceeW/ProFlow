@@ -1,2 +1,10 @@
-<div class="container">
-</div>
+<ngx-charts-pie-chart
+  [view]="[375, 400]"
+  scheme="ocean"
+  [results]="pbState()"
+  [legend]="true"
+  [legendPosition]="pbPieChartLegendPos"
+  [doughnut]="true"
+  [arcWidth]=".5"
+  legendTitle="Story states">
+</ngx-charts-pie-chart>

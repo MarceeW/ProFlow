@@ -1,6 +1,7 @@
 ﻿using API.Constants;
 using API.DTO;
 using API.DTOs;
+using API.DTOs.Reports;
 using API.Exceptions;
 using API.Extensions;
 using API.Interfaces.Repository;
@@ -71,6 +72,7 @@ public class ProjectController(
 	}
 	
 	[HttpGet("{id}")]
+	[AllowAnonymous]
 	public async Task<ActionResult<ProjectDTO>> GetProject(Guid id) 
 	{
 		try
@@ -126,9 +128,9 @@ public class ProjectController(
 	}
 	
 	[HttpPost("add-sprint/{projectId}")]
-	[Authorize(Policy = "ProjectManagement")]
+	[Authorize(Policy = "ScrumManagement")]
 	public async Task<ActionResult> AddSprint(
-		Guid projectId, 
+		Guid projectId,
 		SprintDTO sprintDTO) 
 	{
 		try
@@ -137,6 +139,10 @@ public class ProjectController(
 			await _projectService.AddSprintAsync(projectId, sprintDTO, loggedInUser);
 			return Ok("Created sprint successfully");
 		}
+		catch (NotAllowedException e)
+		{
+			return Forbid(e.Message);
+		}
 		catch (Exception e)
 		{
 			return BadRequest(e.Message);
@@ -144,16 +150,15 @@ public class ProjectController(
 	}
 	
 	[HttpGet("nth-sprint/{projectId}")]
-	public async Task<ActionResult<SprintDTO>> GetNthSprint(Guid projectId, [FromQuery] int n) 
+	public async Task<ActionResult<SprintDTO?>> GetNthSprint(Guid projectId, [FromQuery] Guid teamId, [FromQuery] int n) 
 	{
 		try
 		{
 			var user = await _userManager.GetLoggedInUserAsync(User);
 			if(!await _projectService.UserHasAccessToProjectAsync(projectId, user!))
 				return Forbid();
-				
-			return _mapper
-				.Map<SprintDTO>(await _projectRepository.GetNthSprintAsync(projectId, n));
+			var sprint = await _projectRepository.GetNthSprintAsync(projectId, teamId, n);
+			return _mapper.Map<SprintDTO>(sprint);
 		}
 		catch (Exception e)
 		{
@@ -178,7 +183,7 @@ public class ProjectController(
 	}
 	
 	[HttpGet("backlog/{projectId}")]
-	[Authorize(Policy = "ProjectManagement")]
+	[Authorize(Policy = "ScrumManagement")]
 	public async Task<ActionResult<IEnumerable<StoryDTO>>> GetBacklog(Guid projectId) 
 	{
 		try
@@ -191,9 +196,9 @@ public class ProjectController(
 			
 			if(project == null)
 				throw new KeyNotFoundException("Project does not exists");
+	
 			return Ok(project.ProductBacklog
-				.AsQueryable()
-				.ProjectTo<StoryDTO>(_mapper.ConfigurationProvider));
+				.AsQueryable().ProjectTo<StoryDTO>(_mapper.ConfigurationProvider));
 		}
 		catch (Exception e)
 		{
@@ -202,6 +207,7 @@ public class ProjectController(
 	}
 	
 	[HttpPost("add-story/{projectId}")]
+	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult> AddStoryToBacklogAsync(
 		Guid projectId, 
 		StoryDTO story) 
@@ -219,6 +225,7 @@ public class ProjectController(
 	}
 	
 	[HttpDelete("remove-story/{storyId}")]
+	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult> RemoveStoryFromBacklogAsync( 
 		Guid storyId) 
 	{
@@ -233,4 +240,21 @@ public class ProjectController(
 			return BadRequest(e.Message);
 		}
 	}
+	
+	#region Reports
+	
+	[HttpGet("stats/backlog/{id}")]
+	public async Task<ActionResult<IEnumerable<BacklogStatDTO>>> GetBacklogStats(Guid id) 
+	{
+		try
+		{
+			return Ok(await _projectRepository.GetBacklogStatsAsync(id));
+		}
+		catch (KeyNotFoundException e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	#endregion
 }
