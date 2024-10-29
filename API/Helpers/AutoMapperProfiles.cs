@@ -24,8 +24,12 @@ public class AutoMapperProfiles : Profile
 		CreateMap<Project, ProjectDTO>()
 			.ForMember(dest => dest.Sprints,
 					opt => opt.MapFrom(src => src.Sprints.OrderByDescending(s => s.End)));
-		CreateMap<Sprint, SprintDateDTO>();
+		CreateMap<Sprint, ShortSprintDTO>();
 
+		CreateMap<Team, ShortTeamDTO>()
+			.ForMember(dest => dest.MemberIds,
+					opt => opt.MapFrom(src => src.Members.Select(m => m.Id)));
+		
 		CreateMap<Team, TeamDTO>()
 			.ForMember(dest => dest.TopUserSkills, 
 				opt => opt.MapFrom(src => src.Members

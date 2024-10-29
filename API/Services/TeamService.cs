@@ -62,6 +62,11 @@ public class TeamService(
 		if(team.TeamLeader != loggedInUser)
 			throw new NotAllowedException();
 		
+		var teamStories = team.Sprints.SelectMany(s => s.SprintBacklog);
+		
+		foreach(var story in teamStories)
+			story.SprintId = null;
+		
 		_teamRepository.Delete(team);
 
 		var notifications = team.Members.Select(m => 

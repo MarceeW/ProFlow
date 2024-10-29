@@ -12,4 +12,5 @@ public class SprintDTO
 	public DateTime End { get; set; }
 	public ICollection<StoryDTO> SprintBacklog { get; set; } = [];
 	public bool IsActive { get; set; }
+	public Guid TeamId { get; set; }
 }

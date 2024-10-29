@@ -1,4 +1,5 @@
 ﻿using API.Data;
+using API.DTOs.Reports;
 using API.Interfaces.Repository;
 using API.Models;
 
@@ -20,10 +21,36 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
 		return projects;
 	}
 	
-	public async Task<Sprint> GetNthSprintAsync(Guid projectId, int n)
+	public async Task<Sprint?> GetNthSprintAsync(Guid projectId, Guid teamId, int n)
 	{
-		var project = await ReadAsync(projectId) 
-			?? throw new KeyNotFoundException();
-		return project.Sprints.OrderByDescending(s => s.End).ElementAt(n);
+		var project = await ReadAsync(projectId) ?? throw new KeyNotFoundException();
+			
+		var sprints = project.Sprints
+			.Where(s => s.TeamId == teamId);
+			
+		if(!sprints.Any())
+			return null;
+			
+		return sprints.OrderByDescending(s => s.End).ElementAt(n);
+	}
+
+	public async Task<IEnumerable<BacklogStatDTO>> GetBacklogStatsAsync(Guid projectId)
+	{
+		var project = await ReadAsync(projectId) ?? throw new KeyNotFoundException();
+			
+		return project.ProductBacklog
+			.GroupBy(pb => pb.StoryStatus)
+			.Select(group => new BacklogStatDTO
+			{
+				StoryStatus = group.Key,
+				Count = group.Count()
+			});
+	}
+
+	public async Task<IEnumerable<Story>> GetBacklog(Guid projectId)
+	{
+		var project = await ReadAsync(projectId) ?? throw new KeyNotFoundException();
+		
+		return project.ProductBacklog.Where(s => s.StoryStatus != Enums.StoryStatus.Done);
 	}
 }

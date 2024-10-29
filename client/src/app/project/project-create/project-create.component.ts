@@ -71,7 +71,8 @@ export class ProjectCreateComponent extends BaseComponent {
     const project: Project = {
       name: this.projectCreateForm.controls.projectName.value!,
       projectManager: this.projectManager,
-      teamLeaders: this.projectCreateForm.controls.teamLeaders.value!
+      teamLeaders: this.projectCreateForm.controls.teamLeaders.value!,
+      teams: []
     };
     this.projectService.createProject(project).pipe(
       takeUntil(this._destroy$)

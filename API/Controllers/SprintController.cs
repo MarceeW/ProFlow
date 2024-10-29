@@ -55,7 +55,7 @@ public class SprintController : BaseApiController
 	}
 	
 	[HttpPatch("add-stories/{sprintId}")]
-	[Authorize(Policy = "SprintManagement")]
+	[Authorize(Policy = "ScrumManagement")]
 	public async Task<ActionResult> AddStoriesToBacklog(
 		Guid sprintId, 
 		IEnumerable<StoryDTO> stories) 
@@ -77,7 +77,7 @@ public class SprintController : BaseApiController
 	}
 	
 	[HttpPatch("remove-stories/{sprintId}")]
-	[Authorize(Policy = "SprintManagement")]
+	[Authorize(Policy = "ScrumManagement")]
 	public async Task<ActionResult> RemoveStoriesFromBacklog(
 		Guid sprintId, 
 		IEnumerable<StoryDTO> stories) 
@@ -95,7 +95,7 @@ public class SprintController : BaseApiController
 	}
 	
 	[HttpGet("close/{sprintId}")]
-	[Authorize(Policy = "SprintManagement")]
+	[Authorize(Policy = "ScrumManagement")]
 	public async Task<ActionResult> CloseSprint(Guid sprintId)
 	{
 		try

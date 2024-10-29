@@ -58,13 +58,10 @@ public static class IdentityServiceExtensions
 		services.AddAuthorizationBuilder()
 			.AddPolicy("ProjectManagement", policy => policy
 				.RequireRole(RoleConstant.Administrator, RoleConstant.ProjectManager))
-			.AddPolicy("TeamManagement", policy => policy
+			.AddPolicy("ScrumManagement", policy => policy
 				.RequireRole(RoleConstant.Administrator, RoleConstant.TeamLeader, RoleConstant.ProjectManager))
-			.AddPolicy("SprintManagement", policy => policy
-				.RequireRole(
-					RoleConstant.Administrator, 
-					RoleConstant.ProjectManager, 
-					RoleConstant.TeamLeader));
+			.AddPolicy("TeamManagement", policy => policy
+				.RequireRole(RoleConstant.Administrator, RoleConstant.TeamLeader, RoleConstant.ProjectManager));
 				
 		return services;
 	}

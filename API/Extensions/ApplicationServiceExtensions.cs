@@ -57,6 +57,7 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<ILogRepository, LogRepository>();
 		services.AddScoped<ISkillRepository, SkillRepository>();
 		services.AddScoped<IUserSkillRepository, UserSkillRepository>();
+		services.AddScoped<IStoryStatusChangeRepository, StoryStatusChangeRepository>();
 		
 		#endregion Repositories
 		

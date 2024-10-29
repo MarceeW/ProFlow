@@ -6,17 +6,22 @@
       [disabled]="backBtnDisabled()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <div class="sprint-title">
+    <div>
+      @if(teamSelectionVisible() && !isTeamsEmpty()) {
+        <app-team-selector [project]="project()!"
+          (selectionChange)="onTeamSelectionChanged($event)"></app-team-selector>
+      }
       <mat-form-field>
-        @let label = !isProjectHasSprints() ? 'There are no sprints yet' : 'Select sprint';
+        @let label = teamSprints().length > 0 ? 'Select sprint' : 'There are no sprints yet';
         <mat-label>{{label}}</mat-label>
         <mat-select
-          [disabled]="!isProjectHasSprints()"
+          [disabled]="teamSprints().length == 0"
           [formControl]="sprintSelectControl"
-          (selectionChange)="selectSprint($event)">
-          @for(sprint of project()?.sprints; track $index) {
+          (selectionChange)="selectSprint($event)"
+          [compareWith]="compareSprint">
+          @for(sprint of teamSprints(); track $index) {
             @let startDate = sprint.start | date;
-            <mat-option [value]="sprint.id">
+            <mat-option [value]="sprint">
               <span>{{startDate}} - {{sprint.end | date}} &nbsp;</span>
               @if(sprint.isActive) {
                 <span>(Active)</span>

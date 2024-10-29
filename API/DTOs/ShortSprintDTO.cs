@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs;
 
-public class SprintDateDTO
+public class ShortSprintDTO
 {
 	public Guid Id { get; set; }
 	[Required]
@@ -11,4 +11,5 @@ public class SprintDateDTO
 	public DateTime End { get; set; }
 	public DateTime? EarlyClose { get; set; }
 	public bool IsActive { get; set; }
+	public Guid TeamId { get; set; }
 }

@@ -19,6 +19,7 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<User, Rol
 	public DbSet<Log> Logs { get; set; }
 	public DbSet<Skill> Skills { get; set; }
 	public DbSet<UserSkill> UserSkills { get; set; }
+	public DbSet<StoryStatusChange> StoryStatusChanges { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
@@ -54,10 +55,23 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<User, Rol
 			.HasMany(s => s.SprintBacklog)
 			.WithOne(sb => sb.Sprint)
 			.HasForeignKey(sb => sb.SprintId)
-			.IsRequired(false);
+			.IsRequired(false)
+			.OnDelete(DeleteBehavior.NoAction);
+			
 		
 		#endregion Sprint
 		
+		#region Team
+		
+		builder.Entity<Team>()
+			.HasMany(t => t.Sprints)
+			.WithOne(s => s.Team)
+			.HasForeignKey(s => s.TeamId)
+			.IsRequired()
+			.OnDelete(DeleteBehavior.Cascade);
+			
+		#endregion Team
+			
 		#region UserRole
 		
 		builder.Entity<UserRole>()
@@ -173,6 +187,17 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<User, Rol
 			.HasForeignKey(ur => ur.RoleId)
 			.IsRequired();
 			
-		#endregion
+		#endregion Role
+		
+		#region Story
+		
+		builder.Entity<Story>()
+			.HasMany(s => s.StoryStatusChanges)
+			.WithOne(se => se.Story)
+			.HasForeignKey(se => se.StoryId)
+			.IsRequired()
+			.OnDelete(DeleteBehavior.Cascade);
+		
+		#endregion Story
 	}
 }

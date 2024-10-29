@@ -72,7 +72,6 @@ public class ProjectController(
 	}
 	
 	[HttpGet("{id}")]
-	[AllowAnonymous]
 	public async Task<ActionResult<ProjectDTO>> GetProject(Guid id) 
 	{
 		try

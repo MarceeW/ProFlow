@@ -14,6 +14,7 @@ public class StoryService : IStoryService
 	private readonly IStoryRepository _storyRepository;
 	private readonly IProjectService _projectService;
 	private readonly IStoryCommitRepository _storyCommitRepository;
+	private readonly IStoryStatusChangeRepository _storyStatusChangeRepository;
 	private readonly INotificationService _notificationService;
 	private readonly ILoggingService _loggingService;
 	private readonly UserManager<User> _userManager;
@@ -24,7 +25,8 @@ public class StoryService : IStoryService
 		UserManager<User> userManager,
 		INotificationService notificationService,
 		ILoggingService loggingService,
-		IProjectService projectService)
+		IProjectService projectService,
+		IStoryStatusChangeRepository storyStatusChangeRepository)
 	{
 		_storyRepository = storyRepository;
 		_storyCommitRepository = storyCommitRepository;
@@ -32,6 +34,7 @@ public class StoryService : IStoryService
 		_notificationService = notificationService;
 		_loggingService = loggingService;
 		_projectService = projectService;
+		_storyStatusChangeRepository = storyStatusChangeRepository;
 	}
 
 	public async Task AddCommitAsync(Guid storyId, User loggedInUser, StoryCommitDTO commitDTO)
@@ -93,6 +96,19 @@ public class StoryService : IStoryService
 		{
 			story.Closed = storyDTO.StoryStatus == StoryStatus.Done ? 
 				DateTime.Now : null;
+				
+			if(story.StoryStatus + 1 == storyDTO.StoryStatus && storyDTO.StoryStatus == StoryStatus.InPorgress) 
+				story.ResolveStart = DateTime.Now;
+			else if(storyDTO.StoryStatus == StoryStatus.Backlog)
+				story.ResolveStart = null;
+
+			await _storyStatusChangeRepository.CreateAsync(new()
+			{
+				Story = story,
+				PreviousStoryStatus = story.StoryStatus,
+				StoryStatus = storyDTO.StoryStatus
+			});
+			await _storyStatusChangeRepository.SaveAsync();
 		}
 		
 		story.Title = storyDTO.Title;

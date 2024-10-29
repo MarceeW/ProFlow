@@ -13,7 +13,7 @@
         <app-story-tile
           (storyChanged)="reload()"
           [story]="story"
-          [disabled]="!lastSprint()?.isActive"
+          [disabled]="!lastSprint()?.isActive || isTeamsEmpty()"
           cdkDrag
           [cdkDragDisabled]="!lastSprint()?.isActive"></app-story-tile>
       }
@@ -35,21 +35,24 @@
           [story]="story"
           [disabled]="!lastSprint()?.isActive"
           cdkDrag
-          [cdkDragDisabled]="!lastSprint()?.isActive"></app-story-tile>
+          [cdkDragDisabled]="!lastSprint()?.isActive || isTeamsEmpty()"></app-story-tile>
       }
     </div>
   </div>
   <button mat-flat-button (click)="saveBacklogChanges()" [disabled]="!changeHappened()">Save changes</button>
+  @if(teamSelectionVisible() && !isTeamsEmpty()) {
+    <app-team-selector [project]="project()!" (selectionChange)="onTeamSelectionChanged($event)"></app-team-selector>
+  }
 </div>
 <div class="functions-container">
   <div class="function-container">
     <div class="function-title">
       Create new sprint
     </div>
-    <div class="function sprint-create-form-container">
+    <form class="function sprint-create-form" [formGroup]="sprintCreateFormGroup">
       <mat-form-field>
         <mat-label>Sprint duration</mat-label>
-        <mat-date-range-input [min]="minStartDate" [disabled]="!canCreateSprint()" [formGroup]="sprintCreateFormGroup" [rangePicker]="picker">
+        <mat-date-range-input [min]="minStartDate" [disabled]="!canCreateSprint() || isTeamsEmpty()"  [rangePicker]="picker">
           <input matStartDate formControlName="startDate" placeholder="Start date">
           <input matEndDate formControlName="endDate" placeholder="End date">
         </mat-date-range-input>
@@ -60,15 +63,12 @@
           sprintCreateFormGroup.controls.startDate.hasError('matEndDateInvalid')) {
           <mat-error>Invalid date!</mat-error>
         }
-        @if(sprintCreateFormGroup.controls.startDate.hasError('required') ||
-          sprintCreateFormGroup.controls.startDate.hasError('required')) {
-          <mat-error>You must enter the sprint duration!</mat-error>
-        }
       </mat-form-field>
       <button mat-flat-button
+        type="submit"
         [disabled]="sprintCreateFormGroup.invalid"
         (click)="createSprint()">Create sprint</button>
-    </div>
+    </form>
   </div>
   <div class="function-container">
     @if(lastSprint()?.isActive) {
@@ -80,8 +80,10 @@
         (click)="closeSprint()"
         [disabled]="canCreateSprint()">Close current sprint</button>
       </div>
+    } @else if(isTeamsEmpty()) {
+      <span>This project doesn't have any teams yet, you can't create a sprint until the project has at least 1 team!</span>
     } @else {
-      <b>Currently the project doesn't have active sprint.</b>
+      <span>This team has no active sprints!</span>
     }
   </div>
 </div>

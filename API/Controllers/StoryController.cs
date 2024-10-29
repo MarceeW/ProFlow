@@ -17,26 +17,29 @@ namespace API.Controllers;
 public class StoryController : BaseApiController
 {
 	private readonly IStoryRepository _storyRepository;
+	private readonly IStoryStatusChangeRepository _StoryStatusChangeRepository;
 	private readonly IStoryService _storyService;
 	private readonly IProjectService _projectService;
 	private readonly UserManager<User> _userManager;
 	private readonly IMapper _mapper;
 
-	public StoryController(
-		IStoryRepository storyRepository,
-		UserManager<User> userManager,
-		IStoryService storyService,
-		IMapper mapper,
-		IProjectService projectService)
-	{
-		_storyRepository = storyRepository;
-		_userManager = userManager;
-		_storyService = storyService;
-		_mapper = mapper;
-		_projectService = projectService;
-	}
+    public StoryController(
+        IStoryRepository storyRepository,
+        UserManager<User> userManager,
+        IStoryService storyService,
+        IMapper mapper,
+        IProjectService projectService,
+        IStoryStatusChangeRepository StoryStatusChangeRepository)
+    {
+        _storyRepository = storyRepository;
+        _userManager = userManager;
+        _storyService = storyService;
+        _mapper = mapper;
+        _projectService = projectService;
+        _StoryStatusChangeRepository = StoryStatusChangeRepository;
+    }
 
-	[HttpGet("{id}")]
+    [HttpGet("{id}")]
 	public async Task<ActionResult<StoryDTO>> GetStory(Guid id) 
 	{
 		try
@@ -67,7 +70,7 @@ public class StoryController : BaseApiController
 		{
 			var user = (await _userManager.GetLoggedInUserAsync(User))!;
 			await _storyService.UpdateAsync(storyDTO, user);
-			return Ok($"Story moved to status: '{storyDTO.StoryStatus}'");
+			return Ok();
 		}
 		catch (KeyNotFoundException e)
 		{

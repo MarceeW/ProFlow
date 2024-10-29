@@ -1,28 +1,26 @@
-import { StoryStatus } from './../../../_enums/story-status.enum';
 import {
   CdkDrag,
   CdkDragDrop,
   CdkDropList,
-  CdkDropListGroup,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Project } from '../../../_models/project.model';
+import { takeUntil } from 'rxjs';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
-import { SprintService } from '../../../_services/sprint.service';
+import { StoryService } from '../../../_services/story.service';
 import { ProjectBaseComponent } from '../project-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
-import { StoryService } from '../../../_services/story.service';
-import { takeUntil } from 'rxjs';
+import { TeamSelectorComponent } from '../team-selector/team-selector.component';
+import { StoryStatus } from './../../../_enums/story-status.enum';
 
 @Component({
   selector: 'app-scrum-board',
@@ -38,7 +36,8 @@ import { takeUntil } from 'rxjs';
     CdkDropList,
     CdkDrag,
     DatePipe,
-    StoryTileComponent
+    StoryTileComponent,
+    TeamSelectorComponent
   ],
   templateUrl: './scrum-board.component.html',
   styleUrl: './scrum-board.component.scss',
@@ -48,6 +47,9 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
   override itemKey: string = 'scrumboard';
 
   readonly sprint = signal<Sprint | null>(null);
+  readonly teamSprints = computed<Sprint[]>(() => {
+    return this.project()?.sprints?.filter(s => s.teamId == this.team()?.id) ?? [];
+  });
   readonly currentSprintIdx = signal(0);
   readonly states = ['Backlog', 'In progress', 'Code review', 'Done'];
   readonly stories = signal<Story[][]>(new Array(this.states.length));
@@ -55,20 +57,45 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
   readonly connectedStates = [
     [1], [0, 2], [1, 3], [1, 2]
   ];
-  readonly sprintSelectControl = new FormControl();
+  readonly sprintSelectControl = new FormControl<Sprint | undefined>(undefined);
   readonly nextBtnDisabled = computed(() => {
     return this._sprintIdx() == 0;
   });
   readonly backBtnDisabled = computed(() => {
-    return this._sprintIdx() + 1 == this.project()?.sprints?.length
-      || !this.isProjectHasSprints();
+    return this._sprintIdx() + 1 == this.teamSprints().length
+      || this.teamSprints().length == 0;
   });
   private readonly _storyService = inject(StoryService);
   private readonly _sprintIdx = signal(0);
 
-  override onProjectLoaded(project: Project): void {
-    super.onProjectLoaded(project);
-    this.loadNthSprint(0);
+  compareSprint(s1: Sprint, s2?: Sprint) {
+    return s1.id === s2?.id;
+  }
+
+  constructor() {
+    super();
+
+    effect(() => {
+      this.team();
+      untracked(() => {
+        if(!this.team())
+          return;
+        this._sprintIdx.set(0);
+        if(this.teamSprints().length > 0)
+          this.loadNthSprint(0);
+        else
+          this.stories.set(new Array(this.states.length));
+      });
+    });
+
+    effect(() => {
+      this._sprintIdx();
+      untracked(() => {
+        if(!this.team())
+          return;
+        this.loadNthSprint(this._sprintIdx());
+      });
+    });
   }
 
   getConnectedToIds(idx: number): string[] {
@@ -103,7 +130,6 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
 
   navigateToSprint(direction: number) {
     this._sprintIdx.update(idx => idx += direction);
-    this.loadNthSprint(this._sprintIdx());
   }
 
   selectSprint(event: MatSelectChange) {
@@ -116,7 +142,7 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
 
   protected override onSprintLoaded(sprint: Sprint): void {
     this.sprint.set(sprint);
-    this.sprintSelectControl.setValue(sprint.id);
+    this.sprintSelectControl.setValue(sprint);
     this.filterStories(sprint);
   }
 

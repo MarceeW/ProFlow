@@ -16,6 +16,9 @@ public class Sprint
 	[ForeignKey(nameof(ProjectId))]
 	public virtual required Project Project { get; set; }
 	public Guid ProjectId { get; set; }
+	[ForeignKey(nameof(TeamId))]
+	public virtual required Team Team { get; set; }
+	public Guid TeamId { get; set; }
 	public virtual ICollection<Story> SprintBacklog { get; set; } = [];
 	public bool IsActive { 
 		get 

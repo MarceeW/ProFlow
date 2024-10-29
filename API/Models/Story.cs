@@ -9,6 +9,7 @@ public class Story
 	[Key]
 	public Guid Id { get; set; }
 	public DateTime Created { get; set; } = DateTime.Now;
+	public DateTime? ResolveStart { get; set; }
 	public DateTime? Closed { get; set; }
 	public required string Title { get; set; }
 	public required string Description { get; set; }
@@ -26,6 +27,7 @@ public class Story
 	public int? StoryPoints { get; set; }
 	public required StoryStatus StoryStatus { get; set; } = StoryStatus.Backlog;
 	public virtual ICollection<StoryCommit> StoryCommits { get; set; } = [];
+	public virtual ICollection<StoryStatusChange> StoryStatusChanges { get; set; } = [];
 
 	public override bool Equals(object? obj)
 	{

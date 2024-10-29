@@ -1,13 +1,14 @@
-import { Component, inject, OnDestroy, signal } from "@angular/core";
+import { Component, effect, inject, OnDestroy, signal, untracked, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { takeUntil } from "rxjs";
 import { HasSideNav } from "../../_component-base/has-sidenav.component";
-import { Project } from "../../_models/project.model";
+import { Project, ProjectTeam } from "../../_models/project.model";
 import { SidenavItem } from "../../_models/sidenav-item.model";
 import { Sprint } from "../../_models/sprint.model";
+import { Story } from "../../_models/story.model";
 import { AccountService } from "../../_services/account.service";
 import { ProjectService } from "../../_services/project.service";
-import { Story } from "../../_models/story.model";
+import { TeamSelectorComponent } from "./team-selector/team-selector.component";
 
 @Component({
   template: ''
@@ -16,18 +17,32 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
 
   projectId!: string;
   readonly project = signal<Project | null>(null);
+  readonly team = signal<ProjectTeam | undefined | null>(undefined);
 
   protected override _loadSidenavItemsOnInit = false;
+  protected readonly _teamSelector = viewChild(TeamSelectorComponent);
   protected readonly _route = inject(ActivatedRoute);
   protected readonly _projectService = inject(ProjectService);
+  protected readonly _authService = inject(AccountService);
 
-  private readonly _authService = inject(AccountService);
   private readonly _router = inject(Router);
 
   override ngOnInit(): void {
     this.projectId = this._route.snapshot.paramMap.get('id')!;
     this.loadProject();
     super.ngOnInit();
+  }
+
+  isTeamsEmpty() {
+    return this.project()?.teams.length == 0;
+  }
+
+  onTeamSelectionChanged(team: ProjectTeam) {
+    this.team.set(team);
+  }
+
+  teamSelectionVisible() {
+    return this.isUserProjectManager() || this.isUserTeamLeader();
   }
 
   loadProject() {
@@ -44,11 +59,18 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
     });
   }
 
+  private setTeam() {
+    const userId = this._authService.getCurrentUser()!.id;
+    const team = this.isUserProjectManager() ? this._teamSelector()?.value :
+      this.project()?.teams.find(t => t.memberIds.find(m => m === userId));
+    this.team.set(team);
+  }
+
   loadBacklog() {
     this._projectService.getBacklog(this.projectId)
       .pipe(takeUntil(this._destroy$))
       .subscribe(stories => {
-        this.onBacklogLoaded(stories.filter(story => !story.sprintId));
+        this.onBacklogLoaded(stories);
       });
   }
 
@@ -56,6 +78,7 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
 
   onProjectLoaded(project: Project) {
     this.project.set(project);
+    this.setTeam();
   }
 
   override getSidenavItems(): {[key: string]: SidenavItem} {
@@ -76,13 +99,13 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
         label: 'Product backlog',
         routerLink: prefix + 'product-backlog/' + this.projectId,
         icon: 'task',
-        enabled: this.isUserProjectOwner()
+        enabled: this.isUserProjectManager()
       },
       managesprints: {
         label: 'Manage sprint',
         routerLink: prefix + 'manage-sprints/' + this.projectId,
         icon: 'run_circle',
-        enabled: this.isUserProjectOwner()
+        enabled: this.isUserProjectManager() || this.isUserTeamLeader()
       },
       timeline: {
         label: 'Timeline',
@@ -97,7 +120,8 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
       settings: {
         label: 'Settings',
         routerLink: prefix + 'settings/' + this.projectId,
-        icon: 'settings'
+        icon: 'settings',
+        enabled: this.isUserProjectManager()
       }
     };
     return items;
@@ -107,24 +131,30 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
     return (this.project()?.sprints ?? []).length > 0;
   }
 
-  protected onSprintLoaded(sprint: Sprint): void {}
+  protected onSprintLoaded(sprint?: Sprint): void {}
 
   protected loadNthSprint(n: number) {
     if(!this.isProjectHasSprints())
       return;
 
-    this._projectService.getNthSprint(this.projectId, n)
+    this._projectService.getNthSprint(this.projectId, this.team()!.id, n)
       .pipe(takeUntil(this._destroy$))
       .subscribe(sprint => {
         this.onSprintLoaded(sprint);
       });
   }
 
-  private isUserProjectOwner() {
+  protected isUserProjectManager() {
     const authUser = this._authService.getCurrentAuthUser();
     if(!authUser || !this.project())
       return false;
-
     return this.project()!.projectManager.id === authUser.id;
+  }
+
+  protected isUserTeamLeader() {
+    const authUser = this._authService.getCurrentAuthUser();
+    if(!authUser || !this.project())
+      return false;
+    return !!this.project()!.teamLeaders.find(t => t.id === authUser.id);
   }
 }

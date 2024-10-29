@@ -1,5 +1,6 @@
 using API.Constants;
 using API.DTOs;
+using API.Enums;
 using API.Interfaces.Repository;
 using API.Interfaces.Service;
 using API.Models;
@@ -33,6 +34,7 @@ public class SprintService : ISprintService
 			if (story == null)
 				continue;
 				
+			story.StoryStatus = StoryStatus.Backlog;
 			story.Sprint = null;
 			sprint.SprintBacklog.Remove(story);
 		}

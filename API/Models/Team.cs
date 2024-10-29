@@ -10,6 +10,7 @@ public class Team
 	public Guid Id { get; set; }
 	public required string Name { get; set; }
 	public virtual ICollection<Project> Projects { get; set; } = [];
+	public virtual ICollection<Sprint> Sprints { get; set; } = [];
 	[ForeignKey(nameof(TeamLeaderId))]
 	public required virtual User TeamLeader { get; set; }
 	public Guid TeamLeaderId { get; set; }

@@ -7,13 +7,16 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { takeUntil } from 'rxjs';
-import { Project } from '../../../_models/project.model';
+import { Project, ProjectTeam } from '../../../_models/project.model';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
 import { ProjectBaseComponent } from '../project-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
+import { TeamSelectorComponent } from '../team-selector/team-selector.component';
+import { StoryStatus } from '../../../_enums/story-status.enum';
 
 @Component({
   selector: 'app-manage-sprints',
@@ -26,11 +29,13 @@ import { StoryTileComponent } from '../story-tile/story-tile.component';
     MatDividerModule,
     MatButtonModule,
     MatIconModule,
+    MatSelectModule,
     DatePipe,
     CdkDropList,
     CdkDropListGroup,
     CdkDrag,
-    StoryTileComponent
+    StoryTileComponent,
+    TeamSelectorComponent
   ],
   templateUrl: './manage-sprints.component.html',
   styleUrl: './manage-sprints.component.scss'
@@ -43,8 +48,8 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
 
   private readonly _formBuilder = inject(FormBuilder);
   readonly sprintCreateFormGroup = this._formBuilder.group({
-    startDate: ['', [Validators.required]],
-    endDate: ['', [Validators.required]]
+    startDate: ['', Validators.required],
+    endDate: ['', Validators.required],
   });
   readonly lastSprint = signal<Sprint | undefined>(undefined);
   readonly minStartDate = new Date();
@@ -58,14 +63,20 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
   private readonly _markedToAdd = signal<Story[]>([]);
   private readonly _markedToRemove = signal<Story[]>([]);
 
-  override onProjectLoaded(project: Project): void {
-    super.onProjectLoaded(project);
-    this.loadBacklog();
+  override onTeamSelectionChanged(team: ProjectTeam): void {
+    super.onTeamSelectionChanged(team);
     this.loadNthSprint(0);
   }
 
+  override onProjectLoaded(project: Project): void {
+    super.onProjectLoaded(project);
+    this.loadBacklog();
+    if(this.isUserTeamLeader())
+      this.loadNthSprint(0);
+  }
+
   override onBacklogLoaded(stories: Story[]): void {
-    this.productBacklog.set(stories);
+    this.productBacklog.set(stories.filter(story => !story.sprintId));
   }
 
   reload() {
@@ -125,13 +136,12 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
   createSprint() {
     this._projectService.addSprint(this.projectId, {
       start: new Date(this.sprintCreateFormGroup.controls.startDate.value!).toJSON(),
-      end: new Date(this.sprintCreateFormGroup.controls.endDate.value!).toJSON()
+      end: new Date(this.sprintCreateFormGroup.controls.endDate.value!).toJSON(),
+      teamId: this.team()!.id
     }).pipe(takeUntil(this._destroy$))
       .subscribe(response => {
-        this.sprintCreateFormGroup.controls.startDate.setValue('');
-        this.sprintCreateFormGroup.controls.endDate.setValue('');
-        this.sprintCreateFormGroup.markAsUntouched();
         this._toastr.success(response);
+        this.sprintCreateFormGroup.reset();
         this.loadProject();
         this.loadNthSprint(0);
       });
@@ -141,8 +151,8 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
     this._sprintService.closeSprint(this.lastSprint()!.id!)
       .pipe(takeUntil(this._destroy$))
       .subscribe(response => {
-        this._toastr.info(response);
         this.loadNthSprint(0);
+        this._toastr.info(response);
       });
   }
 
@@ -151,10 +161,9 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
       return true;
     return new Date(this.lastSprint()!.end) < new Date();
   }
-
-  protected override onSprintLoaded(sprint: Sprint): void {
+  protected override onSprintLoaded(sprint?: Sprint): void {
     this.lastSprint.set(sprint);
-    this.sprintBacklog.set(sprint.sprintBacklog ?? []);
+    this.sprintBacklog.set(sprint?.sprintBacklog ?? []);
   }
 
   private resetMarkedStories() {

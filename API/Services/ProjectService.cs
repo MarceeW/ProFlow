@@ -18,6 +18,7 @@ public class ProjectService : IProjectService
 	private readonly ISprintRepository _sprintRepository;
 	private readonly IStoryRepository _storyRepository;
 	private readonly INotificationService _notificationService;
+	private readonly ITeamRepository _teamRepository;
 	private readonly UserManager<User> _userManager;
 
 	public ProjectService(
@@ -25,13 +26,15 @@ public class ProjectService : IProjectService
 		INotificationService notificationService,
 		UserManager<User> userManager,
 		IStoryRepository storyRepository,
-		ISprintRepository sprintRepository)
+		ISprintRepository sprintRepository,
+		ITeamRepository teamRepository)
 	{
 		_projectRepository = projectRepository;
 		_notificationService = notificationService;
 		_userManager = userManager;
 		_storyRepository = storyRepository;
 		_sprintRepository = sprintRepository;
+		_teamRepository = teamRepository;
 	}
 	public async Task CreateProjectAsync(ProjectDTO projectDTO)
 	{
@@ -96,19 +99,20 @@ public class ProjectService : IProjectService
 		var project = await _projectRepository.ReadAsync(projectId) 
 			?? throw new KeyNotFoundException();
 			
-		if(project.ProjectManager != user)
+		if(project.ProjectManager != user && !project.TeamLeaders.Any(tl => tl == user))
 			throw new NotAllowedException();
 			
-		if(project.Sprints.Count > 0) 
-		{
-			var lastSprint = await _projectRepository.GetNthSprintAsync(projectId, 0);
-			lastSprint.CloseStories();
-		}
+		var lastSprint = await _projectRepository.GetNthSprintAsync(projectId, sprintDTO.TeamId, 0);
+		lastSprint?.CloseStories();
+		
+		var team = await _teamRepository.ReadAsync(sprintDTO.TeamId) 
+			?? throw new KeyNotFoundException();
 			
 		Sprint sprint = new() 
 		{
 			End = sprintDTO.End,
 			Project = project,
+			Team = team
 		};
 		
 		project.Sprints.Add(sprint);
