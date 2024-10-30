@@ -10,6 +10,7 @@ import { Story } from '../../../_models/story.model';
 import { StoryDialogComponent } from '../story-dialog/story-dialog.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { UserPictureDirective } from '../../../_directives/user-picture.directive';
 
 @Component({
   selector: 'app-project-updates-list',
@@ -18,7 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
     ScrumStatePipe,
     DatePipe,
     MatTooltip,
-    MatIconModule
+    MatIconModule,
+    UserPictureDirective
   ],
   templateUrl: './project-updates-list.component.html',
   styleUrl: './project-updates-list.component.scss'

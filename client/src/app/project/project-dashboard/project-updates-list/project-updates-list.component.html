@@ -1,9 +1,13 @@
 <div class="story-update-container">
+  @if(updates().length == 0) {
+    <div class="empty-msg">There are no updates yet.</div>
+  }
   @for (update of updates(); track $index) {
     <div class="story-update">
       <div class="timestamp">{{update.timestamp | date: 'short'}}</div>
       <div class="infos">
-        <span class="user info">
+        <span class="user">
+          <img [user-picture]="update.user.id">
           {{update.user.fullName}}
         </span>
         <span class="story info" matTooltip="Click to open"

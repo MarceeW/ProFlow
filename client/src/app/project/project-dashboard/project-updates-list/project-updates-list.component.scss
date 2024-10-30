@@ -6,6 +6,16 @@
   user-select: none;
   gap: 4px;
 
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  .empty-msg {
+    text-align: center;
+    font-weight: 500;
+    opacity: .5;
+  }
+
   .timestamp {
     font-size: 12px;
     opacity: .5;
