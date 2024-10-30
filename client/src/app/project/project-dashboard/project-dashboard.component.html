@@ -9,7 +9,9 @@
       legendTitle="Story states">
     </ngx-charts-pie-chart>
 }
-<div class="update-container">
-  <h4>Last updates</h4>
-  <app-project-updates-list [projectId]="project()!.id!"></app-project-updates-list>
-</div>
+@if(project()) {
+  <div class="update-container">
+    <h4>Last updates</h4>
+    <app-project-updates-list [projectId]="project()!.id!"></app-project-updates-list>
+  </div>
+}
