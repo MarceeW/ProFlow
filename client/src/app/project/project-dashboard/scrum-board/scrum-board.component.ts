@@ -21,6 +21,7 @@ import { ProjectBaseComponent } from '../project-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
 import { TeamSelectorComponent } from '../team-selector/team-selector.component';
 import { StoryStatus } from './../../../_enums/story-status.enum';
+import { ScrumStatePipe } from '../../../_pipes/scrum-state.pipe';
 
 @Component({
   selector: 'app-scrum-board',
@@ -37,7 +38,8 @@ import { StoryStatus } from './../../../_enums/story-status.enum';
     CdkDrag,
     DatePipe,
     StoryTileComponent,
-    TeamSelectorComponent
+    TeamSelectorComponent,
+    ScrumStatePipe
   ],
   templateUrl: './scrum-board.component.html',
   styleUrl: './scrum-board.component.scss',
@@ -51,8 +53,7 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
     return this.project()?.sprints?.filter(s => s.teamId == this.team()?.id) ?? [];
   });
   readonly currentSprintIdx = signal(0);
-  readonly states = ['Backlog', 'In progress', 'Code review', 'Done'];
-  readonly stories = signal<Story[][]>(new Array(this.states.length));
+  readonly stories = signal<Story[][]>(new Array(4));
   readonly stateDragIdPrefix = 'scrum-state-';
   readonly connectedStates = [
     [1], [0, 2], [1, 3], [1, 2]
@@ -74,7 +75,6 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
 
   constructor() {
     super();
-
     effect(() => {
       this.team();
       untracked(() => {
@@ -84,7 +84,7 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
         if(this.teamSprints().length > 0)
           this.loadNthSprint(0);
         else
-          this.stories.set(new Array(this.states.length));
+          this.stories.set(new Array(this.stories().length));
       });
     });
 
@@ -151,7 +151,7 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
       return;
 
     const stories = sprint.sprintBacklog;
-    for (let i = 0; i < this.states.length; i++) {
+    for (let i = 0; i < this.stories().length; i++) {
       this.stories.update(_stories => {
         _stories[i] = stories.filter(s => s.storyStatus == i);
         return _stories;

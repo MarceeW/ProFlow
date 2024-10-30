@@ -6,6 +6,7 @@ import { Sprint } from '../_models/sprint.model';
 import { Story } from '../_models/story.model';
 import { HttpParams } from '@angular/common/http';
 import { BacklogStat } from '../_models/reports/backlog-stat.model';
+import { StoryStatusChange } from '../_models/story-status-change.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,10 @@ export class ProjectService extends BaseService {
 
   getProject(projectId: string) {
     return this.http.get<Project>(this.apiUrl + 'project/' + projectId);
+  }
+
+  getProjectUpdates(projectId: string) {
+    return this.http.get<StoryStatusChange[]>(this.apiUrl + 'project/stats/updates/' + projectId);
   }
 
   getNthSprint(projectId: string, teamId: string, n: number) {

@@ -106,7 +106,8 @@ public class StoryService : IStoryService
 			{
 				Story = story,
 				PreviousStoryStatus = story.StoryStatus,
-				StoryStatus = storyDTO.StoryStatus
+				StoryStatus = storyDTO.StoryStatus,
+				User = loggedInUser
 			});
 			await _storyStatusChangeRepository.SaveAsync();
 		}

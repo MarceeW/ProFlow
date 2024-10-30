@@ -54,6 +54,8 @@ public class AutoMapperProfiles : Profile
 			.ForMember(dest => dest.StoryType,
 				opt => opt.MapFrom(src => Enum.GetName(src.StoryType)));
 				
+		CreateMap<StoryStatusChange, StoryStatusChangeDTO>();
+		
 		CreateMap<StoryCommit, StoryCommitDTO>()
 			.ForMember(dest => dest.StoryCommitType,
 				opt => opt.MapFrom(src => Enum.GetName(src.StoryCommitType)));

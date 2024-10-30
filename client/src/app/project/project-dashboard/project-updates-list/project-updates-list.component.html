@@ -1,0 +1,24 @@
+<div class="story-update-container">
+  @for (update of updates(); track $index) {
+    <div class="story-update">
+      <div class="timestamp">{{update.timestamp | date: 'short'}}</div>
+      <div class="infos">
+        <span class="user info">
+          {{update.user.fullName}}
+        </span>
+        <span class="story info" matTooltip="Click to open"
+          (click)="onStoryClicked(update.story)">
+          {{update.story.title}}
+        </span>
+        <mat-icon>update</mat-icon>
+        <span class="previous-state info">
+          {{update.previousStoryStatus | scrumState}}
+        </span>
+        <mat-icon>arrow_forward</mat-icon>
+        <span class="actual-state info">
+          {{update.storyStatus | scrumState}}
+        </span>
+      </div>
+    </div>
+  }
+</div>

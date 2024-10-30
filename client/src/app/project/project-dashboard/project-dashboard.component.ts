@@ -4,13 +4,15 @@ import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { takeUntil } from 'rxjs';
 import { BacklogStat } from '../../_models/reports/backlog-stat.model';
 import { ProjectBaseComponent } from './project-base.component';
+import { ProjectUpdatesListComponent } from './project-updates-list/project-updates-list.component';
 
 @Component({
   selector: 'app-project-dashboard',
   standalone: true,
   imports: [
     MatDividerModule,
-    NgxChartsModule
+    NgxChartsModule,
+    ProjectUpdatesListComponent
   ],
   templateUrl: './project-dashboard.component.html',
   styleUrl: './project-dashboard.component.scss'
@@ -30,7 +32,7 @@ export class ProjectDashboardComponent extends ProjectBaseComponent implements O
   readonly pbPieChartColors = {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
-  readonly pbPieChartLegendPos = LegendPosition.Below;
+  readonly pbPieChartLegendPos = LegendPosition.Right;
 
   protected override _title = 'Dashboard';
 

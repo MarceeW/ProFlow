@@ -16,6 +16,7 @@ public class User : IdentityUser<Guid>
 	public virtual ICollection<Notification> Notifications { get; set; } = [];
 	public virtual ICollection<StoryCommit> StoryCommits { get; set; } = [];
 	public virtual ICollection<Story> AssignedStories { get; set; } = [];
+	public virtual ICollection<StoryStatusChange> StoryStatusChanges { get; set; } = [];
 	public required string FirstName { get; set; }
 	public required string LastName { get; set; }
 	public required DateOnly DateOfBirth { get; set; }

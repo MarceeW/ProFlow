@@ -9,6 +9,9 @@ public class StoryStatusChange
 {
 	[Key]
 	public Guid Id { get; set; }
+	[ForeignKey(nameof(UserId))]
+	public required virtual User User { get; set; }
+	public Guid UserId { get; set; }
 	public DateTime Timestamp { get; set; } = DateTime.Now;
 	[ForeignKey(nameof(StoryId))]
 	public required virtual Story Story { get; set; }

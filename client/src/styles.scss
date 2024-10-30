@@ -180,6 +180,12 @@ h4 {
               rgba(0, 0, 0, 0.22) 0px 10px 10px !important;
 }
 
+.legend-title {
+  letter-spacing: 3px;
+  font-weight: 200 !important;
+  opacity: .5;
+}
+
 .proflow-logo {
   --font-size: 128px;
   display: inline-flex;

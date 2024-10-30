@@ -1,5 +1,6 @@
 ﻿using API.Data;
 using API.DTOs.Reports;
+using API.Exceptions;
 using API.Interfaces.Repository;
 using API.Models;
 
@@ -50,7 +51,28 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
 	public async Task<IEnumerable<Story>> GetBacklog(Guid projectId)
 	{
 		var project = await ReadAsync(projectId) ?? throw new KeyNotFoundException();
-		
 		return project.ProductBacklog.Where(s => s.StoryStatus != Enums.StoryStatus.Done);
+	}
+
+	public async Task<IEnumerable<StoryStatusChange>> GetLastUpdatesAsync(Guid projectId, User loggedInUser)
+	{
+		var project = await ReadAsync(projectId) ?? throw new KeyNotFoundException();
+		const int changesToReturn = 10;
+		
+		if(project.ProjectManager == loggedInUser) 
+			return project.ProductBacklog
+				.SelectMany(pb => pb.StoryStatusChanges)
+				.OrderByDescending(s => s.Timestamp)
+				.Take(changesToReturn);
+
+		if(!project.TeamLeaders.Any(t => t == loggedInUser))
+			throw new NotAllowedException();
+			
+		return project.Teams
+			.Where(t => t.TeamLeader == loggedInUser).First()
+			.Sprints.Where(s => s.IsActive).First()
+			.SprintBacklog.SelectMany(s => s.StoryStatusChanges)
+			.OrderByDescending(s => s.Timestamp)
+			.Take(changesToReturn);
 	}
 }

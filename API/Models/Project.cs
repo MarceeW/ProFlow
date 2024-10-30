@@ -27,4 +27,11 @@ public class Project
 	{
 		return Id.GetHashCode();
 	}
+	
+	public bool IsUserPartOf(User user) 
+	{
+		return Teams
+			.SelectMany(t => t.Members)
+			.Any(m => m == user);
+	}
 }

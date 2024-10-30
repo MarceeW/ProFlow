@@ -242,6 +242,23 @@ public class ProjectController(
 	
 	#region Reports
 	
+	[HttpGet("stats/updates/{id}")]
+	[Authorize(Policy = "ScrumManagement")]
+	public async Task<ActionResult<IEnumerable<StoryStatusChangeDTO>>> GetLastUpdates(Guid id) 
+	{
+		try
+		{
+			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+			var changes = await _projectRepository.GetLastUpdatesAsync(id, loggedInUser);
+			return Ok(changes
+				.AsQueryable().ProjectTo<StoryStatusChangeDTO>(_mapper.ConfigurationProvider));
+		}
+		catch (KeyNotFoundException e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
 	[HttpGet("stats/backlog/{id}")]
 	public async Task<ActionResult<IEnumerable<BacklogStatDTO>>> GetBacklogStats(Guid id) 
 	{

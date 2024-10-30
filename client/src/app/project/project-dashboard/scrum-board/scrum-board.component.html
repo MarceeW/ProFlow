@@ -38,9 +38,9 @@
       <mat-icon>arrow_forward</mat-icon>
     </button>
   </div>
-  @for (state of states; track $index) {
+  @for (state of stories(); track $index) {
     <div class="column">
-      <div class="column-header">{{state}}</div>
+      <div class="column-header">{{$index | scrumState}}</div>
       <div
         [id]="'scrum-state-' + $index"
         cdkDropList

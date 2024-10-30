@@ -167,6 +167,12 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<User, Rol
 			.HasForeignKey(ur => ur.UserId)
 			.IsRequired();
 			
+		builder.Entity<User>()
+			.HasMany(ur => ur.StoryStatusChanges)
+			.WithOne(u => u.User)
+			.HasForeignKey(ur => ur.UserId)
+			.IsRequired();
+			
 		#endregion User
 		
 		#region Notification
