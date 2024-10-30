@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnDestroy, signal, untracked, viewChild } from "@angular/core";
+import { Component, computed, effect, inject, OnDestroy, signal, untracked, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { takeUntil } from "rxjs";
 import { HasSideNav } from "../../_component-base/has-sidenav.component";
@@ -18,6 +18,10 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
   projectId!: string;
   readonly project = signal<Project | null>(null);
   readonly team = signal<ProjectTeam | undefined | null>(undefined);
+
+  readonly teamSprints = computed<Sprint[]>(() => {
+    return this.project()?.sprints?.filter(s => s.teamId == this.team()?.id) ?? [];
+  });
 
   protected override _loadSidenavItemsOnInit = false;
   protected readonly _teamSelector = viewChild(TeamSelectorComponent);

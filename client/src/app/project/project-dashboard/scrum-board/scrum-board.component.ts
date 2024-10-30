@@ -49,9 +49,7 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
   override itemKey: string = 'scrumboard';
 
   readonly sprint = signal<Sprint | null>(null);
-  readonly teamSprints = computed<Sprint[]>(() => {
-    return this.project()?.sprints?.filter(s => s.teamId == this.team()?.id) ?? [];
-  });
+
   readonly currentSprintIdx = signal(0);
   readonly stories = signal<Story[][]>(new Array(4));
   readonly stateDragIdPrefix = 'scrum-state-';

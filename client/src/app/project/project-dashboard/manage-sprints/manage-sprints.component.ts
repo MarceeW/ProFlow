@@ -1,7 +1,7 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, computed, effect, inject, signal, untracked, WritableSignal } from '@angular/core';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
@@ -17,6 +17,7 @@ import { ProjectBaseComponent } from '../project-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
 import { TeamSelectorComponent } from '../team-selector/team-selector.component';
 import { StoryStatus } from '../../../_enums/story-status.enum';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-manage-sprints',
@@ -29,6 +30,7 @@ import { StoryStatus } from '../../../_enums/story-status.enum';
     MatDividerModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
     MatSelectModule,
     DatePipe,
     CdkDropList,
@@ -50,7 +52,9 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
   readonly sprintCreateFormGroup = this._formBuilder.group({
     startDate: ['', Validators.required],
     endDate: ['', Validators.required],
+    capacity: [0, Validators.required]
   });
+  readonly capacityControl = new FormControl<number>(0);
   readonly lastSprint = signal<Sprint | undefined>(undefined);
   readonly minStartDate = new Date();
   readonly changeHappened = computed<boolean>(() => {
@@ -63,16 +67,23 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
   private readonly _markedToAdd = signal<Story[]>([]);
   private readonly _markedToRemove = signal<Story[]>([]);
 
-  override onTeamSelectionChanged(team: ProjectTeam): void {
-    super.onTeamSelectionChanged(team);
-    this.loadNthSprint(0);
+  constructor() {
+    super();
+
+    effect(() => {
+      this.team();
+      untracked(() => {
+        if(!this.team())
+          return;
+        if(this.teamSprints().length > 0)
+          this.loadNthSprint(0);
+      });
+    });
   }
 
   override onProjectLoaded(project: Project): void {
     super.onProjectLoaded(project);
     this.loadBacklog();
-    if(this.isUserTeamLeader())
-      this.loadNthSprint(0);
   }
 
   override onBacklogLoaded(stories: Story[]): void {
@@ -137,7 +148,8 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
     this._projectService.addSprint(this.projectId, {
       start: new Date(this.sprintCreateFormGroup.controls.startDate.value!).toJSON(),
       end: new Date(this.sprintCreateFormGroup.controls.endDate.value!).toJSON(),
-      teamId: this.team()!.id
+      teamId: this.team()!.id,
+      capacity: this.capacityControl.value!
     }).pipe(takeUntil(this._destroy$))
       .subscribe(response => {
         this._toastr.success(response);
