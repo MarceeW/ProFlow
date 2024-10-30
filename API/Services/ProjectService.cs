@@ -112,7 +112,8 @@ public class ProjectService : IProjectService
 		{
 			End = sprintDTO.End,
 			Project = project,
-			Team = team
+			Team = team,
+			Capacity = sprintDTO.Capacity
 		};
 		
 		project.Sprints.Add(sprint);

@@ -52,7 +52,7 @@
     <form class="function sprint-create-form" [formGroup]="sprintCreateFormGroup">
       <mat-form-field>
         <mat-label>Sprint duration</mat-label>
-        <mat-date-range-input [min]="minStartDate" [disabled]="!canCreateSprint() || isTeamsEmpty()"  [rangePicker]="picker">
+        <mat-date-range-input [min]="minStartDate"  [rangePicker]="picker">
           <input matStartDate formControlName="startDate" placeholder="Start date">
           <input matEndDate formControlName="endDate" placeholder="End date">
         </mat-date-range-input>
@@ -64,9 +64,13 @@
           <mat-error>Invalid date!</mat-error>
         }
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Sprint capacity</mat-label>
+        <input type="number" matInput formControlName="capacity" [min]="1" [value]="lastSprint()?.capacity">
+      </mat-form-field>
       <button mat-flat-button
         type="submit"
-        [disabled]="sprintCreateFormGroup.invalid"
+        [disabled]="sprintCreateFormGroup.invalid || sprintCreateFormGroup.disabled"
         (click)="createSprint()">Create sprint</button>
     </form>
   </div>

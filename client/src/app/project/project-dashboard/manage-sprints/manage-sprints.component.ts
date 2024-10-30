@@ -7,17 +7,16 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { takeUntil } from 'rxjs';
-import { Project, ProjectTeam } from '../../../_models/project.model';
+import { Project } from '../../../_models/project.model';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { SprintService } from '../../../_services/sprint.service';
 import { ProjectBaseComponent } from '../project-base.component';
 import { StoryTileComponent } from '../story-tile/story-tile.component';
 import { TeamSelectorComponent } from '../team-selector/team-selector.component';
-import { StoryStatus } from '../../../_enums/story-status.enum';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-manage-sprints',
@@ -47,15 +46,13 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
 
   readonly productBacklog = signal<Story[]>([]);
   readonly sprintBacklog = signal<Story[]>([]);
-
-  private readonly _formBuilder = inject(FormBuilder);
-  readonly sprintCreateFormGroup = this._formBuilder.group({
-    startDate: ['', Validators.required],
-    endDate: ['', Validators.required],
-    capacity: [0, Validators.required]
-  });
-  readonly capacityControl = new FormControl<number>(0);
   readonly lastSprint = signal<Sprint | undefined>(undefined);
+
+  readonly sprintCreateFormGroup = this._formBuilder.group({
+    startDate: new FormControl('', Validators.required),
+    endDate: new FormControl('', Validators.required),
+    capacity: new FormControl(1, Validators.required),
+  });
   readonly minStartDate = new Date();
   readonly changeHappened = computed<boolean>(() => {
     return this._markedToAdd().length > 0 || this._markedToRemove().length > 0;
@@ -67,7 +64,7 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
   private readonly _markedToAdd = signal<Story[]>([]);
   private readonly _markedToRemove = signal<Story[]>([]);
 
-  constructor() {
+  constructor(private readonly _formBuilder: FormBuilder) {
     super();
 
     effect(() => {
@@ -77,6 +74,24 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
           return;
         if(this.teamSprints().length > 0)
           this.loadNthSprint(0);
+      });
+    });
+
+    effect(() => {
+      this.project();
+      untracked(() => {
+        if(this.isTeamsEmpty())
+          this.sprintCreateFormGroup.disable();
+      });
+    });
+
+    effect(() => {
+      this.lastSprint();
+      untracked(() => {
+        if(!this.canCreateSprint())
+          this.sprintCreateFormGroup.disable();
+        else
+          this.sprintCreateFormGroup.enable();
       });
     });
   }
@@ -149,7 +164,7 @@ export class ManageSprintsComponent extends ProjectBaseComponent {
       start: new Date(this.sprintCreateFormGroup.controls.startDate.value!).toJSON(),
       end: new Date(this.sprintCreateFormGroup.controls.endDate.value!).toJSON(),
       teamId: this.team()!.id,
-      capacity: this.capacityControl.value!
+      capacity: this.sprintCreateFormGroup.controls.capacity.value!
     }).pipe(takeUntil(this._destroy$))
       .subscribe(response => {
         this._toastr.success(response);

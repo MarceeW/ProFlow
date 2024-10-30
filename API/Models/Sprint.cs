@@ -12,6 +12,7 @@ public class Sprint
 	public Guid Id { get; set; }
 	public DateTime Start { get; set; } = DateTime.Now;
 	public required DateTime End { get; set; }
+	public required int Capacity { get; set; }
 	[AllowNull]
 	[ForeignKey(nameof(ProjectId))]
 	public virtual required Project Project { get; set; }
