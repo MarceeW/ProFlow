@@ -65,12 +65,12 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
 				.OrderByDescending(s => s.Timestamp)
 				.Take(changesToReturn);
 
-		if(!project.TeamLeaders.Any(t => t == loggedInUser))
+		if(!project.IsUserPartOf(loggedInUser))
 			throw new NotAllowedException();
 			
 		return project.Teams
-			.Where(t => t.TeamLeader == loggedInUser).First()
-			.Sprints.Where(s => s.IsActive).First()
+			.Where(t => t.Members.Any(m => m == loggedInUser)).First()
+			.Sprints.Where(s => s.IsActive && s.Project == project).First()
 			.SprintBacklog.SelectMany(s => s.StoryStatusChanges)
 			.OrderByDescending(s => s.Timestamp)
 			.Take(changesToReturn);

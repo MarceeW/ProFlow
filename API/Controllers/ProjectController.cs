@@ -243,7 +243,6 @@ public class ProjectController(
 	#region Reports
 	
 	[HttpGet("stats/updates/{id}")]
-	[Authorize(Policy = "ScrumManagement")]
 	public async Task<ActionResult<IEnumerable<StoryStatusChangeDTO>>> GetLastUpdates(Guid id) 
 	{
 		try

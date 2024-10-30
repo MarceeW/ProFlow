@@ -9,9 +9,7 @@
       legendTitle="Story states">
     </ngx-charts-pie-chart>
 }
-@if(isUserProjectManager() || isUserTeamLeader()) {
-  <div class="update-container">
-    <h4>Last updates</h4>
-    <app-project-updates-list [projectId]="project()!.id!"></app-project-updates-list>
-  </div>
-}
+<div class="update-container">
+  <h4>Last updates</h4>
+  <app-project-updates-list [projectId]="project()!.id!"></app-project-updates-list>
+</div>
