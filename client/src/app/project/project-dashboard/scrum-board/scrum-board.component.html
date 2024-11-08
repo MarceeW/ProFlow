@@ -6,7 +6,7 @@
       [disabled]="backBtnDisabled()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <div>
+    <div class="sprint-selector">
       @if(teamSelectionVisible() && !isTeamsEmpty()) {
         <app-team-selector [project]="project()!"
           (selectionChange)="onTeamSelectionChanged($event)"></app-team-selector>

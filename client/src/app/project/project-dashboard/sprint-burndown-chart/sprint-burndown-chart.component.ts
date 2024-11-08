@@ -3,8 +3,7 @@ import { SprintService } from '../../../_services/sprint.service';
 import { BaseComponent } from '../../../_component-base/base.component';
 import { SprintBurndownData } from '../../../_models/reports/sprint-burndown-data.model';
 import { takeUntil } from 'rxjs';
-import { LineChartModule } from '@swimlane/ngx-charts';
-import { DatePipe } from '@angular/common';
+import { Color, LineChartModule, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-sprint-burndown-chart',
@@ -18,6 +17,12 @@ import { DatePipe } from '@angular/common';
 export class SprintBurndownChartComponent extends BaseComponent {
   readonly burndownDatas = signal<SprintBurndownData[]>([]);
   readonly sprintId = input.required<string>();
+  colorScheme: Color = {
+    domain: ['#0073ff', '#ff0055'],
+    group: ScaleType.Ordinal,
+    selectable: true,
+    name: 'Customer Usage',
+  };
   private readonly _sprintService = inject(SprintService);
 
   constructor() {

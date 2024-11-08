@@ -10,13 +10,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BaseComponent } from '../../_component-base/base.component';
+import { MemberSearchControlComponent } from '../../_controls/member-search-control/member-search-control.component';
 import { UserPictureDirective } from '../../_directives/user-picture.directive';
 import { Team } from '../../_models/team.model';
 import { User } from '../../_models/user.model';
 import { AccountService } from '../../_services/account.service';
 import { BASE_COMPONENT_DEFAULT_CONFIG, BASE_COMPONENT_DIALOG_CONFIG } from '../../injection-tokens.config';
-import { MemberSearchControlComponent } from '../../_controls/member-search-control/member-search-control.component';
-import { ComponentArgsService } from '../../_services/component-args.service';
 
 @Component({
   selector: 'app-team-create-dialog',
@@ -48,7 +47,7 @@ export class TeamCreateDialogComponent extends BaseComponent {
   readonly dialogRef = inject(MatDialogRef<TeamCreateDialogComponent>);
   readonly teamCreateForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    members: new FormControl<User[]>([], [Validators.required]),
+    members: new FormControl<User[]>([]),
     teamLeader: new FormControl<User | undefined>(undefined)
   });
 

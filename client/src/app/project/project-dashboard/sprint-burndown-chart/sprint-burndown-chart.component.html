@@ -1,11 +1,13 @@
 <ngx-charts-line-chart
-  [view]="[1000, 500]"
-  scheme="ocean"
+  [view]="[1000, 450]"
+  [scheme]="colorScheme"
   [showYAxisLabel]="true"
+  [showXAxisLabel]="true"
   [legend]="true"
   [xAxis]="true"
   [yAxis]="true"
-  yAxisLabel="Remaining effort (hours)"
+  yAxisLabel="Remaining story points"
+  xAxisLabel="Sprint day"
   [timeline]="true"
   [results]="burndownDatas()"
   >

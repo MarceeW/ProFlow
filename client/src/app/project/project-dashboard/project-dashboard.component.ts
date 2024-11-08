@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Sprint } from '../../_models/sprint.model';
 import { DatePipe } from '@angular/common';
 import { TeamSelectorComponent } from './team-selector/team-selector.component';
+import { Project } from '../../_models/project.model';
 
 @Component({
   selector: 'app-project-dashboard',
@@ -54,8 +55,9 @@ export class ProjectDashboardComponent extends ProjectBaseComponent implements O
     this._loadBacklogStats();
   }
 
-  selectSprint(event: MatSelectChange) {
-    console.log("sprint select changed");
+  override onProjectLoaded(project: Project): void {
+    super.onProjectLoaded(project);
+    this.sprintSelectControl.setValue(project.sprints![0])
   }
 
   compareSprint(s1: Sprint, s2?: Sprint) {
