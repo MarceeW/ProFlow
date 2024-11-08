@@ -112,7 +112,6 @@ public class SprintController : BaseApiController
 	#region Reports
 	
 	[HttpGet("reports/burndown/{sprintId}")]
-	[AllowAnonymous]
 	public async Task<ActionResult<IEnumerable<ChartDataDTO>>> GetSprintBurndown(Guid sprintId)
 	{
 		try

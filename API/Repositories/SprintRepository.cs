@@ -28,8 +28,8 @@ public class SprintRepository : AbstractRepository<Sprint, Guid>, ISprintReposit
 		
 		var team = (await _teamRepository.ReadAsync(sprint.TeamId))!;
 		
-		//if(!team.IsUserPartOf(loggedInUser))
-		//	throw new NotAllowedException();
+		if(!team.IsUserPartOf(loggedInUser))
+			throw new NotAllowedException();
 			
 		int sprintDuration = (sprint.End - sprint.Start).Days + 1;
 		
