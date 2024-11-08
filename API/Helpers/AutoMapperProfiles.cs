@@ -52,7 +52,9 @@ public class AutoMapperProfiles : Profile
 			.ForMember(dest => dest.StoryPriority,
 				opt => opt.MapFrom(src => Enum.GetName(src.StoryPriority)))
 			.ForMember(dest => dest.StoryType,
-				opt => opt.MapFrom(src => Enum.GetName(src.StoryType)));
+				opt => opt.MapFrom(src => Enum.GetName(src.StoryType)))
+			.ForMember(dest => dest.Tags,
+				opt => opt.MapFrom(src => src.TagList));
 				
 		CreateMap<StoryStatusChange, StoryStatusChangeDTO>();
 		

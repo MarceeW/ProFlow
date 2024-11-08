@@ -1,5 +1,4 @@
 import { StoryStatus } from "../_enums/story-status.enum";
-import { StoryCommit } from "./story-commit.model";
 import { User } from "./user.model";
 
 export interface Story {
@@ -11,6 +10,7 @@ export interface Story {
   description: string,
   assignedTo?: User,
   storyPriority: string,
+  tags: string[],
   storyType: string,
   storyPoints?: number,
   storyStatus: StoryStatus

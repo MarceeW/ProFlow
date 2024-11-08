@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using API.Enums;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Models;
 
@@ -26,8 +27,24 @@ public class Story
 	public Guid? SprintId { get; set; }
 	public int? StoryPoints { get; set; }
 	public required StoryStatus StoryStatus { get; set; } = StoryStatus.Backlog;
+	public string Tags { get; set; } = "";
 	public virtual ICollection<StoryCommit> StoryCommits { get; set; } = [];
 	public virtual ICollection<StoryStatusChange> StoryStatusChanges { get; set; } = [];
+	
+	[NotMapped]
+	public List<string> TagList
+	{
+		get 
+		{
+			if(Tags.IsNullOrEmpty())
+				return [];
+			return Tags.Split(',').ToList();
+		}
+		set 
+		{
+			Tags = string.Join(",", value);
+		}
+	}
 
 	public override bool Equals(object? obj)
 	{

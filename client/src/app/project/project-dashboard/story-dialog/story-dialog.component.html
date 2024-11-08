@@ -55,6 +55,14 @@
       }
     </section>
     <article>
+      @if(story().tags.length > 0) {
+        <h4>Tags</h4>
+        <div class="tag-container">
+          @for (tag of story().tags; track $index) {
+            <span class="tag">{{tag}}</span>
+          }
+        </div>
+      }
       <h4>Description</h4>
       <p class="description">{{story().description}}</p>
     </article>

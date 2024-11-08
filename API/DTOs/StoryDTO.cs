@@ -22,4 +22,5 @@ public class StoryDTO
 	public required string StoryType { get; set; }
 	public int? StoryPoints { get; set; }
 	public StoryStatus StoryStatus { get; set; }
+	public List<string> Tags { get; set; } = [];
 }

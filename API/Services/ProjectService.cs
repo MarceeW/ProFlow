@@ -89,6 +89,7 @@ public class ProjectService : IProjectService
 			Project = project,
 			StoryPoints = storyDTO.StoryPoints,
 			StoryStatus = storyDTO.StoryStatus,
+			TagList = storyDTO.Tags
 		};
 		project.ProductBacklog.Add(story);
 		await _projectRepository.SaveAsync();

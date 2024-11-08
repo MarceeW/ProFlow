@@ -42,6 +42,25 @@
       <mat-error>Story points is required</mat-error>
     </mat-form-field>
 
+    <mat-form-field>
+      <mat-label>Story tags</mat-label>
+      <mat-chip-grid #chipGrid formControlName="tags">
+        @for (tag of tags(); track $index) {
+          <mat-chip-row (removed)="removeTag(tag)">
+            {{tag}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        }
+      </mat-chip-grid>
+      <input
+        placeholder="New tag"
+        [matChipInputFor]="chipGrid"
+        (matChipInputTokenEnd)="add($event)"
+      />
+    </mat-form-field>
+
     <mat-dialog-actions>
       <button mat-button mat-dialog-close>Cancel</button>
       <button type="submit"
