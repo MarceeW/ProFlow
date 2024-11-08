@@ -15,4 +15,9 @@ public class Team
 	public required virtual User TeamLeader { get; set; }
 	public Guid TeamLeaderId { get; set; }
 	public virtual ICollection<User> Members { get; set; } = [];
+	
+	public bool IsUserPartOf(User user) 
+	{
+		return Members.Any(m => m == user);
+	}
 }

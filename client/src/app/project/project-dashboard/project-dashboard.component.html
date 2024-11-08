@@ -15,3 +15,31 @@
     <app-project-updates-list [projectId]="project()!.id!"></app-project-updates-list>
   </div>
 }
+<div class="sprint-burndown-container">
+  @if(teamSelectionVisible() && !isTeamsEmpty()) {
+    <app-team-selector [project]="project()!"
+      (selectionChange)="onTeamSelectionChanged($event)"></app-team-selector>
+  }
+  <mat-form-field>
+    @let label = teamSprints().length > 0 ? 'Select sprint' : 'There are no sprints yet';
+    <mat-label>{{label}}</mat-label>
+    <mat-select
+      [disabled]="teamSprints().length == 0"
+      [formControl]="sprintSelectControl"
+      (selectionChange)="selectSprint($event)"
+      [compareWith]="compareSprint">
+      @for(sprint of teamSprints(); track $index) {
+        @let startDate = sprint.start | date;
+        <mat-option [value]="sprint">
+          <span>{{startDate}} - {{sprint.end | date}} &nbsp;</span>
+          @if(sprint.isActive) {
+            <span>(Active)</span>
+          }
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  @if(sprintSelectControl.value) {
+    <app-sprint-burndown-chart [sprintId]="sprintSelectControl.value!.id!" />
+  }
+</div>

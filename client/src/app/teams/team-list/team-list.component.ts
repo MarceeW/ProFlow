@@ -50,7 +50,6 @@ export class TeamListComponent extends BaseComponent {
     this._teamService.getMyTeams()
       .pipe(takeUntil(this._destroy$))
       .subscribe(teams => {
-        console.log(teams);
         this.teams.set(teams);
       });
   }

@@ -1,10 +1,17 @@
 import { Component, computed, OnDestroy, signal } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 import { takeUntil } from 'rxjs';
 import { BacklogStat } from '../../_models/reports/backlog-stat.model';
 import { ProjectBaseComponent } from './project-base.component';
 import { ProjectUpdatesListComponent } from './project-updates-list/project-updates-list.component';
+import { SprintBurndownChartComponent } from './sprint-burndown-chart/sprint-burndown-chart.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Sprint } from '../../_models/sprint.model';
+import { DatePipe } from '@angular/common';
+import { TeamSelectorComponent } from './team-selector/team-selector.component';
 
 @Component({
   selector: 'app-project-dashboard',
@@ -12,7 +19,13 @@ import { ProjectUpdatesListComponent } from './project-updates-list/project-upda
   imports: [
     MatDividerModule,
     NgxChartsModule,
-    ProjectUpdatesListComponent
+    ProjectUpdatesListComponent,
+    SprintBurndownChartComponent,
+    MatSelectModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    TeamSelectorComponent,
+    DatePipe
   ],
   templateUrl: './project-dashboard.component.html',
   styleUrl: './project-dashboard.component.scss'
@@ -20,6 +33,7 @@ import { ProjectUpdatesListComponent } from './project-updates-list/project-upda
 export class ProjectDashboardComponent extends ProjectBaseComponent implements OnDestroy {
   override itemKey: string = 'dashboard';
 
+  readonly sprintSelectControl = new FormControl<Sprint | undefined>(undefined);
   readonly pbState = computed<{name: string, value: number}[]>(() => {
     const statuses = ['Backlog', 'In progress', 'Code review', 'Done'];
     return this._backlogStats().map(stat => {
@@ -29,9 +43,6 @@ export class ProjectDashboardComponent extends ProjectBaseComponent implements O
       };
     });
   });
-  readonly pbPieChartColors = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-  };
   readonly pbPieChartLegendPos = LegendPosition.Right;
 
   protected override _title = 'Dashboard';
@@ -41,6 +52,14 @@ export class ProjectDashboardComponent extends ProjectBaseComponent implements O
   override ngOnInit(): void {
     super.ngOnInit();
     this._loadBacklogStats();
+  }
+
+  selectSprint(event: MatSelectChange) {
+    console.log("sprint select changed");
+  }
+
+  compareSprint(s1: Sprint, s2?: Sprint) {
+    return s1.id === s2?.id;
   }
 
   private _loadBacklogStats() {

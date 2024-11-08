@@ -108,4 +108,27 @@ public class SprintController : BaseApiController
 			return BadRequest(e.Message);
 		}
 	}
+	
+	#region Reports
+	
+	[HttpGet("reports/burndown/{sprintId}")]
+	[AllowAnonymous]
+	public async Task<ActionResult<IEnumerable<ChartDataDTO>>> GetSprintBurndown(Guid sprintId)
+	{
+		try
+		{
+			var user = (await _userManager.GetLoggedInUserAsync(User))!;
+			return Ok(await _sprintRepository.GetBurndownChartDataAsync(sprintId, user));
+		}
+		catch (NotAllowedException) 
+		{
+			return Forbid();
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
+	#endregion
 }
