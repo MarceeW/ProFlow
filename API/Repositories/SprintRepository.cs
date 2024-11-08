@@ -31,7 +31,7 @@ public class SprintRepository : AbstractRepository<Sprint, Guid>, ISprintReposit
 		//if(!team.IsUserPartOf(loggedInUser))
 		//	throw new NotAllowedException();
 			
-		int sprintDuration = (sprint.End - sprint.Start).Days;
+		int sprintDuration = (sprint.End - sprint.Start).Days + 1;
 		
 		float sprintWeight = sprint.SprintBacklog.Sum(s => s.StoryPoints ?? 0);
 		
