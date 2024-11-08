@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using API.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace API.Models;
@@ -38,5 +39,24 @@ public class User : IdentityUser<Guid>
 	public override int GetHashCode()
 	{
 		return (Id, UserName).GetHashCode();
+	}
+	
+	public double? GetAverageStoryPointsPerHour() 
+	{
+		var stories = 
+			AssignedStories
+				.Where(s => 
+					s.ResolveStart != null 
+					&& s.Closed != null 
+					&& s.StoryStatus == StoryStatus.Done
+					&& (s.StoryPoints ?? 0) != 0
+					&& s.StoryCommits.Count > 0);
+					
+		if(stories.Count() == 0)
+			return null;
+			
+		var result = stories
+			.Average(s => (float)(s.StoryPoints ?? 0) / s.StoryCommits.Sum(sc => sc.Hours));
+		return Math.Round(result, 2);
 	}
 }

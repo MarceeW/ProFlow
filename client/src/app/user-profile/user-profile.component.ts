@@ -22,6 +22,7 @@ import { SkillService } from '../_services/skill.service';
 import { UserService } from '../_services/user.service';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import { UserStat } from '../_models/user-stat.model';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 @Component({
@@ -39,7 +40,8 @@ import { UserStat } from '../_models/user-stat.model';
     FormsModule,
     UserPictureDirective,
     MatSelectModule,
-    MatSliderModule
+    MatSliderModule,
+    NgxChartsModule
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss'

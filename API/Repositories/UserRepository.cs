@@ -50,7 +50,8 @@ public class UserRepository : IUserRepository
 			Teams = user.Teams.Count,
 			Projects = user.Teams.Sum(t => t.Projects.Count),
 			StoriesDone = user.AssignedStories
-				.Count(t => t.StoryStatus == StoryStatus.Done)
+				.Count(t => t.StoryStatus == StoryStatus.Done),
+			Performance = user.GetAverageStoryPointsPerHour()
 		};
 	}
 }

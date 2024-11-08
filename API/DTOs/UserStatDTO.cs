@@ -7,4 +7,5 @@ public class UserStatDTO
     public int Teams { get; set; }
     public int Projects { get; set; }
     public int StoriesDone { get; set; }
+    public double? Performance { get; set; }
 }

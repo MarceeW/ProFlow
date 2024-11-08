@@ -4,4 +4,5 @@ export interface UserStat {
   teams: number,
   projects: number,
   storiesDone: number,
+  performance?: number
 }

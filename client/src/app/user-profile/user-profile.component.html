@@ -34,11 +34,20 @@
     <section class="stat-section">
       <h4>Statistics</h4>
       <div class="stats">
-        <span class="gradient-pill">Owned projects: {{userStats()?.ownedProjects ?? 0}}</span>
-        <span class="gradient-pill">Led teams: {{userStats()?.ledTeams ?? 0}}</span>
-        <span class="gradient-pill">Teams: {{userStats()?.teams ?? 0}}</span>
-        <span class="gradient-pill">Projects: {{userStats()?.projects ?? 0}}</span>
-        <span class="gradient-pill">Stories done: {{userStats()?.storiesDone ?? 0}}</span>
+        <span>Owned projects: {{userStats()?.ownedProjects ?? 0}}</span>
+        <span>Led teams: {{userStats()?.ledTeams ?? 0}}</span>
+        <span>Teams: {{userStats()?.teams ?? 0}}</span>
+        <span>Projects: {{userStats()?.projects ?? 0}}</span>
+        <span>Stories done: {{userStats()?.storiesDone ?? 0}}</span>
+      </div>
+      <div class="performance">
+        <h4>Story points per hour</h4>
+        <ngx-charts-gauge
+          [view]="[400,300]"
+          scheme="ocean"
+          [max]="1"
+          [results]="[{name: 'Performance', value: userStats()?.performance ?? 0}]">
+        </ngx-charts-gauge>
       </div>
     </section>
   </section>
