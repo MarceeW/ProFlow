@@ -81,7 +81,9 @@ export class UserProfileComponent extends BaseComponent {
     this.loadSkills();
 
     this._router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(
+        takeUntil(this._destroy$),
+        filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         this.userId.set(this.getUserIdFromUrl());
         this.loadUser();
