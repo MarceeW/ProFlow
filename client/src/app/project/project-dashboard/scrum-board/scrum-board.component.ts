@@ -131,7 +131,7 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
   }
 
   selectSprint(event: MatSelectChange) {
-    const idx = this.project()?.sprints?.findIndex(s => s.id == event.value);
+    const idx = this.project()?.sprints?.findIndex(s => s.id == event.value.id);
     if(idx == undefined)
       return;
     this._sprintIdx.set(idx);
