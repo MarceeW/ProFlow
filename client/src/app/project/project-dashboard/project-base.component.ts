@@ -31,6 +31,16 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
 
   private readonly _router = inject(Router);
 
+  constructor() {
+    super();
+    effect(() => {
+      this.team();
+      untracked(() => {
+        this.loadNthSprint(0);
+      });
+    });
+  }
+
   override ngOnInit(): void {
     this.projectId = this._route.snapshot.paramMap.get('id')!;
     this.loadProject();
@@ -46,7 +56,10 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
   }
 
   teamSelectionVisible() {
-    return this.isUserProjectManager() || this.isUserTeamLeader();
+    const authUser = this._authService.getCurrentAuthUser()!;
+    const teams = this.project()?.teams
+      .filter(t => this.isUserProjectManager() || t.memberIds.includes(authUser.id));
+    return (teams?.length ?? 0) > 1;
   }
 
   loadProject() {
@@ -106,7 +119,7 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
         enabled: this.isUserProjectManager()
       },
       managesprints: {
-        label: 'Manage sprint',
+        label: 'Sprint management',
         routerLink: prefix + 'manage-sprints/' + this.projectId,
         icon: 'run_circle',
         enabled: this.isUserProjectManager() || this.isUserTeamLeader()
@@ -160,5 +173,12 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
     if(!authUser || !this.project())
       return false;
     return !!this.project()!.teamLeaders.find(t => t.id === authUser.id);
+  }
+
+  protected isUserTeamMember() {
+    const authUser = this._authService.getCurrentAuthUser();
+    if(!authUser || !this.project())
+      return false;
+    return !!this.project()!.teams.find(t => t.memberIds.includes(authUser.id));
   }
 }

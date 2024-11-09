@@ -24,9 +24,9 @@ export class TeamSelectorComponent implements OnInit {
   readonly selectionChange = output<ProjectTeam>();
   readonly selectControl = new FormControl<ProjectTeam | undefined>(undefined);
   readonly teams = computed<ProjectTeam[]>(() => {
-    const userId = this._accountService.getCurrentUser()?.id;
+    const userId = this._accountService.getCurrentUser()!.id;
     const isProjectManager = this.project().projectManager.id == userId;
-    return this.project().teams.filter(t => isProjectManager || t.teamLeaderId == userId);
+    return this.project().teams.filter(t => isProjectManager || t.memberIds.includes(userId));
   });
 
   private readonly _accountService = inject(AccountService);
