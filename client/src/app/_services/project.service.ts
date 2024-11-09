@@ -76,6 +76,10 @@ export class ProjectService extends BaseService {
     return this.http.delete(this.apiUrl + 'project/' + projectId);
   }
 
+  updateProject(project: Project) {
+    return this.http.patch(this.apiUrl + 'project/update', project, {responseType: 'text'});
+  }
+
   removeStory(storyId: string) {
     return this.http.delete(this.apiUrl + 'project/remove-story/' + storyId);
   }

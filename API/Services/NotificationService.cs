@@ -20,19 +20,6 @@ public class NotificationService : INotificationService
 		_notificationRepository = notificationRepository;
 		_notificationHub = notificationHub;
 	}
-	public async Task CreateNotificationsForProject(Project project)
-	{
-		foreach(var teamLeader in project.TeamLeaders) 
-		{
-			await _notificationRepository
-				.CreateAsync(GetTeamLeaderNotification(project.Name, teamLeader));
-				
-			await _notificationHub.Clients.User(teamLeader.UserName!)
-				.ReceiveNotification();
-		}
-			
-		await _notificationRepository.SaveAsync();
-	}
 	
 	public async Task CreateNotificationAsync(Notification notification) 
 	{
@@ -40,14 +27,6 @@ public class NotificationService : INotificationService
 		await _notificationRepository.SaveAsync();
 		await _notificationHub.Clients.User(notification.TargetUser.UserName!).ReceiveNotification();
 	}
-	
-	private Notification GetTeamLeaderNotification(string projectName, User targetUser) => new()
-	{
-		Type = "flag",
-		Title = $"Teamleader invitation!",
-		Content = $"You have been invited as a teamleader in {projectName} project!",
-		TargetUser = targetUser,
-	};
 
 	public async Task CreateNotificationsAsync(IEnumerable<Notification> notifications)
 	{

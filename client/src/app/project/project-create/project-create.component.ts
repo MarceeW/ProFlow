@@ -43,8 +43,6 @@ export class ProjectCreateComponent extends BaseComponent {
     projectName: new FormControl('', [Validators.required]),
     teamLeaders: new FormControl<User[]>([], [Validators.required]),
   });
-  @ViewChild('teamLeaderInput') teamLeaderInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('teamLeaderChipGrid') teamLeaderChipGrid!: MatChipGrid;
 
   readonly RoleType = RoleType;
 

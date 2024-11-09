@@ -1,4 +1,5 @@
-﻿using API.Constants;
+﻿using System.Collections.Immutable;
+using API.Constants;
 using API.DTO;
 using API.DTOs;
 using API.Enums;
@@ -8,6 +9,7 @@ using API.Interfaces.Repository;
 using API.Interfaces.Service;
 using API.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
@@ -17,6 +19,7 @@ public class ProjectService : IProjectService
 	private readonly IProjectRepositoy _projectRepository;
 	private readonly ISprintRepository _sprintRepository;
 	private readonly IStoryRepository _storyRepository;
+	private readonly ISprintService _sprintService;
 	private readonly INotificationService _notificationService;
 	private readonly ITeamRepository _teamRepository;
 	private readonly UserManager<User> _userManager;
@@ -27,7 +30,8 @@ public class ProjectService : IProjectService
 		UserManager<User> userManager,
 		IStoryRepository storyRepository,
 		ISprintRepository sprintRepository,
-		ITeamRepository teamRepository)
+		ITeamRepository teamRepository,
+		ISprintService sprintService)
 	{
 		_projectRepository = projectRepository;
 		_notificationService = notificationService;
@@ -35,6 +39,7 @@ public class ProjectService : IProjectService
 		_storyRepository = storyRepository;
 		_sprintRepository = sprintRepository;
 		_teamRepository = teamRepository;
+		_sprintService = sprintService;
 	}
 	public async Task CreateProjectAsync(ProjectDTO projectDTO)
 	{
@@ -51,8 +56,103 @@ public class ProjectService : IProjectService
 		await _projectRepository.CreateAsync(project);
 		await _projectRepository.SaveAsync();
 		
-		await _notificationService.CreateNotificationsForProject(project);
+		foreach(var teamLeader in project.TeamLeaders) 
+		{
+			await _notificationService
+				.CreateNotificationAsync(GetTeamLeaderInviteNotification(project.Name, teamLeader));
+		}
 	}
+	
+	public async Task UpdateProjectAsync(ProjectDTO projectDTO)
+	{
+		var project = await _projectRepository.ReadAsync(projectDTO.Id)
+			?? throw new KeyNotFoundException();
+			
+		if(project.Name != projectDTO.Name && await IsProjectNameExistsAsync(projectDTO.Name))
+			throw new NameAlreadyExistsException(projectDTO.Name);
+		else if(project.Name != projectDTO.Name) 
+		{
+			foreach(var member in project.Members) 
+			{
+				await _notificationService
+					.CreateNotificationAsync(GetProjectRenameNotification(project.Name, projectDTO.Name, member));
+			}
+		}
+		
+		project.Name = projectDTO.Name;
+		
+		var teamLeadersToRemove = project.TeamLeaders
+			.Where(tl => !projectDTO.TeamLeaders.Any(tl2 => tl.Id == tl2.Id));
+			
+		var teamLeaderDTOsToAdd = projectDTO.TeamLeaders
+			.Where(tl => !project.TeamLeaders.Any(tl2 => tl.Id == tl2.Id));
+
+		foreach(var teamLeader in teamLeadersToRemove.ToImmutableList()) 
+		{
+			var teams = teamLeader
+				.LedTeams.Where(t => t.Projects.Any(p => p == project));
+				
+			foreach(var team in teams) 
+			{
+				var sprints = team.Sprints.Where(s => s.Project == project);
+				foreach(var sprint in sprints) 
+					await _sprintService.Close(sprint.Id);
+				
+				team.Projects.Remove(project);
+			}
+			var notifications = teams
+				.SelectMany(t => t.Members)
+				.Append(teamLeader)
+				.Distinct()
+				.Select(m => GetRemovedFromProjectNotification(project.Name, m));
+				
+			await _notificationService.CreateNotificationsAsync(notifications);
+			project.TeamLeaders.Remove(teamLeader);
+		}
+		
+		foreach(var teamLeaderDTO in teamLeaderDTOsToAdd) 
+		{
+			var teamLeader = await _userManager.FindByNameAsync(teamLeaderDTO.UserName);
+			if(teamLeader == null)
+				continue;
+				
+			project.TeamLeaders.Add(teamLeader);
+			await _notificationService
+				.CreateNotificationAsync(GetTeamLeaderInviteNotification(project.Name, teamLeader));
+		}
+
+		_projectRepository.Update(project);
+		await _projectRepository.SaveAsync();
+	}
+	
+	private Notification GetRemovedFromProjectNotification(
+		string projectName, 
+		User targetUser) => new()
+	{
+		Type = "event_busy",
+		Title = $"Removed from project!",
+		Content = $"You are no longer part of {projectName} project!",
+		TargetUser = targetUser,
+	};
+	
+	private Notification GetProjectRenameNotification(
+		string projectOldName, 
+		string projectNewName, 
+		User targetUser) => new()
+	{
+		Type = "signature",
+		Title = $"Project rename!",
+		Content = $"{projectOldName} project has been renamed to {projectNewName}!",
+		TargetUser = targetUser,
+	};
+	
+	private Notification GetTeamLeaderInviteNotification(string projectName, User targetUser) => new()
+	{
+		Type = "flag",
+		Title = $"Teamleader invitation!",
+		Content = $"You have been invited as a teamleader in {projectName} project!",
+		TargetUser = targetUser,
+	};
 	
 	private async Task<bool> IsProjectNameExistsAsync(string name) 
 	{

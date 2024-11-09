@@ -33,17 +33,6 @@ public class Sprint
 		foreach(var story in SprintBacklog.Where(s => s.Closed != null)) 
 			story.Closed = DateTime.Now;
 	}
-	
-	[NotMapped]
-	public IEnumerable<User> Members => 
-		Project.Teams
-			.SelectMany(t => t.Members)
-			.Append(Project.ProjectManager);
-			
-	public bool IsUserPartOf(User user) 
-	{
-		return Members.Contains(user);
-	}
 
 	public override bool Equals(object? obj)
 	{

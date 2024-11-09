@@ -1,1 +1,15 @@
-<p>project-settings works!</p>
+<h4>Update project</h4>
+<form [formGroup]="projectUpdateForm">
+  <mat-form-field>
+    <mat-label>Project name</mat-label>
+    <input matInput type="text" formControlName="projectName"/>
+    <mat-error>Project name is <strong>required</strong></mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Teamleaders</mat-label>
+    <app-member-search-control formControlName="teamLeaders" [allowedRoles]="[RoleType.TeamLeader]" />
+    <mat-error>At least one team leader is <strong>required</strong> to add!</mat-error>
+  </mat-form-field>
+  <button [disabled]="!projectUpdateForm.dirty"
+    mat-flat-button type="submit" (click)="updateProject()">Save changes</button>
+</form>

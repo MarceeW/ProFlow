@@ -16,6 +16,13 @@ public class Project
 	public virtual ICollection<Team> Teams { get; set; } = [];
 	public virtual ICollection<Story> ProductBacklog { get; set; } = [];
 	public virtual ICollection<Sprint> Sprints { get; set; } = [];
+	[NotMapped]
+	public IEnumerable<User> Members => 
+		Teams
+			.SelectMany(t => t.Members)
+			.Append(ProjectManager)
+			.DistinctBy(m => m.Id);
+			
 	public override bool Equals(object? obj)
 	{
 		if(obj is Project p)

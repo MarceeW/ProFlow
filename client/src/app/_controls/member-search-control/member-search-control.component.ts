@@ -53,8 +53,8 @@ export class MemberSearchControlComponent extends ControlBase<User[]> {
       .filter(user =>
         user.fullName.toLowerCase()
           .includes(this._currentUsersName().toLowerCase()) &&
-        !this._addedUsers().includes(user) &&
-        !this.notAllowedMembers().filter(n => n.userName == user.userName).length);
+        !this._addedUsers().find(u => u.id == user.id) &&
+        !this.notAllowedMembers().find(u => u.id == user.id));
   });
 
   override get errorState(): boolean {

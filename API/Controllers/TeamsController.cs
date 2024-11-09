@@ -1,5 +1,5 @@
-using API.Constants;
 using API.DTO;
+using API.DTOs;
 using API.Exceptions;
 using API.Extensions;
 using API.Interfaces.Repository;
@@ -8,7 +8,6 @@ using API.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -173,5 +172,29 @@ namespace API.Controllers
 				return BadRequest(e.Message);
 			}
 		}
+		
+		#region Reports
+		
+		[HttpGet("velocity-chart/{teamId}")]
+		[Authorize(Policy = "TeamManagement")]
+		[AllowAnonymous]
+		public async Task<ActionResult<IEnumerable<ChartDataDTO>>> GetVelocityChart(Guid teamId) 
+		{
+			var loggedInUser = (await _userManager.GetLoggedInUserAsync(User))!;
+			try
+			{
+				return Ok(await _teamRepository.GetVelocityChartDataAsync(teamId, loggedInUser));
+			} 
+			catch (NotAllowedException)
+			{
+				return Forbid();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+		}
+		
+		#endregion
 	}
 }

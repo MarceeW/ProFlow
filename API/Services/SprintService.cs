@@ -46,7 +46,7 @@ public class SprintService : ISprintService
 
 	public bool UserHasAccessToSprint(Sprint sprint, User user)
 	{
-		var members = sprint.Members;
+		var members = sprint.Team.Members;
 		return members.Any(m => m == user) || user.UserRoles!
 			.Any(r => r.Role.Name!.ToLower() == RoleConstant.Administrator.ToLower());
 	}

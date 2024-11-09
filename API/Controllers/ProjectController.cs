@@ -43,6 +43,25 @@ public class ProjectController(
 		}
 	}
 	
+	[HttpPatch("update")]
+	[Authorize(Policy = "ProjectManagement")]
+	public async Task<ActionResult> UpdateProject(ProjectDTO projectDTO)
+	{
+		try
+		{
+			await _projectService.UpdateProjectAsync(projectDTO);
+			return Ok("Project updated");
+		}
+		catch (NotAllowedException)
+		{
+			return Forbid();
+		}
+		catch (Exception e)
+		{
+			return BadRequest(e.Message);
+		}
+	}
+	
 	[HttpGet]
 	[Authorize(Roles = RoleConstant.Administrator)]
 	public async Task<IEnumerable<ProjectDTO>> GetProjects() 
@@ -55,7 +74,7 @@ public class ProjectController(
 	
 	[HttpDelete("{id}")]
 	[Authorize(Policy = "ProjectManagement")]
-	public async Task<ActionResult> DeleteProjectAsync(Guid id) 
+	public async Task<ActionResult> DeleteProject(Guid id) 
 	{
 		try
 		{
