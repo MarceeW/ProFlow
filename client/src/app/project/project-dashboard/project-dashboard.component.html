@@ -1,22 +1,5 @@
-<div class="story-state-infos">
-  @if(pbState().length > 0) {
-      <ngx-charts-pie-chart
-        [view]="[600, 300]"
-        scheme="ocean"
-        [results]="pbState()"
-        [legend]="true"
-        [legendPosition]="pbPieChartLegendPos"
-        legendTitle="States">
-      </ngx-charts-pie-chart>
-  }
-  @if(project()) {
-    <div class="update-container">
-      <h4>Last updates</h4>
-      <app-project-updates-list [projectId]="project()!.id!"></app-project-updates-list>
-    </div>
-  }
-</div>
 <div class="sprint-burndown-container">
+  <h4>Sprint burndown</h4>
   <div class="sprint-selector">
     @if(teamSelectionVisible() && !isTeamsEmpty()) {
       <app-team-selector [project]="project()!"
@@ -43,5 +26,23 @@
   </div>
   @if(sprintSelectControl.value) {
     <app-sprint-burndown-chart [sprintId]="sprintSelectControl.value!.id!" />
+  }
+</div>
+<div class="story-state-infos">
+  @if(pbState().length > 0) {
+      <ngx-charts-pie-chart
+        [view]="[600, 300]"
+        scheme="ocean"
+        [results]="pbState()"
+        [legend]="true"
+        [legendPosition]="pbPieChartLegendPos"
+        legendTitle="States">
+      </ngx-charts-pie-chart>
+  }
+  @if(project()) {
+    <div class="update-container">
+      <h4>Last updates</h4>
+      <app-project-updates-list [projectId]="project()!.id!"></app-project-updates-list>
+    </div>
   }
 </div>
