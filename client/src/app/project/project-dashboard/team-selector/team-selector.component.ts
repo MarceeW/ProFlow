@@ -6,6 +6,7 @@ import { Project, ProjectTeam } from '../../../_models/project.model';
 import { computeMsgId } from '@angular/compiler';
 import { Team } from '../../../_models/team.model';
 import { AccountService } from '../../../_services/account.service';
+import { RoleType } from '../../../_enums/role-type.enum';
 
 @Component({
   selector: 'app-team-selector',
@@ -23,10 +24,16 @@ export class TeamSelectorComponent implements OnInit {
   readonly project = input.required<Project>();
   readonly selectionChange = output<ProjectTeam>();
   readonly selectControl = new FormControl<ProjectTeam | undefined>(undefined);
+  readonly showOnlyLedTeams = input<boolean>(false);
+
   readonly teams = computed<ProjectTeam[]>(() => {
     const userId = this._accountService.getCurrentUser()!.id;
     const isProjectManager = this.project().projectManager.id == userId;
-    return this.project().teams.filter(t => isProjectManager || t.memberIds.includes(userId));
+    return this.project().teams.filter(t =>
+      this._accountService.isCurrentUserInRole(RoleType.Administrator) ||
+      isProjectManager ||
+      t.teamLeaderId == userId ||
+      !this.showOnlyLedTeams() && t.memberIds.includes(userId));
   });
 
   private readonly _accountService = inject(AccountService);

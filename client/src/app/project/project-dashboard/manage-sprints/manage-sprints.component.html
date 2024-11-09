@@ -42,7 +42,10 @@
   </div>
   <button mat-flat-button (click)="saveBacklogChanges()" [disabled]="!changeHappened()">Save changes</button>
   @if(teamSelectionVisible() && !isTeamsEmpty()) {
-    <app-team-selector [project]="project()!" (selectionChange)="onTeamSelectionChanged($event)"></app-team-selector>
+    <app-team-selector
+      [showOnlyLedTeams]="true"
+      [project]="project()!"
+      (selectionChange)="onTeamSelectionChanged($event)"></app-team-selector>
   }
 </div>
 <div class="functions-container">
