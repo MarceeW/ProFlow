@@ -42,7 +42,7 @@ public class TeamService(
 			var notification = new Notification
 			{
 				Type = "info",
-				Title = "Team creation",
+				Title = "Team invitation",
 				Content = $"You are now part of '{team.Name} team'!",
 				TargetUser = m
 			};
