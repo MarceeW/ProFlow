@@ -39,6 +39,11 @@ public class Sprint
 		Project.Teams
 			.SelectMany(t => t.Members)
 			.Append(Project.ProjectManager);
+			
+	public bool IsUserPartOf(User user) 
+	{
+		return Members.Contains(user);
+	}
 
 	public override bool Equals(object? obj)
 	{

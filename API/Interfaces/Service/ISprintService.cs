@@ -5,9 +5,9 @@ namespace API.Interfaces.Service;
 
 public interface ISprintService
 {
-	Task AddStoriesToBacklog(Guid sprintId, IEnumerable<StoryDTO> stories);
+	Task UpdateBacklog(Guid sprintId, IEnumerable<SprintBacklogUpdateItemDTO> sprintBacklogUpdateItemDTOs);
+	Task Update(SprintDTO sprintDTO);
 	Task Close(Guid sprintId);
-	Task RemoveStoriesFromBacklog(Guid sprintId, IEnumerable<StoryDTO> stories);
 	Task<bool> UserHasAccessToSprintAsync(Guid sprintId, User user);
 	bool UserHasAccessToSprint(Sprint sprint, User user);
 }

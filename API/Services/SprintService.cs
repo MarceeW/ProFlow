@@ -1,6 +1,7 @@
 using API.Constants;
 using API.DTOs;
 using API.Enums;
+using API.Exceptions;
 using API.Interfaces.Repository;
 using API.Interfaces.Service;
 using API.Models;
@@ -21,41 +22,6 @@ public class SprintService : ISprintService
 		_projectRepository = projectRepositoy;
 		_storyRepository = storyRepository;
 		_sprintRepository = sprintRepository;
-	}
-	
-	public async Task RemoveStoriesFromBacklog(Guid sprintId, IEnumerable<StoryDTO> stories) 
-	{
-		var sprint = await _sprintRepository.ReadAsync(sprintId) 
-			?? throw new KeyNotFoundException();
-			
-		foreach(var storyDTO in stories) 
-		{
-			var story = await _storyRepository.ReadAsync(storyDTO.Id);
-			if (story == null)
-				continue;
-				
-			story.StoryStatus = StoryStatus.Backlog;
-			story.Sprint = null;
-			sprint.SprintBacklog.Remove(story);
-		}
-		await _sprintRepository.SaveAsync();
-	}
-	
-	public async Task AddStoriesToBacklog(Guid sprintId, IEnumerable<StoryDTO> stories)
-	{
-		var sprint = await _sprintRepository.ReadAsync(sprintId) 
-			?? throw new KeyNotFoundException();
-		
-		foreach(var storyDTO in stories) 
-		{
-			var story = await _storyRepository.ReadAsync(storyDTO.Id);
-			if (story == null)
-				continue;
-				
-			story.Sprint = sprint;
-			sprint.SprintBacklog.Add(story);
-		}
-		await _sprintRepository.SaveAsync();
 	}
 
 	public async Task Close(Guid sprintId)
@@ -83,5 +49,44 @@ public class SprintService : ISprintService
 		var members = sprint.Members;
 		return members.Any(m => m == user) || user.UserRoles!
 			.Any(r => r.Role.Name!.ToLower() == RoleConstant.Administrator.ToLower());
+	}
+
+	public async Task Update(SprintDTO sprintDTO)
+	{	
+		var sprint = await _sprintRepository.ReadAsync(sprintDTO.Id)
+			?? throw new KeyNotFoundException();
+		
+		sprint.Start = sprintDTO.Start;
+		sprint.End = sprintDTO.End;
+		sprint.Capacity = sprintDTO.Capacity;
+		
+		_sprintRepository.Update(sprint);
+		await _projectRepository.SaveAsync();
+	}
+
+	public async Task UpdateBacklog(Guid sprintId, 
+		IEnumerable<SprintBacklogUpdateItemDTO> sprintBacklogUpdateItemDTOs)
+	{
+		var sprint = await _sprintRepository.ReadAsync(sprintId) 
+			?? throw new KeyNotFoundException();
+			
+		foreach(var item in sprintBacklogUpdateItemDTOs) 
+		{
+			var story = await _storyRepository.ReadAsync(item.Id);
+			if (story == null)
+				continue;
+				
+			if(item.Remove) 
+			{
+				story.StoryStatus = StoryStatus.Backlog;
+				story.Sprint = null;
+				sprint.SprintBacklog.Remove(story);
+			} else 
+			{
+				story.Sprint = sprint;
+				sprint.SprintBacklog.Add(story);
+			}
+		}
+		await _sprintRepository.SaveAsync();
 	}
 }

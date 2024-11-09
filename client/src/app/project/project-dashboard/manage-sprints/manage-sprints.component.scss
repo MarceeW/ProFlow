@@ -52,3 +52,18 @@
 .function-title {
   margin-bottom: 8px;
 }
+
+.story-list {
+  &.error {
+    border-color: #ff0040;
+
+    &::before {
+      content: "CAPACITY IS FULL";
+      margin: 4px;
+      border-radius: 8px;
+      background-color: #ff0040;
+      color: white;
+      text-align: center;
+    }
+  }
+}

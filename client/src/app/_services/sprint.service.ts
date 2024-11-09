@@ -3,6 +3,7 @@ import { BaseService } from './base.service';
 import { Sprint } from '../_models/sprint.model';
 import { Story } from '../_models/story.model';
 import { SprintBurndownData as SprintBurndownData } from '../_models/reports/sprint-burndown-data.model';
+import { SprintBacklogUpdateItem } from '../_models/sprint-backlog-update-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,12 @@ export class SprintService extends BaseService {
     return this.http.get<Sprint>(this.apiUrl + 'sprint/' + sprintId);
   }
 
-  addStories(sprintId: string, stories: Story[]) {
-    return this.http.patch(this.apiUrl + 'sprint/add-stories/' + sprintId, stories, {responseType: 'text'});
+  updateSprint(sprint: Sprint) {
+    return this.http.patch(this.apiUrl + 'sprint/update', sprint, {responseType: 'text'});
   }
 
-  removeStories(sprintId: string, stories: Story[]) {
-    return this.http.patch(this.apiUrl + 'sprint/remove-stories/' + sprintId, stories, {responseType: 'text'});
+  updateBacklog(sprintId: string, updateItems: SprintBacklogUpdateItem[]) {
+    return this.http.patch(this.apiUrl + 'sprint/update-backlog/' + sprintId, updateItems, {responseType: 'text'});
   }
 
   closeSprint(sprintId: string) {

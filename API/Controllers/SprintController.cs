@@ -54,18 +54,16 @@ public class SprintController : BaseApiController
 		}
 	}
 	
-	[HttpPatch("add-stories/{sprintId}")]
+	[HttpPatch("update-backlog/{sprintId}")]
 	[Authorize(Policy = "ScrumManagement")]
 	public async Task<ActionResult> AddStoriesToBacklog(
 		Guid sprintId, 
-		IEnumerable<StoryDTO> stories) 
+		IEnumerable<SprintBacklogUpdateItemDTO> sprintBacklogUpdateItemDTOs) 
 	{
 		try
 		{
-			await _sprintService.AddStoriesToBacklog(sprintId, stories);
-		
-			string prefix = stories.Count() == 0 ? "Story" : "Stories";
-			return Ok($"{prefix} added to sprint backlog successfully");
+			await _sprintService.UpdateBacklog(sprintId, sprintBacklogUpdateItemDTOs);
+			return Ok("Backlog updated");
 		}
 		catch (KeyNotFoundException e)
 		{
@@ -76,21 +74,21 @@ public class SprintController : BaseApiController
 		}
 	}
 	
-	[HttpPatch("remove-stories/{sprintId}")]
+	[HttpPatch("update")]
 	[Authorize(Policy = "ScrumManagement")]
-	public async Task<ActionResult> RemoveStoriesFromBacklog(
-		Guid sprintId, 
-		IEnumerable<StoryDTO> stories) 
+	public async Task<ActionResult> UpdateSprint(SprintDTO sprintDTO) 
 	{
 		try
 		{
-			await _sprintService.RemoveStoriesFromBacklog(sprintId, stories);
-			string prefix = stories.Count() == 0 ? "Story" : "Stories";
-			return Ok($"{prefix} removed from sprint backlog successfully");
+			await _sprintService.Update(sprintDTO);
+			return Ok("Sprint updated");
 		}
-		catch (Exception e)
+		catch (KeyNotFoundException e)
 		{
 			return BadRequest(e.Message);
+		} catch(NotAllowedException) 
+		{
+			return Forbid();
 		}
 	}
 	
