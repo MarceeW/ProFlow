@@ -3,6 +3,7 @@ import { BaseService } from './base.service';
 import { Team } from '../_models/team.model';
 import { User } from '../_models/user.model';
 import { Project } from '../_models/project.model';
+import { ChartData } from '../_models/reports/chart-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,9 @@ export class TeamService extends BaseService {
 
   removeProjects(id: string, projects: Project[]) {
     return this.http.patch(this.apiUrl + 'teams/remove-from-project/' + id, projects);
+  }
+
+  getVelocityChartData(id: string) {
+    return this.http.get<ChartData[]>(this.apiUrl + 'teams/velocity-chart/' + id);
   }
 }

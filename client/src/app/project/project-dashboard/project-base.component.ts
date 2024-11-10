@@ -35,9 +35,7 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
     super();
     effect(() => {
       this.team();
-      untracked(() => {
-        this.loadNthSprint(0);
-      });
+      untracked(() => this.onTeamChanged());
     });
   }
 
@@ -45,6 +43,10 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
     this.projectId = this._route.snapshot.paramMap.get('id')!;
     this.loadProject();
     super.ngOnInit();
+  }
+
+  onTeamChanged() {
+    this.loadNthSprint(0);
   }
 
   isTeamsEmpty() {
@@ -58,8 +60,8 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
   teamSelectionVisible() {
     const authUser = this._authService.getCurrentAuthUser()!;
     const teams = this.project()?.teams
-      .filter(t => this.isUserProjectManager() || t.memberIds.includes(authUser.id));
-    return (teams?.length ?? 0) > 1;
+      .filter(t => t.memberIds.includes(authUser.id));
+    return (teams?.length ?? 0) > 1 || this.isUserProjectManager();
   }
 
   loadProject() {

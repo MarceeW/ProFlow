@@ -11,6 +11,7 @@ import { StoryDialogComponent } from '../story-dialog/story-dialog.component';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { UserPictureDirective } from '../../../_directives/user-picture.directive';
+import { BASE_COMPONENT_DEFAULT_CONFIG, BASE_COMPONENT_NO_TITLE_CONFIG } from '../../../injection-tokens.config';
 
 @Component({
   selector: 'app-project-updates-list',
@@ -20,7 +21,13 @@ import { UserPictureDirective } from '../../../_directives/user-picture.directiv
     DatePipe,
     MatTooltip,
     MatIconModule,
-    UserPictureDirective
+    UserPictureDirective,
+  ],
+  providers: [
+    {
+      provide: BASE_COMPONENT_DEFAULT_CONFIG,
+      useValue: BASE_COMPONENT_NO_TITLE_CONFIG
+    }
   ],
   templateUrl: './project-updates-list.component.html',
   styleUrl: './project-updates-list.component.scss'

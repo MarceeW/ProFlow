@@ -12,7 +12,7 @@
         [disabled]="teamSprints().length == 0"
         [formControl]="sprintSelectControl"
         [compareWith]="compareSprint">
-        @for(sprint of teamSprints(); track $index) {
+        @for(sprint of teamSprints(); track sprint) {
           @let startDate = sprint.start | date;
           <mat-option [value]="sprint">
             <span>{{startDate}} - {{sprint.end | date}} &nbsp;</span>

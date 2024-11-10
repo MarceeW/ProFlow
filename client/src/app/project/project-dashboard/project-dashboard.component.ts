@@ -57,7 +57,10 @@ export class ProjectDashboardComponent extends ProjectBaseComponent implements O
 
   override onProjectLoaded(project: Project): void {
     super.onProjectLoaded(project);
-    this.sprintSelectControl.setValue(project.sprints![0])
+  }
+
+  override onTeamChanged(): void {
+    this.sprintSelectControl.setValue(this.teamSprints()[0]);
   }
 
   compareSprint(s1: Sprint, s2?: Sprint) {

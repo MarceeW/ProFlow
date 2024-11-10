@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from './base.service';
-import { Sprint } from '../_models/sprint.model';
-import { Story } from '../_models/story.model';
-import { SprintBurndownData as SprintBurndownData } from '../_models/reports/sprint-burndown-data.model';
+import { ChartData } from '../_models/reports/chart-data.model';
 import { SprintBacklogUpdateItem } from '../_models/sprint-backlog-update-item.model';
+import { Sprint } from '../_models/sprint.model';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +26,6 @@ export class SprintService extends BaseService {
   }
 
   getBurndownDatas(sprintId: string) {
-    return this.http.get<SprintBurndownData[]>(this.apiUrl + 'sprint/reports/burndown/' + sprintId);
+    return this.http.get<ChartData[]>(this.apiUrl + 'sprint/reports/burndown/' + sprintId);
   }
 }
