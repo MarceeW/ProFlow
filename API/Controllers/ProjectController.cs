@@ -275,6 +275,10 @@ public class ProjectController(
 		{
 			return BadRequest(e.Message);
 		}
+		catch (NotAllowedException)
+		{
+			return Forbid();
+		}
 	}
 	
 	[HttpGet("stats/backlog/{id}")]

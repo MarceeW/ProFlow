@@ -57,7 +57,7 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
 	public async Task<IEnumerable<StoryStatusChange>> GetLastUpdatesAsync(Guid projectId, User loggedInUser)
 	{
 		var project = await ReadAsync(projectId) ?? throw new KeyNotFoundException();
-		const int changesToReturn = 10;
+		const int changesToReturn = 20;
 		
 		if(project.ProjectManager == loggedInUser) 
 			return project.ProductBacklog
@@ -67,12 +67,16 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
 
 		if(!project.IsUserPartOf(loggedInUser))
 			throw new NotAllowedException();
-			
-		return project.Teams
-			.Where(t => t.Members.Any(m => m == loggedInUser)).First()
-			.Sprints.Where(s => s.IsActive && s.Project == project).First()
-			.SprintBacklog.SelectMany(s => s.StoryStatusChanges)
+		
+		var changes = project.Teams
+			.Where(t => t.IsUserPartOf(loggedInUser))
+			.SelectMany(t => t.Sprints)
+			.Where(s => s.Project == project)
+			.SelectMany(s => s.SprintBacklog)
+			.SelectMany(s => s.StoryStatusChanges)
 			.OrderByDescending(s => s.Timestamp)
 			.Take(changesToReturn);
+				
+		return changes;
 	}
 }
