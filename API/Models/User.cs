@@ -25,7 +25,6 @@ public class User : IdentityUser<Guid>
 	public DateTime LastSeen { get; set; } = DateTime.Now;
 	public string? ProfilePicturePath { get; set; }
 	public virtual ICollection<UserSkill> UserSkills { get; set; } = [];
-	public Guid? LastViewedProjectId { get; set; }
 	[NotMapped]
 	public string FullName { get => $"{FirstName} {LastName}"; }
 

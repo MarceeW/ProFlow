@@ -99,8 +99,7 @@ public class ProjectController(
 			if(!await _projectService.UserHasAccessToProjectAsync(id, user!))
 				return Forbid();
 			
-			user!.LastViewedProjectId = id;
-			await _userManager.UpdateAsync(user);
+			await _userManager.UpdateAsync(user!);
 			
 			return _mapper.Map<ProjectDTO>(await _projectRepository.ReadAsync(id));
 		} catch (KeyNotFoundException e) 
