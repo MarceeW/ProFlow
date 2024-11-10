@@ -108,6 +108,7 @@ public class ProjectService : IProjectService
 				
 			await _notificationService.CreateNotificationsAsync(notifications);
 			project.TeamLeaders.Remove(teamLeader);
+			teamLeader.TeamLeaderInProjects.Remove(project);
 		}
 		
 		foreach(var teamLeaderDTO in teamLeaderDTOsToAdd) 
