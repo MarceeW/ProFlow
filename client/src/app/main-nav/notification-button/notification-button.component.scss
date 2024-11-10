@@ -41,6 +41,8 @@
   "icon content";
   gap: 8px;
   padding: 8px;
+  grid-template-columns: 50px 1fr;
+  overflow: hidden;
   &:not(:last-child) {
     border-bottom-style: solid;
   }
@@ -59,6 +61,7 @@
 .notification-header {
   grid-area: header;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 
