@@ -1,73 +1,99 @@
-<div class="edit-settings-container">
-  <div class="member-settings-container" role="group">
-    @let members = team()?.members ?? [];
-    <mat-form-field>
-      <app-member-search-control [notAllowedMembers]="members ?? []" [formControl]="memberControl"/>
-    </mat-form-field>
-    <div class="member-container">
-      <div class="title">
-        Team members:
-      </div>
-      @if(members.length == 0) {
-        This team has no members yet!
-      }
-      @for(member of members; track $index) {
-        @let _isMemberMarkedToRemove = isMemberMarkedToRemove(member);
-        @if(member.userName != team()?.teamLeader?.userName) {
-          <div class="member" [class.marked-to-remove]="_isMemberMarkedToRemove">
-            <img [user-picture]="member.id" [size]="24">
-            <span>{{member.fullName}}</span>
-            <div class="remove-icon-container">
-              <mat-icon
-                (click)="onMemberRemoveClicked(member)"
-                [matTooltip]="_isMemberMarkedToRemove ?
-                  'Undo member remove' : 'Remove member from the team'">
-                {{_isMemberMarkedToRemove ? 'undo' : 'close'}}
-              </mat-icon>
-            </div>
-          </div>
-        } @else {
-          <div class="teamleader">
-            <img [user-picture]="member.id" [size]="24">
-            <span>{{member.fullName}}</span>
-          </div>
-        }
-      }
+<section>
+  <h4>members</h4>
+  @if(isCurrentUserTeamLeader()) {
+    <div class="form-control-container">
+      <mat-form-field>
+        <app-member-search-control placeholder="Search members"
+          [notAllowedMembers]="members()" [formControl]="memberControl"/>
+      </mat-form-field>
+      <button mat-flat-button (click)="addMembers()"
+        [disabled]="memberControl.value?.length == 0">Add members</button>
     </div>
-  </div>
-  <div class="project-settings-container" role="group">
-    <div class="project-container">
-      <div class="title">
-        Team projects:
-      </div>
-      @let projects = team()?.projects ?? [];
-      @if(projects.length == 0) {
-        This team has no projects yet!
-      }
-      @for(project of projects; track $index) {
-        @let _isProjectMarkedToRemove = isProjectMarkedToRemove(project);
-        <div class="project" [class.marked-to-remove]="_isProjectMarkedToRemove">
-          {{project.name}}
-          <div class="remove-icon-container">
-            <mat-icon
-              (click)="onProjectRemoveClicked(project)"
-              [matTooltip]="_isProjectMarkedToRemove ?
-                'Undo project remove' : 'Remove project from the team'">
-              {{_isProjectMarkedToRemove ? 'undo' : 'close'}}
-            </mat-icon>
-          </div>
+  }
+  <div class="member-tile-container">
+    @for (member of members(); track $index) {
+      <div class="member-tile" style="--i: {{$index}}">
+        <button mat-icon-button class="more-btn" [matMenuTriggerFor]="menuRef">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menuRef="matMenu">
+          <button mat-menu-item [routerLink]="['/user-profile', member.id]">
+            <mat-icon>visibility</mat-icon>
+            View profile
+          </button>
+          @if(!isTeamLeader(member) && isCurrentUserTeamLeader()) {
+            <button mat-menu-item (click)="removeMember(member)">
+              <mat-icon>cancel</mat-icon>
+              Remove from team
+            </button>
+          }
+        </mat-menu>
+        <div class="member-info member-profile-info">
+          <img [user-picture]="member.id" [size]="64">
+          <span class="member-name" [class.teamleader]="isTeamLeader(member)">{{member.fullName}}</span>
         </div>
-      }
-    </div>
-    <mat-form-field>
-      <app-project-search-control [notAllowedProjects]="projects ?? []" [formControl]="projectControl"/>
-    </mat-form-field>
+        <div class="member-info member-skills">
+          @for (userSkill of memberSkills().get(member.id); track $index) {
+            <div class="skill">
+              <span class="skill-label">{{userSkill.skill.name}}</span>
+              <div class="skill-bar"
+                [style]="'width: ' + _getSkillBarWidth(userSkill) + '%;'">
+              </div>
+            </div>
+          }
+        </div>
+        <div class="member-info member-stats">
+          @let stats = memberStats().get(member.id);
+          <span>Stories per hour: {{stats?.performance ?? 0}}</span>
+        </div>
+      </div>
+    }
   </div>
-</div>
-<button
-  class="w-25 m-2"
-  mat-flat-button
-  (click)="onSave()"
-  [disabled]="!canSaveHappen()">
-  Save changes
-</button>
+</section>
+
+<section>
+  @let projects = team()?.projects ?? [];
+  <h4>Projects</h4>
+  @if(isCurrentUserTeamLeader()) {
+    <div class="form-control-container">
+      <mat-form-field>
+        <app-project-search-control placeholder="Search for projects"
+          [notAllowedProjects]="projects ?? []" [formControl]="projectControl"/>
+      </mat-form-field>
+      <button mat-flat-button (click)="addProjects()"
+          [disabled]="projectControl.value?.length == 0">Add projects</button>
+    </div>
+  }
+  <div class="project-container">
+    @if(projects.length == 0) {
+      <span class="projects-empty-msg">This team has no projects yet!</span>
+    }
+    @for (project of projects; track $index) {
+      <div class="project-pill">
+        <span>{{project.name}}</span>
+        <button mat-icon-button class="more-btn" [matMenuTriggerFor]="menuRef">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menuRef="matMenu">
+          <button mat-menu-item [routerLink]="['/projects', 'project-dashboard', project.id]">
+            <mat-icon>visibility</mat-icon>
+            View project
+          </button>
+          @if(isCurrentUserTeamLeader()) {
+            <button mat-menu-item (click)="removeProject(project)">
+              <mat-icon>cancel</mat-icon>
+              Remove project
+            </button>
+          }
+        </mat-menu>
+      </div>
+    }
+  </div>
+</section>
+
+
+
+@if(team()) {
+  <h4>Velocity chart</h4>
+  <app-velocity-chart [teamId]="team()!.id!"></app-velocity-chart>
+}

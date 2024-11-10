@@ -7,6 +7,8 @@ import { SidenavItem } from '../_models/sidenav-item.model';
 })
 export class SidenavItemService {
   readonly items = computed(() => Object.values(this._items()));
+  readonly title = signal<string | undefined>(undefined);
+
   private readonly _items = signal<{[key: string]: SidenavItem}>({});
 
   constructor(private readonly router: Router) {

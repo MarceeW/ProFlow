@@ -1,6 +1,7 @@
 using System;
 using API.Data;
 using API.DTOs;
+using API.Enums;
 using API.Exceptions;
 using API.Interfaces.Repository;
 using API.Models;
@@ -21,8 +22,28 @@ public class TeamRepository : AbstractRepository<Team, Guid>, ITeamRepository
 		//if(!team.IsUserPartOf(loggedInUser))
 		//	throw new NotAllowedException();
 		
-		
-		
-		return [];
+		int i = 1;
+		var spintsChartData = team.Sprints
+			.Take(12)
+			.Select(sprint => new ChartDataDTO() 
+			{
+				Name = i++,
+				Series = [
+					new() 
+					{
+						Name = "Commitment",
+						Value = sprint.Capacity
+					},
+					new() 
+					{
+						Name = "Work completed",
+						Value = sprint.SprintBacklog
+							.Where(s => s.StoryStatus == StoryStatus.Done)
+							.Sum(s => s.StoryPoints)
+					}
+				]
+			});
+
+		return spintsChartData;
 	}
 }

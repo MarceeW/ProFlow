@@ -14,7 +14,7 @@
     </mat-chip-grid>
     <input
         name="project"
-        placeholder="Add new project"
+        [placeholder]="_placeholder()"
         #projectInput
         [disabled]="disabled"
         [matChipInputFor]="chipGrid"

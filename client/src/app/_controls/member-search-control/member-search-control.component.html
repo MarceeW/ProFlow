@@ -20,6 +20,7 @@
     <input
         name="member"
         #memberInput
+        [placeholder]="_placeholder()"
         [disabled]="disabled || argsService.loading()"
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"
