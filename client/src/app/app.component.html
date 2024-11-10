@@ -2,6 +2,7 @@
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       mode="over"
       [opened]="sidenavItemService.items().length > 0">
+    <h4>{{sidenavItemService.title()}}</h4>
     <mat-nav-list>
       @for (item of sidenavItemService.items(); track $index) {
         @if(item.enabled ?? true) {

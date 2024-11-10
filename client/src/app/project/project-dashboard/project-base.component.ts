@@ -13,7 +13,7 @@ import { TeamSelectorComponent } from "./team-selector/team-selector.component";
 @Component({
   template: ''
 })
-export abstract class ProjectBaseComponent extends HasSideNav implements OnDestroy {
+export abstract class ProjectBaseComponent extends HasSideNav {
 
   projectId!: string;
   readonly project = signal<Project | null>(null);
@@ -98,6 +98,7 @@ export abstract class ProjectBaseComponent extends HasSideNav implements OnDestr
   onProjectLoaded(project: Project) {
     this.project.set(project);
     this.setTeam();
+    this.setSidenavTitle(project.name);
   }
 
   override getSidenavItems(): {[key: string]: SidenavItem} {

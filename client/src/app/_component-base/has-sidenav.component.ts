@@ -24,5 +24,9 @@ export abstract class HasSideNav extends BaseComponent implements OnInit {
     this._sidenavItemService.setItems(items);
   }
 
+  setSidenavTitle(title?: string) {
+    this._sidenavItemService.title.set(title);
+  }
+
   abstract getSidenavItems(): {[key: string]: SidenavItem};
 }
