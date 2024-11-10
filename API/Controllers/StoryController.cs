@@ -194,7 +194,7 @@ public class StoryController : BaseApiController
 	}
 	
 	[HttpDelete("delete/{id}")]
-	[Authorize(Policy = "SprintManagement")]
+	[Authorize(Roles = RoleConstant.ProjectManager)]
 	public async Task<ActionResult> DeleteStory(Guid id) 
 	{
 		var story = await _storyRepository.ReadAsync(id);
@@ -204,6 +204,6 @@ public class StoryController : BaseApiController
 			
 		_storyRepository.Delete(story);
 		await _storyRepository.SaveAsync();
-		return Ok($"Deleted story: {id}");
+		return Ok($"Story deleted successfully");
 	}
 }
