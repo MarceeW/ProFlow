@@ -61,6 +61,15 @@
       />
     </mat-form-field>
 
+    <mat-form-field class="skill-form-field">
+      <mat-label>Skills</mat-label>
+      <mat-select formControlName="requiredSkills" multiple [compareWith]="skillCompare">
+        @for (skill of skills(); track $index) {
+          <mat-option [value]="skill">{{skill.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
     <mat-dialog-actions>
       <button mat-button mat-dialog-close>Cancel</button>
       <button type="submit"

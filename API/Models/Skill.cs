@@ -9,4 +9,5 @@ public class Skill
 	public Guid Id { get; set; }
 	public required string Name { get; set; }
 	public virtual ICollection<UserSkill> UserSkills { get; set; } = [];
+	public virtual ICollection<Story> Stories { get; set; } = [];
 }

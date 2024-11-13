@@ -29,6 +29,7 @@ public class Story
 	public required StoryStatus StoryStatus { get; set; } = StoryStatus.Backlog;
 	public string Tags { get; set; } = "";
 	public virtual ICollection<StoryCommit> StoryCommits { get; set; } = [];
+	public virtual ICollection<Skill> RequiredSkills { get; set; } = [];
 	public virtual ICollection<StoryStatusChange> StoryStatusChanges { get; set; } = [];
 	
 	[NotMapped]

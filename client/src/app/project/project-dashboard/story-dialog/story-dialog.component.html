@@ -63,6 +63,14 @@
           }
         </div>
       }
+      @if(story().requiredSkills.length > 0) {
+        <h4>Required skills</h4>
+        <div class="tag-container">
+          @for (skill of story().requiredSkills; track $index) {
+            <span class="tag">{{skill.name}}</span>
+          }
+        </div>
+      }
       <h4>Description</h4>
       <p class="description">{{story().description}}</p>
     </article>

@@ -1,4 +1,5 @@
 import { StoryStatus } from "../_enums/story-status.enum";
+import { Skill } from "./skill.model";
 import { User } from "./user.model";
 
 export interface Story {
@@ -11,6 +12,7 @@ export interface Story {
   assignedTo?: User,
   storyPriority: string,
   tags: string[],
+  requiredSkills: Skill[],
   storyType: string,
   storyPoints?: number,
   storyStatus: StoryStatus

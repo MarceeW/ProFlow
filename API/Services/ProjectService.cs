@@ -22,6 +22,7 @@ public class ProjectService : IProjectService
 	private readonly ISprintService _sprintService;
 	private readonly INotificationService _notificationService;
 	private readonly ITeamRepository _teamRepository;
+	private readonly ISkillRepository _skillRepository;
 	private readonly UserManager<User> _userManager;
 
 	public ProjectService(
@@ -31,7 +32,8 @@ public class ProjectService : IProjectService
 		IStoryRepository storyRepository,
 		ISprintRepository sprintRepository,
 		ITeamRepository teamRepository,
-		ISprintService sprintService)
+		ISprintService sprintService,
+		ISkillRepository skillRepository)
 	{
 		_projectRepository = projectRepository;
 		_notificationService = notificationService;
@@ -40,6 +42,7 @@ public class ProjectService : IProjectService
 		_sprintRepository = sprintRepository;
 		_teamRepository = teamRepository;
 		_sprintService = sprintService;
+		_skillRepository = skillRepository;
 	}
 	public async Task CreateProjectAsync(ProjectDTO projectDTO)
 	{
@@ -181,6 +184,11 @@ public class ProjectService : IProjectService
 		if(project.ProjectManager != user)
 			throw new NotAllowedException();	
 		
+		var requiredSkills = storyDTO.RequiredSkills
+			.Select(async s => await _skillRepository.ReadAsync(s.Id))
+			.Select(t => t.Result)
+			.ToList() ?? [];
+		
 		Story story = new() 
 		{
 			Title = storyDTO.Title,
@@ -190,7 +198,8 @@ public class ProjectService : IProjectService
 			Project = project,
 			StoryPoints = storyDTO.StoryPoints,
 			StoryStatus = storyDTO.StoryStatus,
-			TagList = storyDTO.Tags
+			TagList = storyDTO.Tags,
+			RequiredSkills = requiredSkills
 		};
 		project.ProductBacklog.Add(story);
 		await _projectRepository.SaveAsync();

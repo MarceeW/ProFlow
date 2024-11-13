@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using API.DTO;
 using API.Enums;
+using API.Models;
 
 namespace API.DTOs;
 
@@ -22,5 +23,6 @@ public class StoryDTO
 	public required string StoryType { get; set; }
 	public int? StoryPoints { get; set; }
 	public StoryStatus StoryStatus { get; set; }
+	public List<SkillDTO> RequiredSkills { get; set; } = [];
 	public List<string> Tags { get; set; } = [];
 }
