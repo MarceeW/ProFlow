@@ -47,7 +47,7 @@ public class SprintRepository : AbstractRepository<Sprint, Guid>, ISprintReposit
 				})
 		};
 		
-		var sprintDays = ((DateTime.Now < sprint.End ? DateTime.Now : sprint.End) - sprint.Start).Days + 1;
+		var sprintDays = ((DateTime.Now < sprint.End ? DateTime.Now : sprint.End) - sprint.Start).Days;
 		
 		var remaining = new ChartDataDTO
 		{
@@ -64,7 +64,7 @@ public class SprintRepository : AbstractRepository<Sprint, Guid>, ISprintReposit
 							new ChartDataDTO
 							{
 								Value = sprintWeight,
-								Name = 0
+								Name = -1
 							}
 						}, (total, curr) => 
 						{
@@ -74,7 +74,7 @@ public class SprintRepository : AbstractRepository<Sprint, Guid>, ISprintReposit
 								Name = (int)total.Last().Name + 1
 							});
 							return total;
-						})
+						}).Skip(1)
 		};
 		
 		return [ideal, remaining];
