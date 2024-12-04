@@ -1,3 +1,12 @@
-<div class="container">
-  <h1 class="mat-headline-1 m-5">Welcome to ProFlow</h1>
-</div>
+<section class="newest-projects">
+  <h4>Newest projects</h4>
+  @if(lastFiveProjects().length == 0) {
+    <div>You don't have any projects yet!</div>
+  }
+  <div class="project-container">
+    @for (project of lastFiveProjects(); track $index) {
+      <div class="project-tile"
+        [routerLink]="['projects/project-dashboard', project.id]">{{project.name}}</div>
+    }
+  </div>
+</section>
