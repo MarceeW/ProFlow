@@ -4,9 +4,9 @@ namespace API.Enums;
 
 public enum StoryPriority
 {
-	Blocker,
-	Critical,
-	High,
+	Low,
 	Medium,
-	Low
+	High,
+	Critical,
+	Blocker
 }

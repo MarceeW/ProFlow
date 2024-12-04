@@ -617,6 +617,21 @@ namespace API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SkillStory", b =>
+                {
+                    b.Property<Guid>("RequiredSkillsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StoriesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RequiredSkillsId", "StoriesId");
+
+                    b.HasIndex("StoriesId");
+
+                    b.ToTable("SkillStory");
+                });
+
             modelBuilder.Entity("API.Models.Invitation", b =>
                 {
                     b.HasOne("API.Models.User", "CreatedBy")
@@ -863,6 +878,21 @@ namespace API.Migrations
                     b.HasOne("API.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SkillStory", b =>
+                {
+                    b.HasOne("API.Models.Skill", null)
+                        .WithMany()
+                        .HasForeignKey("RequiredSkillsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.Story", null)
+                        .WithMany()
+                        .HasForeignKey("StoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

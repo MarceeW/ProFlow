@@ -23,23 +23,23 @@ public class StoryController : BaseApiController
 	private readonly UserManager<User> _userManager;
 	private readonly IMapper _mapper;
 
-    public StoryController(
-        IStoryRepository storyRepository,
-        UserManager<User> userManager,
-        IStoryService storyService,
-        IMapper mapper,
-        IProjectService projectService,
-        IStoryStatusChangeRepository StoryStatusChangeRepository)
-    {
-        _storyRepository = storyRepository;
-        _userManager = userManager;
-        _storyService = storyService;
-        _mapper = mapper;
-        _projectService = projectService;
-        _StoryStatusChangeRepository = StoryStatusChangeRepository;
-    }
+	public StoryController(
+		IStoryRepository storyRepository,
+		UserManager<User> userManager,
+		IStoryService storyService,
+		IMapper mapper,
+		IProjectService projectService,
+		IStoryStatusChangeRepository StoryStatusChangeRepository)
+	{
+		_storyRepository = storyRepository;
+		_userManager = userManager;
+		_storyService = storyService;
+		_mapper = mapper;
+		_projectService = projectService;
+		_StoryStatusChangeRepository = StoryStatusChangeRepository;
+	}
 
-    [HttpGet("{id}")]
+	[HttpGet("{id}")]
 	public async Task<ActionResult<StoryDTO>> GetStory(Guid id) 
 	{
 		try

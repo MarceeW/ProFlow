@@ -18,7 +18,9 @@ public class ProjectRepository : AbstractRepository<Project, Guid>, IProjectRepo
 			user.Teams
 				.SelectMany(t => t.Projects)
 				.Union(user.TeamLeaderInProjects)
-				.Union(user.OwnedProjects);
+				.Union(user.OwnedProjects)
+				.OrderByDescending(p => p.Created);
+				
 		return projects;
 	}
 	

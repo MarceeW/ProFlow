@@ -1,6 +1,8 @@
 ﻿using API.DTO;
 using API.DTOs;
+using API.DTOs.Reports;
 using API.Enums;
+using API.Exceptions;
 using API.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -20,6 +22,21 @@ public class UserRepository : IUserRepository
 	{
 		_userManager = userManager;
 		_mapper = mapper;
+	}
+
+	public async Task<IEnumerable<BacklogStatDTO>> GetUserAssignedStoriesStatsAsync(Guid id)
+	{
+		var user = await _userManager.FindByIdAsync(id.ToString())
+			?? throw new UserNotFoundException(id.ToString());
+		
+		return user.AssignedStories
+			.Where(s => s.Sprint?.IsActive ?? false)
+			.GroupBy(s => s.StoryStatus)
+			.Select(group => new BacklogStatDTO() 
+			{
+				StoryStatus = group.Key,
+				Count = group.Count()
+			});
 	}
 
 	public async Task<UserDTO> GetUserByUserNameAsync(string userName)

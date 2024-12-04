@@ -40,6 +40,7 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<ILoggingService, LoggingService>();
 		services.AddScoped<ISkillService, SkillService>();
 		services.AddScoped<IUserService, UserService>();
+		services.AddScoped<IApiKeyValidationService, ApiKeyValidationService>();
 		
 		#endregion Services
 		
@@ -60,6 +61,8 @@ public static class ApplicationServiceExtensions
 		services.AddScoped<IStoryStatusChangeRepository, StoryStatusChangeRepository>();
 		
 		#endregion Repositories
+		
+		services.AddHostedService<RecommenderTrainHostedService>();
 		
 		return services;
 	}
