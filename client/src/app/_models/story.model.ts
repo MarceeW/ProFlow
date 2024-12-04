@@ -15,5 +15,6 @@ export interface Story {
   requiredSkills: Skill[],
   storyType: string,
   storyPoints?: number,
-  storyStatus: StoryStatus
+  storyStatus: StoryStatus,
+  matchRate?: number
 }

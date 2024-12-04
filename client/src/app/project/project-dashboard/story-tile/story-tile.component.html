@@ -18,6 +18,16 @@
     }
     {{story().assignedTo?.fullName ?? 'Unassigned'}}
   </div>
+  <div class="match-rate-container">
+    @let matchRate = story().matchRate ?? 0;
+    @if(story().matchRate) {
+      <span class="match-rate" [style]="'color: ' + getColorByMatchRate(matchRate)">
+        {{getFormatteMatchRate(matchRate)}}
+      </span>
+    } @else {
+      <mat-progress-bar mode="buffer"></mat-progress-bar>
+    }
+  </div>
   <div class="open-btn" (click)="openStoryDialog()" matTooltip="Open">
       <mat-icon>float_landscape_2</mat-icon>
   </div>

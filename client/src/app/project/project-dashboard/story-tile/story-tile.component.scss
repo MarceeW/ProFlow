@@ -50,6 +50,17 @@
     }
   }
 
+  .match-rate-container {
+    display: flex;
+    justify-content: right;
+    margin-right: 30px;
+    min-width: 10ch;
+
+    .match-rate {
+      font-weight: 500;
+    }
+  }
+
   .metadata-container {
     grid-column: 1 / -1;
     display: flex;

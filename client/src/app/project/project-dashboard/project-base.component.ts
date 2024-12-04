@@ -54,7 +54,8 @@ export abstract class ProjectBaseComponent extends HasSideNav {
   }
 
   onTeamSelectionChanged(team: ProjectTeam) {
-    this.team.set(team);
+    if(team.id !== this.team()?.id)
+      this.team.set(team);
   }
 
   teamSelectionVisible() {

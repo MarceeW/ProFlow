@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { takeUntil } from 'rxjs';
+import { filter, takeUntil } from 'rxjs';
 import { Sprint } from '../../../_models/sprint.model';
 import { Story } from '../../../_models/story.model';
 import { StoryService } from '../../../_services/story.service';
@@ -22,6 +22,7 @@ import { StoryTileComponent } from '../story-tile/story-tile.component';
 import { TeamSelectorComponent } from '../team-selector/team-selector.component';
 import { StoryStatus } from './../../../_enums/story-status.enum';
 import { ScrumStatePipe } from '../../../_pipes/scrum-state.pipe';
+import { RecommendationService } from '../../../_services/recommendation.service';
 
 @Component({
   selector: 'app-scrum-board',
@@ -42,8 +43,7 @@ import { ScrumStatePipe } from '../../../_pipes/scrum-state.pipe';
     ScrumStatePipe
   ],
   templateUrl: './scrum-board.component.html',
-  styleUrl: './scrum-board.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './scrum-board.component.scss'
 })
 export class ScrumBoardComponent extends ProjectBaseComponent {
   override itemKey: string = 'scrumboard';
@@ -63,7 +63,8 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
   readonly backBtnDisabled = computed(() => {
     return this._sprintIdx() + 1 == this.teamSprints().length
       || this.teamSprints().length == 0;
-  });
+    });
+  readonly _recommendationService = inject(RecommendationService);
   private readonly _storyService = inject(StoryService);
   private readonly _sprintIdx = signal(0);
 
@@ -92,6 +93,17 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
         if(!this.team())
           return;
         this.loadNthSprint(this._sprintIdx());
+      });
+    });
+
+    effect(() => {
+      this._recommendationService.recommendationCache();
+      untracked(() => {
+        const cache = this._recommendationService.recommendationCache();
+        const stories = this.sprint()?.sprintBacklog ?? [];
+        stories.forEach(story => story.matchRate = cache.get(story.id ?? ''));
+        console.log(this._recommendationService.recommendationCache());
+        this.filterStories(stories);
       });
     });
   }
@@ -139,16 +151,19 @@ export class ScrumBoardComponent extends ProjectBaseComponent {
   }
 
   protected override onSprintLoaded(sprint: Sprint): void {
-    this.sprint.set(sprint);
-    this.sprintSelectControl.setValue(sprint);
-    this.filterStories(sprint);
-  }
-
-  private filterStories(sprint: Sprint) {
-    if(!sprint.sprintBacklog)
+    if(sprint.id === this.sprint()?.id)
       return;
 
-    const stories = sprint.sprintBacklog;
+    this.sprint.set(sprint);
+    this.sprintSelectControl.setValue(sprint);
+    this.filterStories(sprint.sprintBacklog);
+    this._recommendationService.fetchRecommendations(sprint.sprintBacklog ?? []);
+  }
+
+  private filterStories(stories?: Story[]) {
+    if(!stories)
+      return;
+
     for (let i = 0; i < this.stories().length; i++) {
       this.stories.update(_stories => {
         _stories[i] = stories.filter(s => s.storyStatus == i);
