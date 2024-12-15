@@ -44,6 +44,8 @@ namespace API.Controllers
 		[Authorize]
 		public async Task<ActionResult<IEnumerable<double>>> GetPredictions(IEnumerable<Guid> storyIds) 
 		{
+			if(storyIds.Count() == 0)
+				return BadRequest();
 			
 			string url = _configuration["RecommenderApiEndpoint"]! + "/predict";
 			string apiKey = _configuration["ApiKey"]!;
@@ -55,7 +57,10 @@ namespace API.Controllers
 			
 			var loggedInUser = await _userManager.GetLoggedInUserAsync(User);
 			var stories = await _storyRepository.GetRecommendationDataForPrediction(storyIds, loggedInUser!);
-			
+				
+			if(stories.Count() == 0)
+				return Ok("No recommendation data available");
+				
 			string jsonData = JsonSerializer.Serialize(stories, options);
 			HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 

@@ -13,9 +13,7 @@ import { AuthUser } from './_models/auth-user';
 import { AccountService } from './_services/account.service';
 import { ComponentArgsService } from './_services/component-args.service';
 import { SidenavItemService } from './_services/sidenav-item.service';
-import { AccountMenuButtonComponent } from './main-nav/account-menu-button/account-menu-button.component';
 import { NavMenuComponent } from './main-nav/nav-menu/nav-menu.component';
-import { NotificationButtonComponent } from './main-nav/notification-button/notification-button.component';
 
 @Component({
   selector: 'app-root',
@@ -30,8 +28,6 @@ import { NotificationButtonComponent } from './main-nav/notification-button/noti
     RouterOutlet,
     RouterModule,
     NavMenuComponent,
-    NotificationButtonComponent,
-    AccountMenuButtonComponent,
     MatProgressSpinnerModule
   ],
   templateUrl: './app.component.html',

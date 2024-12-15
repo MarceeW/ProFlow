@@ -61,7 +61,7 @@ public static class IdentityServiceExtensions
 			.AddPolicy("ScrumManagement", policy => policy
 				.RequireRole(RoleConstant.Administrator, RoleConstant.TeamLeader, RoleConstant.ProjectManager))
 			.AddPolicy("TeamManagement", policy => policy
-				.RequireRole(RoleConstant.Administrator, RoleConstant.TeamLeader, RoleConstant.ProjectManager));
+				.RequireRole(RoleConstant.Administrator, RoleConstant.TeamLeader));
 				
 		return services;
 	}

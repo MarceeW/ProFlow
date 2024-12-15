@@ -11,9 +11,7 @@ import { ProjectCreateComponent } from './project/project-create/project-create.
 import { ManageSprintsComponent } from './project/project-dashboard/manage-sprints/manage-sprints.component';
 import { ProductBacklogComponent } from './project/project-dashboard/product-backlog/product-backlog.component';
 import { ProjectDashboardComponent } from './project/project-dashboard/project-dashboard.component';
-import { ProjectReportsComponent } from './project/project-dashboard/project-reports/project-reports.component';
 import { ProjectSettingsComponent } from './project/project-dashboard/project-settings/project-settings.component';
-import { ProjectTimelineComponent } from './project/project-dashboard/project-timeline/project-timeline.component';
 import { ScrumBoardComponent } from './project/project-dashboard/scrum-board/scrum-board.component';
 import { ProjectListComponent } from './project/project-list/project-list.component';
 import { TeamDetailsComponent } from './teams/team-details/team-details.component';
@@ -56,20 +54,12 @@ export const routes: Routes = [
                 component: ProjectDashboardComponent,
               },
               {
-                path: 'timeline/:id',
-                component: ProjectTimelineComponent
-              },
-              {
                 path: 'product-backlog/:id',
                 component: ProductBacklogComponent,
               },
               {
                 path: 'manage-sprints/:id',
                 component: ManageSprintsComponent,
-              },
-              {
-                path: 'reports/:id',
-                component: ProjectReportsComponent
               },
               {
                 path: 'settings/:id',

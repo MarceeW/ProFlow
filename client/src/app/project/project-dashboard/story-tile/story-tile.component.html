@@ -24,8 +24,6 @@
       <span class="match-rate" [style]="'color: ' + getColorByMatchRate(matchRate)">
         {{getFormatteMatchRate(matchRate)}}
       </span>
-    } @else {
-      <mat-progress-bar mode="buffer"></mat-progress-bar>
     }
   </div>
   <div class="open-btn" (click)="openStoryDialog()" matTooltip="Open">

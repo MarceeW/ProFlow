@@ -194,7 +194,7 @@ public class StoryController : BaseApiController
 	}
 	
 	[HttpDelete("delete/{id}")]
-	[Authorize(Roles = RoleConstant.ProjectManager)]
+	[Authorize(Policy = "ProjectManagement")]
 	public async Task<ActionResult> DeleteStory(Guid id) 
 	{
 		var story = await _storyRepository.ReadAsync(id);

@@ -26,18 +26,27 @@ public class RecommenderTrainHostedService  : IHostedService, IDisposable
 	public Task StartAsync(CancellationToken stoppingToken)
 	{
 		_logger.LogInformation("Recommender train service started running.");
+		ScheduleNextRun();
+		return Task.CompletedTask;
+	}
+	
+	private void ScheduleNextRun() 
+	{
+		var now = DateTime.Now;
+		var nextRunTime = now.Date.AddHours(23);
+		
+		if (now > nextRunTime)
+			nextRunTime = nextRunTime.AddDays(1);
 
 		_timer = new Timer(async _ => await CallRecommenderBackend(), 
 			null, 
-			TimeSpan.Zero,
-			TimeSpan.FromMinutes(30));
-
-		return Task.CompletedTask;
+			nextRunTime - now,
+			Timeout.InfiniteTimeSpan);
+		Console.WriteLine($"Scheduled next train at: {nextRunTime}");
 	}
 
 	private async Task CallRecommenderBackend()
 	{
-		
 		using var scope = Services.CreateScope();
 		
 		var storyRepository = 
@@ -49,6 +58,7 @@ public class RecommenderTrainHostedService  : IHostedService, IDisposable
 		if(data.Count() < 100) 
 		{
 			_logger.LogInformation("Can't call recommendation service since there is not enough data!");
+			ScheduleNextRun();
 			return;
 		}
 			
@@ -88,6 +98,10 @@ public class RecommenderTrainHostedService  : IHostedService, IDisposable
 		catch (Exception e)
 		{
 			_logger.LogError(e.Message);
+		}
+		finally
+		{
+			ScheduleNextRun();
 		}
 	}
 

@@ -128,16 +128,6 @@ export abstract class ProjectBaseComponent extends HasSideNav {
         icon: 'run_circle',
         enabled: this.isUserProjectManager() || this.isUserTeamLeader()
       },
-      timeline: {
-        label: 'Timeline',
-        routerLink: prefix + 'timeline/' + this.projectId,
-        icon: 'timeline'
-      },
-      reports: {
-        label: 'Reports',
-        routerLink: prefix + 'reports/' + this.projectId,
-        icon: 'flag'
-      },
       settings: {
         label: 'Settings',
         routerLink: prefix + 'settings/' + this.projectId,

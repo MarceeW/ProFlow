@@ -10,7 +10,6 @@ public class StoryRecommendationDataDTO
 	public required StoryPriority StoryPriority { get; set; }
 	public required string StoryTitle { get; set; }
 	public required int StoryPoints { get; set; }
-	public required int SpentHours { get; set; }
 	public required float UserPreviousSuccessRate { get; set; }
 	public required float UserAverageSpentHours { get; set; }
 	public required bool Completed { get; set; }

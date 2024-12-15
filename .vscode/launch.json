@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${fileDirname}/api.py",
             "console": "integratedTerminal",
-            "cwd": "${fileDirname}"
+            "cwd": "${fileDirname}",
         }
     ]
 }

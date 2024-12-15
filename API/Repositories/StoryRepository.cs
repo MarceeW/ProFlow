@@ -24,7 +24,7 @@ public class StoryRepository : AbstractRepository<Story, Guid>, IStoryRepository
 							
 		var stories = _values.Where(s => storyIds.Contains(s.Id));
 		
-		return await stories
+		var datas = await stories
 			.Select(s => new StoryRecommendationDataDTO
 				{
 					StoryTitle = s.Title,
@@ -36,10 +36,10 @@ public class StoryRepository : AbstractRepository<Story, Guid>, IStoryRepository
 					Skills = s.RequiredSkills.Select(s => s.Name),
 					Tags = s.TagList,
 					StoryPoints = s.StoryPoints ?? 0,
-					Completed = s.StoryStatus == Enums.StoryStatus.Done,
-					SpentHours = s.StoryCommits.Sum(sc => sc.Hours)
+					Completed = s.StoryStatus == Enums.StoryStatus.Done
 				})
 			.ToListAsync();
+		return datas;
 	}
 	
 	public async Task<IEnumerable<StoryRecommendationDataDTO>> GetRecommendationDataForTraining()
@@ -75,8 +75,7 @@ public class StoryRepository : AbstractRepository<Story, Guid>, IStoryRepository
 					Skills = s.RequiredSkills.Select(s => s.Name),
 					Tags = s.TagList,
 					StoryPoints = s.StoryPoints ?? 0,
-					Completed = s.StoryStatus == Enums.StoryStatus.Done,
-					SpentHours = s.StoryCommits.Sum(sc => sc.Hours)
+					Completed = s.StoryStatus == Enums.StoryStatus.Done
 				})
 			.ToListAsync();
 	}

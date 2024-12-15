@@ -13,7 +13,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   imports: [
     MatIconModule,
     MatTooltipModule,
-    MatProgressBarModule,
     UserPictureDirective
   ],
   templateUrl: './story-tile.component.html',
